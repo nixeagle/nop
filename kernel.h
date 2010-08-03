@@ -20,6 +20,9 @@ namespace text_mode {
 
   int puts(const tacospp::kernel::string::String &string,
            unsigned short int line, unsigned short int column);
+
+  int put_hex(unsigned int number,unsigned short int line, unsigned short int column);
+  char hex2char(int hex_number);
   int clear_line (unsigned short int line);
   int clear_screen (void);
 }

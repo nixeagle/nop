@@ -1,5 +1,4 @@
 #include "kernel.h"
-#include "types.h"
 
 namespace text_mode {
   const int VIDEORAM = 0xb8000;
@@ -39,7 +38,7 @@ namespace text_mode {
       clear_line(line);
     }
     return 0;
-}
+  }
 
   int puts(const tacospp::kernel::string::String *string,
              unsigned short int line, unsigned short int column) {
@@ -57,7 +56,38 @@ namespace text_mode {
     return 0;
   }
 
+  char hex2char(int hex_number) {
+    if (0x10 > hex_number) {
+      if (0xa > hex_number) {
+        return static_cast<char>(hex_number | 0x30);
+      } else {
+        return static_cast<char>(hex_number + 54);
+      }
+    }
+    // Failing a proper conversion, for now return the character 'Z'.  Z
+    // is an invalid hex "number", so seeing it means an error happened
+    // somewhere.
+    return 'Z';
+  }
+  int put_hex(unsigned int number, unsigned short int line, unsigned short int column) {
+    if (0xf >= number) {
+      put_char(hex2char(number), line, column);
+    } else {
+      if (0xff >= number) {
+        put_char(hex2char(number >> 4), line, column);
+        put_hex(number & 0x0F, line, static_cast<unsigned short int>(column + 1));
+      } else if (0xffff >= number) {
+        put_hex(number >> 8, line, column);
+        put_hex(number & 0x00FF, line, static_cast<unsigned short int>(column + 2));
+      } else if (0xffffffff >= number) {
+        put_hex(number >> 16, line, column);
+        put_hex(number & 0x0000FFFF, line, static_cast<unsigned short int>(column + 4));
+      }
+    }
+    return 0;
+  }
 }
+
 
 void* kmalloc(size_t size) {
   void* pointer = reinterpret_cast<void*>(kernel_end);
