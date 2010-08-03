@@ -56,6 +56,7 @@ namespace text_mode {
     }
     return 0;
   }
+
 }
 
 void* kmalloc(size_t size) {

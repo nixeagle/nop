@@ -6,23 +6,6 @@
 // linker in linker.ld.
 extern "C" int kernel_end;
 
-namespace std {
-  namespace string {
-    struct string {
-      size_t length;
-      const char* string;
-    };
-    string pascal_string(const char* string);
-  }
-}
-
-namespace c {
-  namespace string {
-    size_t strlen(const char *string);
-    inline size_t strlen(const std::string::string *string);
-  }
-}
-
 inline tacospp::kernel::string::String p(const char* string) __attribute__((always_inline));
 inline tacospp::kernel::string::String p(const char* string) {
   return tacospp::kernel::string::String(string);
