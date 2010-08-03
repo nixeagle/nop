@@ -1,0 +1,5 @@
+default 0
+timeout 1
+
+title My kernel
+kernel /boot/tacospp.bin
