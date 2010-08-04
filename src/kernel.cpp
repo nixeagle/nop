@@ -1,5 +1,5 @@
 #include "kernel.h"
-
+#include "kernel/idt/idt.h"
 namespace text_mode {
   const int VIDEORAM = 0xb8000;
   const unsigned short int LINES = 25;
@@ -87,6 +87,7 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
     text_mode::put_hex(magic,16,22);
   }
 
+  kernel::idt::init(255);
   text_mode::put_hex(0x1234afeb,6,3);
   text_mode::put_hex((unsigned int)&kernel_end,8,9);
   text_mode::puts(p("Tacospp"), 0, 0);
@@ -95,11 +96,18 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
 
   text_mode::put_hex(kernel::memory::getAllocatedByteCount(),10,9);
   text_mode::put_hex((unsigned int)kernel_end,11,9);
+
+  text_mode::put_hex(sizeof(long int), 0, 30);
   // for(unsigned short int i = 0, j = 1; i < 80; i++, j++) {
   //   text_mode::put_char('H', 0, ++i);
   //   text_mode::put_char('H', 0, ++j);
   // }
 
-
+  for(unsigned int i = 0;; i++) {
+    text_mode::put_hex(i, 5,30);
+    for(unsigned int i = 0; i < 10000000;) {
+      i++;
+    }
+  }
   return;
 }
