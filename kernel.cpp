@@ -56,53 +56,44 @@ namespace text_mode {
     return 0;
   }
 
-  char hex2char(int hex_number) {
-    if (0x10 > hex_number) {
-      if (0xa > hex_number) {
+  char hex2char(unsigned int hex_number) {
+    if (0xa > hex_number) {
         return static_cast<char>(hex_number | 0x30);
-      } else {
-        return static_cast<char>(hex_number + 54);
-      }
+    } else if (0x10 > hex_number) {
+        return static_cast<char>(hex_number + 55);
+    } else {
+      // Failing a proper conversion, for now return the character 'Z'.  Z
+      // is an invalid hex "number", so seeing it means an error happened
+      // somewhere.
+      return 'Z';
     }
-    // Failing a proper conversion, for now return the character 'Z'.  Z
-    // is an invalid hex "number", so seeing it means an error happened
-    // somewhere.
-    return 'Z';
   }
   int put_hex(unsigned int number, unsigned short int line, unsigned short int column) {
-    if (0xf >= number) {
-      put_char(hex2char(number), line, column);
-    } else {
-      if (0xff >= number) {
-        put_char(hex2char(number >> 4), line, column);
-        put_hex(number & 0x0F, line, static_cast<unsigned short int>(column + 1));
-      } else if (0xffff >= number) {
-        put_hex(number >> 8, line, column);
-        put_hex(number & 0x00FF, line, static_cast<unsigned short int>(column + 2));
-      } else if (0xffffffff >= number) {
-        put_hex(number >> 16, line, column);
-        put_hex(number & 0x0000FFFF, line, static_cast<unsigned short int>(column + 4));
-      }
+    for(unsigned int mask = 0xF0000000, shift = 28;
+        mask > 0;
+        mask = mask >> 4, column++, shift -= 4) {
+      put_char(hex2char((number & mask) >> shift), line, column);
     }
     return 0;
   }
 }
 
-
-void* kmalloc(size_t size) {
-  void* pointer = reinterpret_cast<void*>(kernel_end);
-  kernel_end += size;
-  return pointer;
-}
-
 extern "C" void kmain(struct mb_header *header, unsigned int magic) {
+  // Setup memory:
   text_mode::clear_screen();
 
-  if(0x1BADB001 != magic) {
+  if(0x1BADB002 != magic) {
     text_mode::puts(p("ERROR: Bootloader magic does not match."), 15, 20);
   }
 
+  text_mode::put_hex(0x1234afeb,6,3);
+  text_mode::put_hex((unsigned int)&kernel_end,8,9);
   text_mode::puts(p("Tacospp"), 0, 0);
+
+  kernel::memory::kmalloc(4);
+
+  text_mode::put_hex(kernel::memory::getAllocatedByteCount(),10,9);
+  text_mode::put_hex((unsigned int)kernel_end,11,9);
   // for(unsigned short int i = 0, j = 1; i < 80; i++, j++) {
   //   text_mode::put_char('H', 0, ++i);
   //   text_mode::put_char('H', 0, ++j);

@@ -16,7 +16,7 @@ cxx_selection := -std=gnu++0x -x c++
 includes := -I./src
 
 args := ${warnings} ${fthings} ${osdevops} ${experimentalops} \
-	 -Wwrite-strings -pedantic ${includes} ${cxx_selection}
+	 -Wwrite-strings -O0 -ggdb -pedantic ${includes} ${cxx_selection}
 
 gcc := i686-pc-linux-gnu-gcc
 
@@ -37,7 +37,7 @@ all: tacospp.bin
 
 tacospp.bin: $(OBJFILES)
 	@nasm -f elf -o loader.o loader.s
-	@i686-pc-linux-gnu-ld -T linker.ld -o tacospp.bin loader.o ${OBJFILES}
+	i686-pc-linux-gnu-ld -T linker.ld -o tacospp.bin loader.o ${OBJFILES}
 	@echo "Done! Linked the following into tacospp.bin:" ${OBJFILES}
 
 %.o: %.cpp Makefile
@@ -53,7 +53,7 @@ check-syntax:
 	${gcc} ${args}  -o /dev/null -c ${CHK_SOURCES}
 
 clean:
-	-@$(RM) $(wildcard $(OBJFILES) $(DEPFILES) $(REGFILES)
+	-@$(RM) $(wildcard $(OBJFILES) $(DEPFILES) $(REGFILES) \
 		tacospp.bin tacospp.iso)
 
 grub:

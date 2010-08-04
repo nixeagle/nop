@@ -1,5 +1,0 @@
-namespace tacospp {
-  namespace global {
-
-  }
-}
