@@ -41,7 +41,7 @@ tacospp.bin: $(OBJFILES)
 	@echo "Size (in bytes):" $(shell du --bytes tacospp.bin)
 
 %.o: %.cpp Makefile
-	@$(gcc) $(args) -save-temps -O2 -MMD -MP -MT "$*.d $*.o"  -c $< -o $@
+	@$(gcc) $(args) -save-temps -O0 -MMD -MP -MT "$*.d $*.o"  -c $< -o $@
 	@echo "Compiled" $(shell du --bytes $(patsubst %.cpp,%.o,$<))
 
 floppy:
@@ -64,3 +64,6 @@ grub:
 
 qemu: grub
 	qemu -cdrom tacospp.iso
+
+doxygen:
+	doxygen .doxygenrc
