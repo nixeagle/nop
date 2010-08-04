@@ -82,8 +82,9 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
   // Setup memory:
   text_mode::clear_screen();
 
-  if(0x1BADB002 != magic) {
+  if(0x2BADB002 != magic) {
     text_mode::puts(p("ERROR: Bootloader magic does not match."), 15, 20);
+    text_mode::put_hex(magic,16,22);
   }
 
   text_mode::put_hex(0x1234afeb,6,3);
