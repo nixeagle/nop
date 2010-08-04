@@ -18,8 +18,7 @@ includes := -I./src
 args := ${warnings} ${fthings} ${osdevops} ${experimentalops} \
 	 -Wwrite-strings ${includes} ${cxx_selection}
 
-gcc := i686-pc-linux-gnu-gcc
-
+gcc := /usr/x86_64-pc-linux-gnu/i686-pc-linux-gnu/gcc-bin/4.5.0/i686-pc-linux-gnu-gcc
 # non source files.
 AUXFILES := Makefile
 
