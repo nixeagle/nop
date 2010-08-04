@@ -16,7 +16,7 @@ cxx_selection := -std=gnu++0x -x c++
 includes := -I./src
 
 args := ${warnings} ${fthings} ${osdevops} ${experimentalops} \
-	 -Wwrite-strings -O0 -ggdb -pedantic ${includes} ${cxx_selection}
+	 -Wwrite-strings ${includes} ${cxx_selection}
 
 gcc := i686-pc-linux-gnu-gcc
 
@@ -37,13 +37,13 @@ all: tacospp.bin
 
 tacospp.bin: $(OBJFILES)
 	@nasm -f elf -o loader.o loader.s
-	i686-pc-linux-gnu-ld -T linker.ld -o tacospp.bin loader.o ${OBJFILES}
+	@i686-pc-linux-gnu-ld -T linker.ld -o tacospp.bin loader.o ${OBJFILES}
 	@echo "Done! Linked the following into tacospp.bin:" ${OBJFILES}
+	@echo "Size (in bytes):" $(shell du --bytes tacospp.bin)
 
 %.o: %.cpp Makefile
-	@echo "Compiling" $<
-	@$(gcc) $(args) -MMD -MP -MT "$*.d $*.o"  -c $< -o $@
-
+	@$(gcc) $(args) -save-temps -O2 -MMD -MP -MT "$*.d $*.o"  -c $< -o $@
+	@echo "Compiled" $(shell du --bytes $(patsubst %.cpp,%.o,$<))
 
 floppy:
 	dd if=/dev/zero of=pad bs=1 count=750
