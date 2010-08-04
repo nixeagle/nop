@@ -10,6 +10,7 @@
 #endif
 
 // I think these are the same on 32bit and 64 bit x86 machines...
+typedef unsigned char uint8_t;
 typedef unsigned short int uint16_t;
 typedef unsigned int uint32_t;
 
