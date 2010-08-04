@@ -1,0 +1,5 @@
+doxygen/
+*.d
+*.t
+*.ii
+*.s
