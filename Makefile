@@ -40,11 +40,10 @@ tacospp.bin: $(OBJFILES)
 	@nasm -f elf -o loader.o loader.s
 	@${LD} ${LDFLAGS} -melf_i386 -nostdlib -T linker.ld -o tacospp.bin loader.o ${OBJFILES}
 	@echo "Done! Linked the following into tacospp.bin:" ${OBJFILES}
-	@echo "Size (in bytes):" $(shell du --bytes tacospp.bin)
 
 %.o: %.cpp Makefile
 	@$(CXX) $(args) -save-temps -O0 -MMD -MP -MT "$*.d $*.o"  -c $< -o $@
-	@echo "Compiled" $(shell du --bytes $(patsubst %.cpp,%.o,$<))
+	@echo "Compiled" $<
 
 floppy:
 	dd if=/dev/zero of=pad bs=1 count=750
