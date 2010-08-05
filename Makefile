@@ -16,9 +16,11 @@ cxx_selection := -std=gnu++0x -x c++
 includes := -I./src
 
 args := ${warnings} ${fthings} ${osdevops} ${experimentalops} \
-	 -Wwrite-strings ${includes} ${cxx_selection}
+	 -Wwrite-strings ${includes} ${cxx_selection} ${LDFLAGS}
 
 CXX := /usr/x86_64-pc-linux-gnu/i686-pc-linux-gnu/gcc-bin/4.5.0/i686-pc-linux-gnu-gcc
+# CXXOPS
+# LDFLAGS
 # non source files.
 AUXFILES := Makefile
 
@@ -36,7 +38,7 @@ all: tacospp.bin
 
 tacospp.bin: $(OBJFILES)
 	@nasm -f elf -o loader.o loader.s
-	@${LD} -T linker.ld -o tacospp.bin loader.o ${OBJFILES}
+	@${LD} ${LDFLAGS} -nostdlib -T linker.ld -o tacospp.bin loader.o ${OBJFILES}
 	@echo "Done! Linked the following into tacospp.bin:" ${OBJFILES}
 	@echo "Size (in bytes):" $(shell du --bytes tacospp.bin)
 
