@@ -14,7 +14,7 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
   kernel::idt::init(255);
   kernel::text_mode::put_hex(0x12300feb,6,3);
   kernel::text_mode::put_hex((unsigned int)&kernel_end,8,9);
-  kernel::text_mode::puts(p("Tacospp"), 0, 0);
+  kernel::text_mode::puts(p("nop"), 0, 0);
 
   kernel::memory::kmalloc(4);
 
