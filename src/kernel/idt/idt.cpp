@@ -13,7 +13,7 @@ namespace kernel {
       idtd.setBase(reinterpret_cast<uint32_t>(idt_gates));
       idtd.setEntryCount(entry_count);
       loadIdt(idtd);
-      return 0;
+      return 0; /// \suc0
     }
   }
 }

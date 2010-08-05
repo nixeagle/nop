@@ -31,7 +31,7 @@ namespace text_mode {
       /// the second byte in video ram to something other then 0x07.
       videoram[offset + 1] = 0x07;
     }
-    return 0; /// \retval 0 Success
+    return 0; /// \suc0
   }
 
 
@@ -43,7 +43,7 @@ namespace text_mode {
       for(unsigned short int i = 0; i < COLUMNS; i++) {
         put_char(' ', line, i);
       }
-      return 0; /// \retval 0 Success
+      return 0; /// \suc0
     }
   }
 
@@ -52,7 +52,7 @@ namespace text_mode {
     for (unsigned short int line = 0; line < LINES; line++) {
       clear_line(line);
     }
-    return 0; /// \retval 0 Success
+    return 0; /// \suc0
   }
 
   // int puts(const tacospp::kernel::string::String *string,
@@ -92,9 +92,10 @@ namespace text_mode {
         mask = mask >> 4, column++, shift -= 4) {
       put_char(hex2char((number & mask) >> shift), line, column);
     }
-    return 0;
+    return 0; /// \suc0
   }
 }
+
 
 extern "C" void kmain(struct mb_header *header, unsigned int magic) {
   // Setup memory:
