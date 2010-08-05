@@ -21,6 +21,7 @@ args := ${warnings} ${fthings} ${osdevops} ${experimentalops} \
 CXX ?= g++
 CXX_CHECK_SYNTAX := /usr/x86_64-pc-linux-gnu/i686-pc-linux-gnu/gcc-bin/4.5.0/i686-pc-linux-gnu-gcc
 
+GRUB_STAGE2 := stage2_eltorito
 # CXXOPS
 # LDFLAGS
 # non source files.
@@ -60,7 +61,7 @@ clean:
 
 grub:
 	@mkdir -p isofiles/boot/grub
-	@cp /boot/grub/stage2_eltorito  isofiles/boot/grub/
+	@cp ${GRUB_STAGE2} isofiles/boot/grub/
 	@cp nop.bin isofiles/boot
 
 	@genisoimage -R -b boot/grub/stage2_eltorito -no-emul-boot -boot-load-size 4                 -boot-info-table --input-charset utf-8 -o nop.iso isofiles
