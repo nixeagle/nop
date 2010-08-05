@@ -15,8 +15,8 @@ inline tacospp::kernel::string::String p(const char* string) {
 namespace text_mode {
   inline int put_char (char character, unsigned short int line,
                        unsigned short int column);
-  int puts(const tacospp::kernel::string::String *string,
-           unsigned short int line, unsigned short int column);
+  // int puts(const tacospp::kernel::string::String *string,
+  //          unsigned short int line, unsigned short int column);
 
   int puts(const tacospp::kernel::string::String &string,
            unsigned short int line, unsigned short int column);

@@ -44,7 +44,7 @@ nop.bin: $(OBJFILES)
 	@echo "Done! Linked the following into nop.bin:" ${OBJFILES}
 
 %.o: %.cpp Makefile
-	@$(CXX_CHECK_SYNTAX) $(args) -save-temps -O0 -MMD -MP -MT "$*.d $*.o"  -c $< -o $@
+	@$(CXX_CHECK_SYNTAX) $(args) -save-temps -O3 -MMD -MP -MT "$*.d $*.o"  -c $< -o $@
 	@echo "Compiled" $<
 
 floppy:

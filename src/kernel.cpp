@@ -55,14 +55,17 @@ namespace text_mode {
     return 0; /// \retval 0 Success
   }
 
-  int puts(const tacospp::kernel::string::String *string,
-             unsigned short int line, unsigned short int column) {
-    for(size_t i = 0; i < string->length; i++) {
-      put_char(string->string[i],line, static_cast<unsigned short int>(i + column));
-    }
-    return 0;
-  }
+  // int puts(const tacospp::kernel::string::String *string,
+  //            unsigned short int line, unsigned short int column) {
+  //   for(size_t i = 0; i < string->length; i++) {
+  //     put_char(string->string[i],line, static_cast<unsigned short int>(i + column));
+  //   }
+  //   return 0;
+  // }
 
+  /// @todo Figure out some way to get rid of this instance of pass by
+  /// reference, but we have to do it right now to comply with the C++
+  /// standard.
   int puts(const tacospp::kernel::string::String &string,
              unsigned short int line, unsigned short int column) {
     for(size_t i = 0; i < string.length; i++) {
@@ -82,7 +85,7 @@ namespace text_mode {
     }
   }
   int put_hex(unsigned int number, unsigned short int line, unsigned short int column) {
-    /// @todo Needs to be made 64bit compatable.
+    /// @todo Needs to be made 64bit compatible.
     /// mask needs to be changed depending on the target.
     for(unsigned int mask = 0xF0000000, shift = 28;
         mask > 0;
