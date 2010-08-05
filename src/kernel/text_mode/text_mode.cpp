@@ -1,6 +1,11 @@
 #include "text_mode.h"
 
 namespace kernel {
+  /** Initial bootup text mode manipulation.
+
+      This covers the graphics, and printing to the primitive console that
+      we get after the kernel gets control from the bootloader.
+  */
   namespace text_mode {
     /// Address to the start of videoram
     const unsigned int VIDEORAM = 0xb8000;
