@@ -8,7 +8,7 @@
 ;; Version:
 ;; Last-Updated:
 ;;           By:
-;;     Update #: 3
+;;     Update #: 5
 ;; URL:
 ;; Keywords:
 ;; Compatibility:
@@ -52,7 +52,7 @@
   (lambda () (interactive)
     "Compile and test nos in qemu."
     (start-process "make-and-test-nos" nil "make"
-                   "-C" "~/cpp/os" "all" "doxygen" "qemu")))
+                   "-C" "~/cpp/os" "LD=i686-pc-linux-gnu-ld" "all" "doxygen" "qemu")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; nop.el ends here
