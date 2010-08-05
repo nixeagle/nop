@@ -23,7 +23,20 @@ namespace text_mode {
 
   int put_hex(unsigned int number,unsigned short int line, unsigned short int column);
   char hex2char(unsigned int hex_number);
+
+  /** Clear a line on the console.
+
+      \param[in] line number to clear, should be a value from 0 to
+      \ref LINES - 1.
+
+      \post characters on \a line are cleared.
+  */
   int clear_line (unsigned short int line);
+
+  /** Makes whole console "blank".
+
+      \post Console screen is cleared of all characters.
+  */
   int clear_screen (void);
 }
 

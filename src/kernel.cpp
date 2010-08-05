@@ -19,25 +19,22 @@ namespace text_mode {
     unsigned char *videoram = reinterpret_cast<unsigned char *> (VIDEORAM);
 
     if(line >= LINES || column >= COLUMNS) {
-      return 1;                 // Inputs are too big.
+      /// \retval 1 Input \a line is larger then \ref LINES or
+      /// input \a column is larger then \ref COLUMNS.
+      return 1;
     }
 
     {                           // A character goes in every _other_ byte.
       size_t offset = (COLUMNS << 1) * line + (column << 1);
       videoram[offset] = character;
-      //BUGBUG: Needs to select forground and background colors.
+      /// @todo Needs to select forground and background colors by setting
+      /// the second byte in video ram to something other then 0x07.
       videoram[offset + 1] = 0x07;
     }
-    return 0;
+    return 0; /// \retval 0 Success
   }
 
-  /*! Clear a line on the console.
 
-    \param[in] line number to clear, should be a value from 0 to
-    \ref LINES - 1.
-
-    \post characters on \a line are cleared.
-   */
   int clear_line (unsigned short int line) {
     if (LINES < line) {
       /// \retval 1 Input \a line is larger then \ref LINES
@@ -50,9 +47,7 @@ namespace text_mode {
     }
   }
 
-  /*! Makes whole console "blank".
-    \post Console screen is cleared of all characters.
-   */
+
   int clear_screen () {
     for (unsigned short int line = 0; line < LINES; line++) {
       clear_line(line);
@@ -87,6 +82,8 @@ namespace text_mode {
     }
   }
   int put_hex(unsigned int number, unsigned short int line, unsigned short int column) {
+    /// @todo Needs to be made 64bit compatable.
+    /// mask needs to be changed depending on the target.
     for(unsigned int mask = 0xF0000000, shift = 28;
         mask > 0;
         mask = mask >> 4, column++, shift -= 4) {
