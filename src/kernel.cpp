@@ -7,8 +7,11 @@
     we get after the kernel gets control from the bootloader.
  */
 namespace text_mode {
-  const int VIDEORAM = 0xb8000;
+  /// Address to the start of videoram
+  const unsigned int VIDEORAM = 0xb8000;
+  /// Number of character rows in the console.
   const unsigned short int LINES = 25;
+  /// Number of characters that fit on a \ref LINES.
   const unsigned short int COLUMNS = 80;
 
   inline int put_char (char character, unsigned short int line,
@@ -103,7 +106,7 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
   }
 
   kernel::idt::init(255);
-  text_mode::put_hex(0x1234afeb,6,3);
+  text_mode::put_hex(0x12300feb,6,3);
   text_mode::put_hex((unsigned int)&kernel_end,8,9);
   text_mode::puts(p("Tacospp"), 0, 0);
 
