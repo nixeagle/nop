@@ -7,7 +7,7 @@ extern "C" int kernel_end;
 
 namespace kernel {
   namespace memory {
-    void* kmalloc(size_t size);
+    void* __attribute__((alloc_size(1))) kmalloc(size_t size);
     size_t getAllocatedByteCount(void);
   }
 }
