@@ -65,5 +65,5 @@ grub:
 qemu: grub
 	qemu -cdrom tacospp.iso
 
-doxygen:
+doxygen: all
 	doxygen .doxygenrc

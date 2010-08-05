@@ -1,5 +1,11 @@
 #include "kernel.h"
 #include "kernel/idt/idt.h"
+
+/** Initial bootup text mode manipulation.
+
+    This covers the graphics, and printing to the primitive console that
+    we get after the kernel gets control from the bootloader.
+ */
 namespace text_mode {
   const int VIDEORAM = 0xb8000;
   const unsigned short int LINES = 25;
@@ -22,22 +28,33 @@ namespace text_mode {
     return 0;
   }
 
+  /*! Clear a line on the console.
+
+    \param[in] line number to clear, should be a value from 0 to
+    \ref LINES - 1.
+
+    \post characters on \a line are cleared.
+   */
   int clear_line (unsigned short int line) {
-    if (LINES <= line) {
-      return 1;                 // Inputs are too big.
+    if (LINES < line) {
+      /// \retval 1 Input \a line is larger then \ref LINES
+      return 1;
     } else {
       for(unsigned short int i = 0; i < COLUMNS; i++) {
         put_char(' ', line, i);
       }
-      return 0;
+      return 0; /// \retval 0 Success
     }
   }
 
+  /*! Makes whole console "blank".
+    \post Console screen is cleared of all characters.
+   */
   int clear_screen () {
     for (unsigned short int line = 0; line < LINES; line++) {
       clear_line(line);
     }
-    return 0;
+    return 0; /// \retval 0 Success
   }
 
   int puts(const tacospp::kernel::string::String *string,
@@ -62,9 +79,7 @@ namespace text_mode {
     } else if (0x10 > hex_number) {
         return static_cast<char>(hex_number + 55);
     } else {
-      // Failing a proper conversion, for now return the character 'Z'.  Z
-      // is an invalid hex "number", so seeing it means an error happened
-      // somewhere.
+      /// \retval 'Z' means an unknown error occurred somewhere.
       return 'Z';
     }
   }
