@@ -44,7 +44,7 @@ nop.bin: $(OBJFILES)
 	@echo "Done! Linked the following into nop.bin:" ${OBJFILES}
 
 %.o: %.cpp Makefile
-	@$(CXX_CHECK_SYNTAX) $(args) -save-temps -O3 -MMD -MP -MT "$*.d $*.o"  -c $< -o $@
+	@$(CXX) $(args) -save-temps -O3 -MMD -MP -MT "$*.d $*.o"  -c $< -o $@
 	@echo "Compiled" $<
 
 floppy:
@@ -52,7 +52,7 @@ floppy:
 	cat /boot/grub/stage1 /boot/grub/stage2 pad nop.bin > floppy.img
 
 check-syntax:
-	${CXX} ${args}  -o /dev/null -c ${CHK_SOURCES}
+	${CXX_CHECK_SYNTAX} ${args}  -o /dev/null -c ${CHK_SOURCES}
 
 clean:
 	-@$(RM) $(wildcard $(OBJFILES) $(DEPFILES) $(REGFILES) \
