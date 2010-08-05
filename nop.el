@@ -8,7 +8,7 @@
 ;; Version:
 ;; Last-Updated:
 ;;           By:
-;;     Update #: 5
+;;     Update #: 6
 ;; URL:
 ;; Keywords:
 ;; Compatibility:
@@ -52,7 +52,8 @@
   (lambda () (interactive)
     "Compile and test nos in qemu."
     (start-process "make-and-test-nos" nil "make"
-                   "-C" "~/cpp/os" "LD=i686-pc-linux-gnu-ld" "all" "doxygen" "qemu")))
+                   "-C" "~/cpp/os" "LD=i686-pc-linux-gnu-ld"
+                   "CXX=/usr/x86_64-pc-linux-gnu/i686-pc-linux-gnu/gcc-bin/4.5.0/i686-pc-linux-gnu-gcc" "all" "doxygen" "qemu")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; nop.el ends here

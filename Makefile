@@ -18,7 +18,9 @@ includes := -I./src
 args := ${warnings} ${fthings} ${osdevops} ${experimentalops} \
 	 -Wwrite-strings ${includes} ${cxx_selection} -m32
 
-CXX := /usr/x86_64-pc-linux-gnu/i686-pc-linux-gnu/gcc-bin/4.5.0/i686-pc-linux-gnu-gcc
+CXX ?= g++
+CXX_CHECK_SYNTAX := /usr/x86_64-pc-linux-gnu/i686-pc-linux-gnu/gcc-bin/4.5.0/i686-pc-linux-gnu-gcc
+
 # CXXOPS
 # LDFLAGS
 # non source files.
@@ -34,37 +36,37 @@ DEPFILES := $(patsubst %.cpp,%.d,$(SRCFILES))
 # declare that these rules don't exist elsewhere.
 .PHONY: all clean dist test testdrivers todolist
 
-all: tacospp.bin
+all: nop.bin
 
-tacospp.bin: $(OBJFILES)
+nop.bin: $(OBJFILES)
 	@nasm -f elf -o loader.o loader.s
-	@${LD} ${LDFLAGS} -melf_i386 -nostdlib -T linker.ld -o tacospp.bin loader.o ${OBJFILES}
-	@echo "Done! Linked the following into tacospp.bin:" ${OBJFILES}
+	@${LD} ${LDFLAGS} -melf_i386 -nostdlib -T linker.ld -o nop.bin loader.o ${OBJFILES}
+	@echo "Done! Linked the following into nop.bin:" ${OBJFILES}
 
 %.o: %.cpp Makefile
-	@$(CXX) $(args) -save-temps -O0 -MMD -MP -MT "$*.d $*.o"  -c $< -o $@
+	@$(CXX_CHECK_SYNTAX) $(args) -save-temps -O0 -MMD -MP -MT "$*.d $*.o"  -c $< -o $@
 	@echo "Compiled" $<
 
 floppy:
 	dd if=/dev/zero of=pad bs=1 count=750
-	cat /boot/grub/stage1 /boot/grub/stage2 pad tacospp.bin > floppy.img
+	cat /boot/grub/stage1 /boot/grub/stage2 pad nop.bin > floppy.img
 
 check-syntax:
 	${CXX} ${args}  -o /dev/null -c ${CHK_SOURCES}
 
 clean:
 	-@$(RM) $(wildcard $(OBJFILES) $(DEPFILES) $(REGFILES) \
-		tacospp.bin tacospp.iso)
+		nop.bin nop.iso)
 
 grub:
 	@mkdir -p isofiles/boot/grub
 	@cp /boot/grub/stage2_eltorito  isofiles/boot/grub/
-	@cp tacospp.bin isofiles/boot
+	@cp nop.bin isofiles/boot
 
-	@genisoimage -R -b boot/grub/stage2_eltorito -no-emul-boot -boot-load-size 4                 -boot-info-table --input-charset utf-8 -o tacospp.iso isofiles
+	@genisoimage -R -b boot/grub/stage2_eltorito -no-emul-boot -boot-load-size 4                 -boot-info-table --input-charset utf-8 -o nop.iso isofiles
 
 qemu: grub
-	qemu -cdrom tacospp.iso
+	qemu -cdrom nop.iso
 
 doxygen: all
 	doxygen .doxygenrc
