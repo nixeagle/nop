@@ -19,7 +19,8 @@ namespace kernel {
         \post \li \ref allocated_byte_count is incremented by \a size.
         \post \li System has allocated dynamic memory memory.
      */
-    void* __attribute__((alloc_size(1),fastcall,malloc)) kmalloc(size_t size);
+    void* kmalloc(size_t size)
+      __attribute__((alloc_size(1),fastcall,malloc,warn_unused_result));
     size_t getAllocatedByteCount(void);
   }
 }
