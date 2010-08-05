@@ -17,7 +17,7 @@ namespace kernel {
     };
 
     const uint16_t kIDT_ENTRY_COUNT = 255;
-    class __attribute__ ((__packed__)) Idtd {
+    class Idtd {
       uint16_t limit;
       uint32_t base;
     public:
