@@ -33,6 +33,7 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
   GdtDescriptor descs = GdtDescriptor(2);
   puts_allocated_memory();
   descs.getBase()[1].setLimit(1048575);
+  descs.getBase()[1].setBase(0xEEEEEEEE);
 
   descs.getBase()[0].inspect(4);
   descs.getBase()[1].inspect(5);

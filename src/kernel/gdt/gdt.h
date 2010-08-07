@@ -64,7 +64,11 @@ namespace kernel {
       int setLimit(size_t limit);
       int setBase(size_t base);
       /// @note Osdev refers to this as the "type".
-      int setAccessByte(uint8_t type);
+      int setAccessByte(uint8_t type) {
+        access_byte = type;
+        return 0; /// \suc0
+      }
+      int setFlags(uint8_t flags);
 
       /// "inspect" by printing information about this entry to console.
       int inspect(uint8_t line);
