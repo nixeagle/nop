@@ -59,10 +59,15 @@ namespace kernel {
       uint8_t flags_and_limit;
       uint8_t base3;
 
+    public:
+
       int setLimit(size_t limit);
       int setBase(size_t base);
       /// @note Osdev refers to this as the "type".
       int setAccessByte(uint8_t type);
+
+      /// "inspect" by printing information about this entry to console.
+      int inspect(uint8_t line);
     };
 
     /** GDT description structure.
