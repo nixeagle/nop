@@ -134,6 +134,8 @@ namespace kernel {
 
       int inspect(void);
     };
+
+    /** Initialize GDT in a flat memory model. */
     GdtDescriptor init(void);
   }
 }
