@@ -85,7 +85,7 @@ namespace kernel {
       int setBase(size_t base);
       /// @note Osdev refers to this as the "type".
       int setAccessByte(uint8_t type) {
-        access_byte = type;
+        access_byte = type | 0b00010000;
         return 0; /// \suc0
       }
       int setFlags(uint8_t flags);
@@ -124,9 +124,16 @@ namespace kernel {
       inline GdtEntry* getBase(void) { return base; }
       /// \retval the \ref limit
       inline uint16_t getLimit(void) { return limit; }
+
+      inline uint16_t getEntryCount(void) {
+        return static_cast<uint16_t>(getLimit() + 1) / sizeof(GdtEntry);
+      }
       GdtDescriptor(uint16_t entry_count)
         : limit(static_cast<uint16_t>((entry_count * sizeof(GdtEntry)) - 1))
         , base(reinterpret_cast<GdtEntry*>(kernel::memory::kmalloc(limit + 1))) {}
+
+      int inspect(void);
     };
+    GdtDescriptor init(void);
   }
 }

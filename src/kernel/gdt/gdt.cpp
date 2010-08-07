@@ -7,7 +7,7 @@ namespace kernel {
         return 1; /// \retval 1 \a limit is larger then 2^20.
       } else {
         this->limit = limit & 0xFFFF;
-        flags_and_limit = flags_and_limit | static_cast<uint8_t>(limit >> 16);
+        flags_and_limit |= static_cast<uint8_t>(limit >> 16);
         return 0; /// \suc0
       }
     }

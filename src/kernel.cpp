@@ -21,33 +21,18 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
     puts(p("ERROR: Bootloader magic does not match."), 15, 20);
     put_hex(magic,16,22);
   }
-
   //  kernel::idt::init(255);
-
 
   puts("nop", 0, 0);
   puts_allocated_memory();
 
+  GdtDescriptor descs = kernel::gdt::init();
 
-
-  GdtDescriptor descs = GdtDescriptor(2);
+  descs.inspect();
   puts_allocated_memory();
-  descs.getBase()[1].setLimit(1048575);
-  descs.getBase()[1].setBase(0xEEEEEEEE);
 
-  descs.getBase()[0].inspect(4);
-  descs.getBase()[1].inspect(5);
-  asm("lgdt %0": : "m" (descs));
-
-  puts("------ GDT descriptor data ------", 1, 0);
-  puts("Base:", 2, 0);
-  put_hex(reinterpret_cast<unsigned int>(descs.getBase()), 2, 6);
-  puts("Limit:", 2, 15);
-  put_hex(descs.getLimit(), 2, 22);
-
-
-  //  kernel::inlasm::lgdt((kernel::gdt::GdtDescriptor*)1);
-  for(unsigned int i = 0;; i++) {
+  // Busy loop.
+  for(unsigned int i = 0;i < 0x1ff; i++) {
     put_hex(i, 10,30);
     for(volatile unsigned int i = 0; i < 10000000;) {
       i++;
