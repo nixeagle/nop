@@ -6,7 +6,7 @@ namespace kernel {
     static IdtGate idt_gates[256];
 
     static inline void loadIdt(const Idtd idtd) {
-      asm volatile ("lidt %0" : : "m" (idtd));
+      //      asm volatile ("lidt %0" : : "m" (idtd));
     }
 
     int init(uint8_t entry_count) {

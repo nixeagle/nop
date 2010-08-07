@@ -91,8 +91,8 @@ namespace kernel {
       /// \retval the \ref limit
       inline uint16_t getLimit(void) { return limit; }
       GdtDescriptor(uint16_t entry_count)
-        : limit(static_cast<uint16_t>((entry_count * /* sizeof(GdtEntry) */ 8) - 1))
-        , base(reinterpret_cast<GdtEntry*>(kernel::memory::kmalloc(limit + 1))) {}
+        : limit(static_cast<uint16_t>((entry_count * sizeof(GdtEntry)) - 1))
+        , base(reinterpret_cast<GdtEntry*>(kernel::memory::kmalloc(sizeof(GdtEntry) * (limit + 1)))) {}
     };
   }
 }
