@@ -37,6 +37,7 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
 
   kernel::text_mode::put_hex(reinterpret_cast<unsigned int>(&kernel_end), 2, 42);
   kernel::text_mode::put_hex(kernel::memory::getAllocatedByteCount(), 3, 60);
+  asm("lgdt %0": : "m" (descs));
 
   kernel::gdt::GdtDescriptor descs2 =
     kernel::gdt::GdtDescriptor(3);
