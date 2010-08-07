@@ -20,8 +20,8 @@ namespace kernel {
         is. This is either 1 byte or 4KiB.
      */
     class __attribute__((packed)) GdtEntry {
-      uint16_t base;
       uint16_t limit;
+      uint16_t base;
       uint8_t base2;
 
       /** Indicates permissons information for this entry.
@@ -58,6 +58,11 @@ namespace kernel {
        */
       uint8_t flags_and_limit;
       uint8_t base3;
+
+      int setLimit(size_t limit);
+      int setBase(size_t base);
+      /// @note Osdev refers to this as the "type".
+      int setAccessByte(uint8_t type);
     };
 
     /** GDT description structure.
@@ -92,7 +97,7 @@ namespace kernel {
       inline uint16_t getLimit(void) { return limit; }
       GdtDescriptor(uint16_t entry_count)
         : limit(static_cast<uint16_t>((entry_count * sizeof(GdtEntry)) - 1))
-        , base(reinterpret_cast<GdtEntry*>(limit + 1)) {}
+        , base(reinterpret_cast<GdtEntry*>(kernel::memory::kmalloc(limit + 1))) {}
     };
   }
 }
