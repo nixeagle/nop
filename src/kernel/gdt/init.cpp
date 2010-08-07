@@ -26,9 +26,10 @@ namespace kernel {
 
       asm("lgdt %0": : "m" (descs));
 
-      /// \retval GdtDescriptor is a fully loaded and initialized
-      /// descriptor. The return result can be used for printing
-      /// information about the gdt out for debugging.
+      /** \retval GdtDescriptor is a fully loaded and initialized
+          descriptor. The return result can be used for printing
+          information about the gdt out for debugging.
+      */
       return descs;
     }
   }

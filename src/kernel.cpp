@@ -1,6 +1,7 @@
 #include "kernel.h"
 #include "kernel/text_mode/text_mode.h"
 #include "kernel/gdt/gdt.h"
+#include "kernel/panic/kpanic.h"
 
 using kernel::text_mode::put_hex;
 using kernel::text_mode::puts;
@@ -41,6 +42,7 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
   descs.inspect();
   puts_allocated_memory();
 
+  kernel::panic::kpanic("crap!", "ooh!", __PRETTY_FUNCTION__, __LINE__, __FILE__, __TIMESTAMP__);
   busy_loop();
   return;
 }
