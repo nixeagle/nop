@@ -72,7 +72,7 @@ grub:
 	@genisoimage -R -b boot/grub/stage2_eltorito -no-emul-boot -boot-load-size 4                 -boot-info-table --input-charset utf-8 -o nop.iso isofiles
 
 qemu: grub
-	qemu -cdrom nop.iso
+	qemu -monitor stdio -cdrom nop.iso
 
 doxygen: all
 	doxygen .doxygenrc
