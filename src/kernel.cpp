@@ -30,8 +30,12 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
 
 
 
-  GdtDescriptor descs = GdtDescriptor(1);
+  GdtDescriptor descs = GdtDescriptor(2);
   puts_allocated_memory();
+  descs.getBase()[1].setLimit(1048575);
+
+  descs.getBase()[0].inspect(4);
+  descs.getBase()[1].inspect(5);
   asm("lgdt %0": : "m" (descs));
 
   puts("------ GDT descriptor data ------", 1, 0);
@@ -43,8 +47,8 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
 
   //  kernel::inlasm::lgdt((kernel::gdt::GdtDescriptor*)1);
   for(unsigned int i = 0;; i++) {
-    put_hex(i, 5,30);
-    for(unsigned int i = 0; i < 10000000;) {
+    put_hex(i, 10,30);
+    for(volatile unsigned int i = 0; i < 10000000;) {
       i++;
     }
   }
