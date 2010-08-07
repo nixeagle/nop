@@ -18,3 +18,6 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic);
 // Mostly "internal" functions just to help with debugging
 /// Put current allocated memory to upper right corner of console.
 void puts_allocated_memory(void);
+
+/// Loop and print out current point in loop to console.
+void busy_loop();
