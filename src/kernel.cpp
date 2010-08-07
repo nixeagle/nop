@@ -39,10 +39,11 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
 
   GdtDescriptor descs = kernel::gdt::init();
 
-  descs.inspect();
   puts_allocated_memory();
 
-  kernel::panic::kpanic("crap!", "ooh!", __PRETTY_FUNCTION__, __LINE__, __FILE__, __TIMESTAMP__);
+  KPANIC(&descs, "GDT issue! Not!");
+  KPANIC("Testing", "Test panic!");
+
   busy_loop();
   return;
 }

@@ -132,10 +132,18 @@ namespace kernel {
         : limit(static_cast<uint16_t>((entry_count * sizeof(GdtEntry)) - 1))
         , base(reinterpret_cast<GdtEntry*>(kernel::memory::kmalloc(limit + 1))) {}
 
-      int inspect(void);
+      int inspect(uint8_t line);
     };
 
     /** Initialize GDT in a flat memory model. */
     GdtDescriptor init(void);
+  }
+}
+
+namespace kernel {
+  namespace panic {
+    void kpanic (kernel::gdt::GdtDescriptor* gdtdescriptor,
+                 const char* message, const char* function,
+                 int line, const char* file, const char* timestamp);
   }
 }

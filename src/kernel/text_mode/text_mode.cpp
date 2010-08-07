@@ -14,8 +14,8 @@ namespace kernel {
     /// Number of characters that fit on a \ref LINES.
     const unsigned short int COLUMNS = 80;
 
-    inline int put_char (char character, unsigned short int line,
-                         unsigned short int column) {
+    inline int put_char (char character, unsigned int line,
+                         unsigned int column) {
       unsigned char *videoram = reinterpret_cast<unsigned char *> (VIDEORAM);
 
       if(line >= LINES || column >= COLUMNS) {
@@ -67,17 +67,17 @@ namespace kernel {
     /// reference, but we have to do it right now to comply with the C++
     /// standard.
     int puts(const tacospp::kernel::string::String &string,
-             unsigned short int line, unsigned short int column) {
+             unsigned int line, unsigned int column) {
       for(size_t i = 0; i < string.length; i++) {
-        put_char(string.string[i],line, static_cast<unsigned short int>(i + column));
+        put_char(string.string[i],line, i + column);
       }
       return 0;
     }
 
-    int puts(const char* string, unsigned short int line,
-             unsigned short int column) {
+    int puts(const char* string, unsigned int line,
+             unsigned int column) {
       for(size_t i = 0; string[i] != '\0'; i++) {
-        put_char(string[i], line, static_cast<unsigned short int>(i + column));
+        put_char(string[i], line, i + column);
       }
       return 0;
     }
@@ -91,7 +91,7 @@ namespace kernel {
         return 'Z';
       }
     }
-    int put_hex(unsigned int number, unsigned short int line, unsigned short int column) {
+    int put_hex(unsigned int number, unsigned int line, unsigned int column) {
       /// @todo Needs to be made 64bit compatible.
       /// mask needs to be changed depending on the target.
       for(unsigned int mask = 0xF0000000, shift = 28;

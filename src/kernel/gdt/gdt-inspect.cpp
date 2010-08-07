@@ -22,17 +22,17 @@ namespace kernel {
       return 0;
     }
 
-    int GdtDescriptor::inspect(void) {
-      puts("------ GDT descriptor data ------", 1, 0);
-      puts("Base:", 2, 0);
-      put_hex(reinterpret_cast<unsigned int>(getBase()), 2, 6);
-      puts("Limit:", 2, 15);
-      put_hex(getLimit(), 2, 22);
-      puts("Entry Count:", 2, 32);
-      put_hex(getEntryCount(), 2, 45);
+    int GdtDescriptor::inspect(uint8_t line) {
+      puts("------ GDT descriptor data ------", line, 0);
+      puts("Base:", line+1, 0);
+      put_hex(reinterpret_cast<unsigned int>(getBase()), line+1, 6);
+      puts("Limit:", line+1, 15);
+      put_hex(getLimit(), line+1, 22);
+      puts("Entry Count:", line+1, 32);
+      put_hex(getEntryCount(), line+1, 45);
 
       for(int i = 0; i < getEntryCount(); i++) {
-        getBase()[i].inspect(static_cast<uint8_t>(i+3));
+        getBase()[i].inspect(static_cast<uint8_t>(i+3+line));
       }
       return 0;
     }

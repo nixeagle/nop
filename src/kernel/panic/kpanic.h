@@ -13,3 +13,5 @@ namespace kernel {
                  int line, const char* file, const char* timestamp);
   }
 }
+
+#define KPANIC(info, message) kernel::panic::kpanic(info, message, __PRETTY_FUNCTION__, __LINE__, __FILE__, __TIMESTAMP__)
