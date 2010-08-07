@@ -1,12 +1,10 @@
 #include "memory.h"
-
+#include "types.h"
 namespace kernel {
   namespace memory {
     size_t allocated_byte_count = 0;
     void* kmalloc(size_t size) {
-      /// @bug multiplying \ref allocated_byte_count by 2 "works", but
-      /// there is no clear reason why this is working.
-      void* pointer = reinterpret_cast<void*>(&kernel_end + 2 * allocated_byte_count);
+      void* pointer = reinterpret_cast<void*>(reinterpret_cast<size_t>(&kernel_end) + allocated_byte_count);
       allocated_byte_count += size;
       return pointer;
     }
