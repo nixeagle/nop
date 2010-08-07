@@ -5,6 +5,27 @@
 namespace kernel {
   namespace gdt {
 
+    /** Options for \ref GdtEntry#access_byte.
+
+     All options are independent except for the \a Ring0 to \a Ring3.
+    */
+    enum AccessOptions {
+      Read__Write           = 0x02,
+      Direction__Conforming = 0x04,
+      Executable            = 0x08,
+      Ring0                 = 0b00000000,
+      Ring1                 = 0b00100000,
+      Ring2                 = 0b01000000,
+      Ring3                 = 0b01100000,
+      Present               = 0x80,
+    };
+
+    /** Options for \ref flags_and_limit "extra flags". */
+    enum FlagOptions {
+      Granularity = 0x80,
+      Size = 0x40,
+    };
+
     /** Entry in the GDT
 
         This is a very strange structure due to how x86 was developed. The
@@ -33,17 +54,17 @@ namespace kernel {
           \li [bit 4] is always set to \b 1.
           \li [bit 3] \b Executable - \b 1 if code in this segment is
           executable otherwise \b 0.
-          \li [bit 3] \b Direction \b bit or \b Conforming \b Bit - On \e
+          \li [bit 2] \b Direction \b bit or \b Conforming \b Bit - On \e
           data \e selectors it indicates the direction the segment "grows"
           with \b 0 meaning the segment grows up and \b 1 meaning the
           segment grows down. On \e code \e selectors \b 1 indicates that
           code can be executed by an equal or lower priviledge level while
           \b 0 means can code can only be executed from the ring set in \e
           Priviledge.
-          \li [bit 2] \b Read/Write - On \e code \e selectors \b 1 means
+          \li [bit 1] \b Read/Write - On \e code \e selectors \b 1 means
           the segment can be read from. For \e data \e segment \b 1 means
           the segment can be written to.
-          \li [bit 1] \b Accessed - Should be set to \b 0, the CPU will
+          \li [bit 0] \b Accessed - Should be set to \b 0, the CPU will
           set to \b 1 when the segment is accessed.
        */
       uint8_t access_byte;
@@ -60,7 +81,6 @@ namespace kernel {
       uint8_t base3;
 
     public:
-
       int setLimit(size_t limit);
       int setBase(size_t base);
       /// @note Osdev refers to this as the "type".
