@@ -74,6 +74,13 @@ namespace kernel {
       return 0;
     }
 
+    int puts(const char* string, unsigned short int line,
+             unsigned short int column) {
+      for(size_t i = 0; string[i] != '\0'; i++) {
+        put_char(string[i], line, static_cast<unsigned short int>(i + column));
+      }
+      return 0;
+    }
     char hex2char(unsigned int hex_number) {
       if (0xa > hex_number) {
         return static_cast<char>(hex_number | 0x30);

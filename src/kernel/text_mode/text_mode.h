@@ -9,6 +9,14 @@ namespace kernel {
     int puts(const tacospp::kernel::string::String &string,
              unsigned short int line, unsigned short int column);
 
+    /** Put a C string to console.
+
+        \note This exists only to make putting literal strings to the
+        console easier as postfix literal prefixes are not yet in gcc
+        (specified in draft C++0x standard).
+     */
+    int puts(const char* string, unsigned short int line,
+             unsigned short int column);
     int put_hex(unsigned int number,unsigned short int line, unsigned short int column);
     char hex2char(unsigned int hex_number);
 
