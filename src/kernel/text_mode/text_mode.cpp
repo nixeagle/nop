@@ -1,4 +1,5 @@
 #include "text_mode.h"
+#include "kernel/panic/kpanic.h"
 
 namespace kernel {
   /** Initial bootup text mode manipulation.
@@ -19,12 +20,9 @@ namespace kernel {
       unsigned char *videoram = reinterpret_cast<unsigned char *> (VIDEORAM);
 
       if(line >= LINES || column >= COLUMNS) {
-        /// \retval 1 Input \a line is larger then \ref LINES or
-        /// input \a column is larger then \ref COLUMNS.
-        return 1;
-      }
-
-      {                           // A character goes in every _other_ byte.
+        KPANIC("Attempt to place a char on a non existing column or row."
+               , "Out of bounds");
+      } else {                  // A character goes in every _other_ byte.
         size_t offset = (COLUMNS << 1) * line + (column << 1);
         videoram[offset] = character;
         /// @todo Needs to select forground and background colors by setting
@@ -37,8 +35,8 @@ namespace kernel {
 
     int clear_line (unsigned short int line) {
       if (LINES < line) {
-        /// \retval 1 Input \a line is larger then \ref LINES
-        return 1;
+        KPANIC("Attempt to clear a line that does not eixist, eg larger then LINES."
+               , "Clear line");
       } else {
         for(unsigned short int i = 0; i < COLUMNS; i++) {
           put_char(' ', line, i);
@@ -87,8 +85,8 @@ namespace kernel {
       } else if (0x10 > hex_number) {
         return static_cast<char>(hex_number + 55);
       } else {
-        /// \retval 'Z' means an unknown error occurred somewhere.
-        return 'Z';
+        KPANIC("Given hex number was greater then 0xa, so can't fit in base 16.",
+               "Converting a hex number to a char failed.");
       }
     }
     int put_hex(unsigned int number, unsigned int line, unsigned int column) {
