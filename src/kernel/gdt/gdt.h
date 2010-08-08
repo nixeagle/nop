@@ -142,7 +142,11 @@ namespace kernel {
 
 namespace kernel {
   namespace panic {
-    void kpanic (kernel::gdt::GdtDescriptor* gdtdescriptor,
+    void kpanic (kernel::gdt::GdtDescriptor* gdt_descriptor,
+                 const char* message, const char* function,
+                 int line, const char* file, const char* timestamp);
+
+    void kpanic (kernel::gdt::GdtEntry* gdt_entry,
                  const char* message, const char* function,
                  int line, const char* file, const char* timestamp);
   }
