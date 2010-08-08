@@ -22,12 +22,31 @@ namespace kernel {
     private:
       uint16_t limit;
       T* base;
+
+    protected:
+      /** Set number of descriptor entries.
+
+          \a entry_count is directly translated to a value suitable for
+          \ref limit.
+
+          \param[in] entry_count is an integer in the range  32 ... 255.
+
+          \internal For x86 (32bit) descriptors are 8 bytes in size but
+          this may vary for 64bit or 16 bit x86oid arches.
+      */
+      uint16_t setEntryCount(uint8_t entry_count) {
+        limit = static_cast<uint16_t>(entry_count * sizeof(T) - 1);
+        return 0; /// \suc0
+      }
+
+
     public:
       inline T* getBase(void) { return base; }
       inline uint16_t getLimit(void) {return limit; }
       inline uint16_t entryCount(void) {
         return static_cast<uint16_t>(getLimit() + 1) / sizeof(T);
       }
+
       BaseDescriptor(uint16_t entry_count)
         : limit(static_cast<uint16_t>((entry_count * sizeof(T)) - 1))
         , base(reinterpret_cast<T*>(kernel::memory::kmalloc(limit + 1))) {}
