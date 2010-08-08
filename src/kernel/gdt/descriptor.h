@@ -5,22 +5,21 @@
 
 namespace kernel {
   namespace gdt {
-    /** Generic descriptor template */
-    template <class T, class R>
-    class mypair {
-      T value;
-      R value2;
-    };
 
-    // class BaseEntry {
-    //   uint32_t a;
-    //   uint32_t b;
-    // };
+    /** Template for descriptor entry tables.
 
+        This will be used for gdt, idt, and possibly others that follow
+        the pattern.
+     */
     template <class T>
     class BaseDescriptor {
     private:
+      /** Length of descriptor table in bytes
+
+          255 is the max permissable descriptor entries.
+      */
       uint16_t limit;
+      /// Pointer to the actual table of entries.
       T* base;
 
     protected:
@@ -42,16 +41,28 @@ namespace kernel {
 
     public:
       inline T* getBase(void) { return base; }
-      inline uint16_t getLimit(void) {return limit; }
+      inline uint16_t getLimit(void) { return limit; }
+
+      /// Number of entries in descriptor table.
       inline uint16_t entryCount(void) {
         return static_cast<uint16_t>(getLimit() + 1) / sizeof(T);
       }
 
+      /** Construct and allocate a base descriptor.
+
+          \param entry_count[in] Number of entries to create in the
+          table. This \e must be 256 or less and can \e never be 0.
+       */
       BaseDescriptor(uint16_t entry_count)
         : limit(static_cast<uint16_t>((entry_count * sizeof(T)) - 1))
         , base(reinterpret_cast<T*>(kernel::memory::kmalloc(limit + 1))) {}
-      //      BaseEntry* base;
 
+
+      /** Print out the descriptor table and some entries to conosole.
+
+          \param line[in] is the line number to start printing inspect
+          information out to.
+       */
       void inspect(uint8_t line) {
         using kernel::text_mode::puts;
         using kernel::text_mode::put_hex;
