@@ -44,7 +44,9 @@ namespace kernel {
         puts("Entry Count:", line+1, 32);
         put_hex(entryCount(), line+1, 45);
 
-        for(int i = 0; i < entryCount(); i++) {
+        /// @todo need constant \ref kernel::text_mode::LINES in header
+        /// file, currently we just hardcode the constant.
+        for(int i = 0; i < entryCount() && i < 25 - line - 4; i++) {
           getBase()[i].inspect(static_cast<uint8_t>(i+3+line));
         }
 

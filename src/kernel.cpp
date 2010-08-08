@@ -43,7 +43,7 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
   puts_allocated_memory();
 
   BaseDescriptor<kernel::idt::IdtEntry> idt = kernel::idt::init(256);
-
+  idt.inspect(3);
 
   puts_allocated_memory();
   busy_loop();

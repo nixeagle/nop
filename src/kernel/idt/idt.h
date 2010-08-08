@@ -20,6 +20,7 @@ namespace kernel {
       uint8_t zero;
       uint8_t access_byte;
       uint16_t base_high;
+    public:
       void setBase(size_t base) {
         base_low = base & 0xFFFF;
         base_high = static_cast<uint16_t>(base >> 16);
@@ -32,6 +33,7 @@ namespace kernel {
       void setAccessByte(uint8_t access_byte) {
         this->access_byte = access_byte;
       }
+      void inspect(size_t line_number);
     } __attribute__((packed));
 
     class IdtDescriptor {
