@@ -1,5 +1,6 @@
 #include "gdt.h"
 #include "descriptor.h"
+#include "kernel/asm/lgdt.h"
 namespace kernel {
   namespace gdt {
 
@@ -24,7 +25,7 @@ namespace kernel {
       descs.getBase()[2].setFlags(FlagOptions::Granularity
                                   | FlagOptions::Size);
 
-      asm("lgdt %0": : "m" (descs));
+      kernel::inlasm::lgdt(&descs);
 
       /** \retval GdtDescriptor is a fully loaded and initialized
           descriptor. The return result can be used for printing
