@@ -4,7 +4,7 @@
 namespace tacospp {
   namespace kernel {
     namespace string {
-      size_t strlen(const char* string);
+      size_t strlen(const char* string) __attribute__((fastcall));
       class String {
       public:
         String(const char* string)
@@ -13,6 +13,7 @@ namespace tacospp {
         {
 
         }
+        /// @todo Make accessor function for the length.
         size_t length;
         const char* string;
       };

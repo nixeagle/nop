@@ -1,44 +1,54 @@
 #include "types.h"
-
+#include "kernel/memory/memory.h"
 namespace kernel {
   namespace idt {
 
-    int init(uint8_t entry_count);
-
-
-    class IdtGate {
-      uint16_t offset1;
-      uint16_t selector; // Code segment selector. (GDT or LDT)
-      uint8_t zero;
-      uint8_t type_attributes;
-      uint16_t offset2;
-
-
+    enum AccessOptions {
+      Ring0                 = 0b00000000,
+      Ring1                 = 0b00100000,
+      Ring2                 = 0b01000000,
+      Ring3                 = 0b01100000,
+      Present               = 0x80,
     };
 
-    /** Default number of descriptors to put in interrupt table.
-
-        This value is placed in the
-        \ref Idtd "Interrupt Descriptor Table descriptor".
-
-        \note 255 is the absolute maximum number of idt entries
-        allowed.
-     */
-    const uint16_t kIDT_ENTRY_COUNT = 255;
-    class Idtd {
-      /// Length of idt array in \e bytes.
-      uint16_t limit;
-      uint32_t base;
-    public:
-      Idtd(void)
-        : limit(static_cast<uint16_t>(kIDT_ENTRY_COUNT * sizeof(IdtGate)))
-        , base(0x0) {}
-
-      /// @todo Check base's bounds against kernel boundery if possible.
-      int setBase(uint32_t base) {
-        this->base = base;
-        return 0; /// \suc0
+    //    int init(uint8_t entry_count);
+    class IdtEntry {
+      uint16_t base_low;
+      uint16_t selector; // Code segment selector. (GDT or LDT)
+      uint8_t zero;
+      uint8_t access_byte;
+      uint16_t base_high;
+      void setBase(size_t base) {
+        base_low = base & 0xFFFF;
+        base_high = static_cast<uint16_t>(base >> 16);
       }
+
+      void setSelector(uint16_t selector) {
+        this->selector = selector;
+      }
+
+      void setAccessByte(uint8_t access_byte) {
+        this->access_byte = access_byte;
+      }
+    } __attribute__((packed));
+
+    class IdtDescriptor {
+      /// Length of idt array in \e bytes.
+      /// 255 is the max permissable idt entries.
+      uint16_t limit;
+      IdtEntry* base;
+    public:
+      inline IdtEntry* getBase(void) {return base; }
+      IdtDescriptor(uint8_t entry_count)
+        /// @bug Possibly set to 0 if gcc misses out on function setting.
+        : limit(setEntryCount(entry_count))
+        , base(reinterpret_cast<IdtEntry*>(kernel::memory::kmalloc(limit + 1))) {}
+
+      // /// @todo Check base's bounds against kernel boundery if possible.
+      // int setBase(uint32_t base) {
+      //   this->base = base;
+      //   return 0; /// \suc0
+      // }
 
       /** Set number of descriptor entries.
 
@@ -50,12 +60,20 @@ namespace kernel {
           \internal For x86 (32bit) descriptors are 8 bytes in size but
           this may vary for 64bit or 16 bit x86oid arches.
        */
-      int setEntryCount(uint8_t entry_count) {
-        limit = (static_cast<uint16_t>(entry_count * sizeof(IdtGate)));
+      uint16_t setEntryCount(uint8_t entry_count) {
+        limit = static_cast<uint16_t>(entry_count * sizeof(IdtEntry) - 1);
         return 0; /// \suc0
       }
     };
 
+    /** Compute \e limit field for a gdt/idt/<etc> descriptor.
+
+        \param limit[in] is number of entries in descriptor table. Valid
+        range is [1 ... 255]. No descriptor table is valid with no
+        entries, and no entries really does not make sense for any of
+        these.
+     */
+    uint16_t computeLimit(uint8_t limit);
     /** Load interrupt descriptor table.
 
         \pre \a idtd is fully initialized with both \ref Idtd::limit
@@ -63,6 +81,6 @@ namespace kernel {
 
         \post Interrupt descriptor table loaded by the CPU.
      */
-    static inline void loadIdt (const Idtd idtd);
+    //    static inline void loadIdt (const IdtDescriptor idtd);
   }
 }

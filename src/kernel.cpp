@@ -1,6 +1,7 @@
 #include "kernel.h"
-#include "kernel/text_mode/text_mode.h"
+//#include "kernel/text_mode/text_mode.h"
 #include "kernel/gdt/gdt.h"
+#include "kernel/gdt/descriptor.h"
 
 using kernel::text_mode::put_hex;
 using kernel::text_mode::puts;
@@ -23,12 +24,13 @@ void busy_loop() {
 }
 
 extern "C" void kmain(struct mb_header *header, unsigned int magic) {
-  using kernel::gdt::GdtDescriptor;
+  using kernel::gdt::BaseDescriptor;
+  using kernel::gdt::GdtEntry;
   // Setup memory:
   kernel::text_mode::clear_screen();
 
   if(0x2BADB002 != magic) {
-    puts(p("ERROR: Bootloader magic does not match."), 15, 20);
+    puts("ERROR: Bootloader magic does not match.", 15, 20);
     put_hex(magic,16,22);
   }
   //  kernel::idt::init(255);
@@ -36,8 +38,10 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
   puts("nop", 0, 0);
   puts_allocated_memory();
 
-  GdtDescriptor descs = kernel::gdt::init();
+  BaseDescriptor<GdtEntry> descs = kernel::gdt::init();
   puts_allocated_memory();
+
+  descs.inspect(10);
 
   busy_loop();
   return;

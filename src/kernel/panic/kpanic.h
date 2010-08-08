@@ -15,4 +15,6 @@ namespace kernel {
   }
 }
 
+/// @note timestamp can be removed at little to no usefulness hit other
+/// then the ability to tell when code was compiled in a panic.
 #define KPANIC(info, message) kernel::panic::kpanic(info, message, __PRETTY_FUNCTION__, __LINE__, __FILE__, __TIMESTAMP__)

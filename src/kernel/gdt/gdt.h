@@ -1,6 +1,7 @@
 #pragma once
 #include "types.h"
 #include "kernel/memory/memory.h"
+#include "descriptor.h"
 
 namespace kernel {
   namespace gdt {
@@ -128,6 +129,7 @@ namespace kernel {
       inline uint16_t getEntryCount(void) {
         return static_cast<uint16_t>(getLimit() + 1) / sizeof(GdtEntry);
       }
+
       GdtDescriptor(uint16_t entry_count)
         : limit(static_cast<uint16_t>((entry_count * sizeof(GdtEntry)) - 1))
         , base(reinterpret_cast<GdtEntry*>(kernel::memory::kmalloc(limit + 1))) {}
@@ -136,7 +138,7 @@ namespace kernel {
     };
 
     /** Initialize GDT in a flat memory model. */
-    GdtDescriptor init(void);
+    BaseDescriptor<GdtEntry> init(void);
   }
 }
 

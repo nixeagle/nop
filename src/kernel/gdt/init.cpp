@@ -1,12 +1,12 @@
 #include "gdt.h"
-
+#include "descriptor.h"
 namespace kernel {
   namespace gdt {
 
-    GdtDescriptor init(void) {
+    BaseDescriptor<GdtEntry> init(void) {
       using kernel::gdt::AccessOptions;
       using kernel::gdt::FlagOptions;
-      GdtDescriptor descs = GdtDescriptor(3);
+      BaseDescriptor<GdtEntry> descs = BaseDescriptor<GdtEntry>(3);
 
       descs.getBase()[1].setLimit(0xfffff);
       descs.getBase()[1].setAccessByte(AccessOptions::Executable
