@@ -1,6 +1,7 @@
 #include "kernel.h"
 //#include "kernel/text_mode/text_mode.h"
 #include "kernel/gdt/gdt.h"
+#include "kernel/idt/idt.h"
 #include "kernel/gdt/descriptor.h"
 
 using kernel::text_mode::put_hex;
@@ -41,8 +42,10 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
   BaseDescriptor<GdtEntry> descs = kernel::gdt::init();
   puts_allocated_memory();
 
-  descs.inspect(10);
+  BaseDescriptor<kernel::idt::IdtEntry> idt = kernel::idt::init(256);
 
+
+  puts_allocated_memory();
   busy_loop();
   return;
 }

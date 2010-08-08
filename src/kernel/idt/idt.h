@@ -1,5 +1,7 @@
 #include "types.h"
 #include "kernel/memory/memory.h"
+#include "kernel/gdt/descriptor.h"
+
 namespace kernel {
   namespace idt {
 
@@ -81,6 +83,8 @@ namespace kernel {
 
         \post Interrupt descriptor table loaded by the CPU.
      */
+
+    kernel::gdt::BaseDescriptor<IdtEntry> init(uint16_t entry_count);
     //    static inline void loadIdt (const IdtDescriptor idtd);
   }
 }
