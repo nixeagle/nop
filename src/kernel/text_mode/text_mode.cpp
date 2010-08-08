@@ -66,7 +66,7 @@ namespace kernel {
     /// standard.
     int puts(const tacospp::kernel::string::String &string,
              unsigned int line, unsigned int column) {
-      for(size_t i = 0; i < string.length; i++) {
+      for(size_t i = 0; i < string.length(); i++) {
         put_char(string.string[i],line, i + column);
       }
       return 0;
