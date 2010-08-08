@@ -26,6 +26,7 @@ namespace kernel {
     void kpanic (const char* issue ,const char* message, const char* function,
                  int line, const char* file, const char* timestamp) {
       header(message, function, line, file, timestamp);
+      puts(issue, 6, 0);
       asm("hlt");
     }
   }

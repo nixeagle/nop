@@ -144,10 +144,12 @@ namespace kernel {
   namespace panic {
     void kpanic (kernel::gdt::GdtDescriptor* gdt_descriptor,
                  const char* message, const char* function,
-                 int line, const char* file, const char* timestamp);
+                 int line, const char* file, const char* timestamp)
+      __attribute__ ((noreturn));
 
     void kpanic (kernel::gdt::GdtEntry* gdt_entry,
                  const char* message, const char* function,
-                 int line, const char* file, const char* timestamp);
+                 int line, const char* file, const char* timestamp)
+      __attribute__ ((noreturn));
   }
 }

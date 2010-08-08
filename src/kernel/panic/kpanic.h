@@ -10,7 +10,8 @@ namespace kernel {
     void header (const char* message, const char* function,
                  int line, const char* file, const char* timestamp);
     void kpanic (const char* issue ,const char* message, const char* function,
-                 int line, const char* file, const char* timestamp);
+                 int line, const char* file, const char* timestamp)
+      __attribute__ ((noreturn));
   }
 }
 
