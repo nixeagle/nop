@@ -39,6 +39,7 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
 
   GdtDescriptor descs = kernel::gdt::init();
 
+  descs.getBase()[1].setFlags(0b00100000);
   puts_allocated_memory();
 
   KPANIC(&descs, "GDT issue! Not!");
