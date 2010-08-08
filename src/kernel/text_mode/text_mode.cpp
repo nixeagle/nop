@@ -64,7 +64,7 @@ namespace kernel {
     /// @todo Figure out some way to get rid of this instance of pass by
     /// reference, but we have to do it right now to comply with the C++
     /// standard.
-    int puts(const tacospp::kernel::string::String &string,
+    int puts(const kernel::string::String &string,
              unsigned int line, unsigned int column) {
       for(size_t i = 0; i < string.length(); i++) {
         put_char(string.string[i],line, i + column);

@@ -7,9 +7,9 @@
 // linker in linker.ld.
 
 
-inline tacospp::kernel::string::String p(const char* string) __attribute__((always_inline));
-inline tacospp::kernel::string::String p(const char* string) {
-  return tacospp::kernel::string::String(string);
+inline kernel::string::String p(const char* string) __attribute__((always_inline));
+inline kernel::string::String p(const char* string) {
+  return kernel::string::String(string);
 }
 
 

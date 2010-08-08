@@ -6,7 +6,7 @@ namespace kernel {
     // int puts(const tacospp::kernel::string::String *string,
     //          unsigned short int line, unsigned short int column);
 
-    int puts(const tacospp::kernel::string::String &string,
+    int puts(const kernel::string::String &string,
              unsigned int line, unsigned int column);
 
     /** Put a C string to console.
