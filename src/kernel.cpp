@@ -1,7 +1,6 @@
 #include "kernel.h"
 #include "kernel/text_mode/text_mode.h"
 #include "kernel/gdt/gdt.h"
-#include "kernel/panic/kpanic.h"
 
 using kernel::text_mode::put_hex;
 using kernel::text_mode::puts;
@@ -38,12 +37,7 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
   puts_allocated_memory();
 
   GdtDescriptor descs = kernel::gdt::init();
-
-  descs.getBase()[1].setFlags(0b00100000);
   puts_allocated_memory();
-
-  KPANIC(&descs, "GDT issue! Not!");
-  KPANIC("Testing", "Test panic!");
 
   busy_loop();
   return;
