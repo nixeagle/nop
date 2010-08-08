@@ -1,11 +1,6 @@
 #pragma once
 #include "types.h"
-#include "kernel/memory/memory.h"
 #include "kernel/string/string.h"
-
-// In theory should be the end of the kernel. This value is set by the
-// linker in linker.ld.
-
 
 inline kernel::string::String p(const char* string) __attribute__((always_inline));
 inline kernel::string::String p(const char* string) {
@@ -13,6 +8,7 @@ inline kernel::string::String p(const char* string) {
 }
 
 
+/// Main function for kernel entry from the loader.
 extern "C" void kmain(struct mb_header *header, unsigned int magic);
 
 // Mostly "internal" functions just to help with debugging

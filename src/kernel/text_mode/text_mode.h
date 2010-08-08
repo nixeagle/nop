@@ -1,3 +1,4 @@
+#pragma once
 #include "kernel/string/string.h"
 namespace kernel {
   namespace text_mode {
