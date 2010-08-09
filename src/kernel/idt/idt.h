@@ -5,6 +5,7 @@
 namespace kernel {
   namespace idt {
 
+    /** Enumerations for \e access_byte */
     enum AccessOptions {
       Ring0                 = 0b00000000,
       Ring1                 = 0b00100000,
@@ -13,12 +14,11 @@ namespace kernel {
       Present               = 0x80,
     };
 
-    //    int init(uint8_t entry_count);
     class IdtEntry {
       uint16_t base_low;
-      uint16_t selector; // Code segment selector. (GDT or LDT)
-      uint8_t zero;
-      uint8_t access_byte;
+      uint16_t selector; /// Code segment selector. (GDT or LDT)
+      uint8_t zero; /// Byte should be 0.
+      uint8_t access_byte; /// Access flags, see \ref AccessOptions.
       uint16_t base_high;
     public:
       void setBase(size_t base) {
@@ -30,45 +30,16 @@ namespace kernel {
         this->selector = selector;
       }
 
+      /** \param access_byte[in] should be set using \ref AccessOptions
+          flags.
+      */
       void setAccessByte(uint8_t access_byte) {
         this->access_byte = access_byte;
       }
+
+      /** Show information about this entry */
       void inspect(size_t line_number);
     } __attribute__((packed));
-
-    class IdtDescriptor {
-      /// Length of idt array in \e bytes.
-      /// 255 is the max permissable idt entries.
-      uint16_t limit;
-      IdtEntry* base;
-    public:
-      inline IdtEntry* getBase(void) {return base; }
-      IdtDescriptor(uint8_t entry_count)
-        /// @bug Possibly set to 0 if gcc misses out on function setting.
-        : limit(setEntryCount(entry_count))
-        , base(reinterpret_cast<IdtEntry*>(kernel::memory::kmalloc(limit + 1))) {}
-
-      // /// @todo Check base's bounds against kernel boundery if possible.
-      // int setBase(uint32_t base) {
-      //   this->base = base;
-      //   return 0; /// \suc0
-      // }
-
-      /** Set number of descriptor entries.
-
-          \a entry_count is directly translated to a value suitable for
-          \ref limit.
-
-          \param[in] entry_count is an integer in the range  32 ... 255.
-
-          \internal For x86 (32bit) descriptors are 8 bytes in size but
-          this may vary for 64bit or 16 bit x86oid arches.
-       */
-      uint16_t setEntryCount(uint8_t entry_count) {
-        limit = static_cast<uint16_t>(entry_count * sizeof(IdtEntry) - 1);
-        return 0; /// \suc0
-      }
-    };
 
     /** Compute \e limit field for a gdt/idt/<etc> descriptor.
 
