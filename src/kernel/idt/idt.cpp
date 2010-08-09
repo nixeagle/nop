@@ -1,6 +1,8 @@
 #include "idt.h"
 #include "kernel/gdt/descriptor.h"
 #include "kernel/panic/kpanic.h"
+#include "kernel/asm/lidt.h"
+
 namespace kernel {
   namespace idt {
     //    static IdtDescriptor idtd;
@@ -15,6 +17,7 @@ namespace kernel {
         KPANIC("entry_count larger then 256", "Positive overflow");
       } else {
         BaseDescriptor<IdtEntry> idt = BaseDescriptor<IdtEntry>(entry_count);
+        kernel::inlasm::lidt(&idt);
         return idt;
       }
     }

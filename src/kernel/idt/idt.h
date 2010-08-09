@@ -1,3 +1,4 @@
+#pragma once
 #include "types.h"
 #include "kernel/memory/memory.h"
 #include "kernel/gdt/descriptor.h"
