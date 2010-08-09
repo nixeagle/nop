@@ -84,3 +84,6 @@ doxygen: all
 
 t:
 	@echo ${CXX}
+
+bochs: grub
+	bochs -rc .bochsdbg -q
