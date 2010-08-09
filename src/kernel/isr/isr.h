@@ -1,3 +1,22 @@
+/** Various isr handling routines
+
+    These are all critical to handling x86 interrupts.
+ */
+#pragma once
+#include "types.h"
+namespace kernel {
+  namespace idt {
+    /** Defines what the stack looks like after an isr ran. */
+    class Registers {
+      uint32_t gs, fs, es, ds;      /* pushed the segs last */
+      uint32_t edi, esi, ebp, esp, ebx, edx, ecx, eax;  /* pushed by 'pusha' */
+      uint32_t int_no, err_code;    /* our 'push byte #' and ecodes do this */
+      uint32_t eip, cs, eflags, useresp, ss;   /* pushed by the processor automatically */
+    };
+  }
+}
+
+
 extern "C" void isr0 ();
 extern "C" void isr1 ();
 extern "C" void isr2 ();
@@ -31,4 +50,4 @@ extern "C" void isr29 ();
 extern "C" void isr30 ();
 extern "C" void isr31 ();
 
-extern "C" void isr_common_stub (int a, int b);
+extern "C" void isrHandler(kernel::idt::Registers reg);
