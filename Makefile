@@ -46,9 +46,9 @@ DEPFILES := $(patsubst %.cpp,%.d,$(SRCFILES))
 
 all: nop.bin
 
-nop.bin: $(OBJFILES) ${ASMFILES}
+nop.bin: $(OBJFILES) ${AOBJFILES}
 	@nasm -f elf -o loader.o loader.s
-	${LD} ${LDFLAGS} -melf_i386 -nostdlib -T linker.ld -o nop.bin loader.o ${OBJFILES} ${AOBJFILES}
+	@${LD} ${LDFLAGS} -melf_i386 -nostdlib -T linker.ld -o nop.bin loader.o ${OBJFILES} ${AOBJFILES}
 	@echo "Done! Linked the following into nop.bin:" ${OBJFILES}
 
 %.o: %.cpp Makefile
