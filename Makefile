@@ -34,9 +34,11 @@ AUXFILES := Makefile
 
 PROJDIRS := src
 SRCFILES := $(shell find -name "*.cpp")
+ASMFILES := $(shell find -name "*.asm")
 HDRFILES := $(shell find -name "*.h")
 
 OBJFILES := $(patsubst %.cpp,%.o,$(SRCFILES))
+AOBJFILES := $(patsubst %.asm,%.o,$(ASMFILES))
 DEPFILES := $(patsubst %.cpp,%.d,$(SRCFILES))
 
 # declare that these rules don't exist elsewhere.
@@ -44,14 +46,17 @@ DEPFILES := $(patsubst %.cpp,%.d,$(SRCFILES))
 
 all: nop.bin
 
-nop.bin: $(OBJFILES)
+nop.bin: $(OBJFILES) ${ASMFILES}
 	@nasm -f elf -o loader.o loader.s
-	${LD} ${LDFLAGS} -melf_i386 -nostdlib -T linker.ld -o nop.bin loader.o ${OBJFILES}
+	${LD} ${LDFLAGS} -melf_i386 -nostdlib -T linker.ld -o nop.bin loader.o ${OBJFILES} ${AOBJFILES}
 	@echo "Done! Linked the following into nop.bin:" ${OBJFILES}
 
 %.o: %.cpp Makefile
 	@$(CXX) $(args) -MMD -MP -MT "$*.d $*.o"  -c $< -o $@
 	@echo "Compiled" $<
+
+%.o: %.asm Makefile
+	nasm -f elf -o $@ $<
 
 floppy:
 	dd if=/dev/zero of=pad bs=1 count=750
