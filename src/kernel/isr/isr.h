@@ -51,4 +51,4 @@ extern "C" void isr29 ();
 extern "C" void isr30 ();
 extern "C" void isr31 ();
 
-extern "C" void isrHandler(kernel::idt::Registers reg);
+extern "C" void __attribute__((noinline, optimize ("-O0"))) isrHandler(volatile kernel::idt::Registers reg);
