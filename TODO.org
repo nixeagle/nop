@@ -4,8 +4,14 @@ A very high level todo list.
   Currently reading a book on this to get some solid theory backing for
   this part.
 
-* TODO Finish ISRs
+* DONE Finish ISRs
+  CLOSED: [2010-08-10 Tue 20:15]
+  :LOGBOOK:
+  - State "DONE"       from "TODO"       [2010-08-10 Tue 20:16]
+  :END:
   Needs to have all the interrupts implemented (copy pasted... ew!).
+
+  Used an operator overload to assist with this :>
 
 * TODO Working IRQs
   Looks pretty simple, just more drudge work and quite a bit of repetitive
