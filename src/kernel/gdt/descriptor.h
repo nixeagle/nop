@@ -12,7 +12,7 @@ namespace kernel {
         the pattern.
      */
     template <class T>
-    class BaseDescriptor {
+    class __attribute__((packed)) BaseDescriptor {
     private:
       /** Length of descriptor table in bytes
 
