@@ -1,0 +1,13 @@
+This is a non standard compliant "C" library that takes advantage of some
+C++ features like function overloading but this will not include classes
+or templates.
+
+As of [2010-08-10 Tue 06:34] there is no name for this C library. I'm
+considering 'noc' (derived from 'nop', replacing the 'p' with 'c'), but I
+think that is a poor choice.
+
+
+I also plan to write a C++ library, (also likely not fully standard) as
+well as take a try at writing a standard C++ and or C library just to see
+how well I can do it ;). Extra things to make working with a lisp easier
+from C would be interesting routes to explore with nop.
