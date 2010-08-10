@@ -27,6 +27,7 @@ void busy_loop() {
 extern "C" void kmain(struct mb_header *header, unsigned int magic) {
   using kernel::gdt::BaseDescriptor;
   using kernel::gdt::GdtEntry;
+  using kernel::idt::IdtEntry;
   // Setup memory:
   kernel::text_mode::clear_screen();
 
@@ -34,7 +35,6 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
     puts("ERROR: Bootloader magic does not match.", 15, 20);
     put_hex(magic,16,22);
   }
-  //  kernel::idt::init(255);
 
   puts("nop", 0, 0);
   puts_allocated_memory();
@@ -42,11 +42,17 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
   BaseDescriptor<GdtEntry> descs = kernel::gdt::init();
   puts_allocated_memory();
 
-  BaseDescriptor<kernel::idt::IdtEntry> idt = kernel::idt::init(256);
-  idt.inspect(3);
+  descs.inspect(6);
+  BaseDescriptor<IdtEntry> idt = kernel::idt::init(256);
+  //  idt.inspect(3);
   put_hex((size_t)&idt, 3, 60);
 
   puts_allocated_memory();
+
+  //  asm volatile ("xchg %bx, %bx");
+  //asm volatile ("int $0x3");
+  asm("int $0x3");
+
   busy_loop();
   return;
 }
