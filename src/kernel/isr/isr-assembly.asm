@@ -23,7 +23,7 @@ isr%1:
         ISRS 8, 1, 1            ; 8 error
         ISRS 9, 1, 0            ; 9 no error
         ISRS 10, 5, 1           ; 10..14 error
-        ISRS 15, 16, 0          ; 15..31 no error
+        ISRS 15, 17, 0          ; 15..31 no error
 
 isr_common_stub:
         pusha                   ; Pushes edi,esi,ebp,esp,ebx,edx,ecx,eax

@@ -6,7 +6,10 @@
 namespace kernel {
   namespace idt {
 
-    /** Enumerations for \e access_byte */
+    /** Enumerations for \e access_byte
+
+     Only one of Ring0, Ring1, Ring2, Ring3 may be present at a time.
+    */
     enum AccessOptions {
       Ring0                 = 0b00000000,
       Ring1                 = 0b00100000,
@@ -35,11 +38,26 @@ namespace kernel {
           flags.
       */
       void setAccessByte(uint8_t access_byte) {
-        this->access_byte = access_byte;
+        this->access_byte = access_byte | 0x0E;
       }
 
       /** Show information about this entry */
       void inspect(size_t line_number);
+
+      /** Initialize a table entry
+
+         Meant for initializing entries in an array after the array calls
+         the default empty constructor
+
+         \param base[in] Pointer to interrupt hander.
+
+         \param selector[in] Pointer to the code segment this interrupt
+         fires on.
+
+         \param flags[in] Permissions flags for the entry, valid flags are
+         \ref AccessOptions
+      */
+      void setEntry(void (base)(), uint16_t selector, uint8_t flags);
     };
 
     /** Compute \e limit field for a gdt/idt/<etc> descriptor.

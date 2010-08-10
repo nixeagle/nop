@@ -48,6 +48,9 @@ namespace kernel {
         return static_cast<uint16_t>(getLimit() + 1) / sizeof(T);
       }
 
+      inline T* __attribute__((gnu_inline,always_inline)) operator[]  (int i) {
+        return &getBase()[i];
+      }
       /** Construct and allocate a base descriptor.
 
           \param entry_count[in] Number of entries to create in the
