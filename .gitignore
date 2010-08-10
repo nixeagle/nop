@@ -6,3 +6,6 @@ doxygen/
 /stage2_eltorito
 /isofiles/boot/grub/stage2_eltorito
 /isofiles/boot/nop.bin
+/nop.bin
+/nop.iso
+/floppy.img
