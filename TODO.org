@@ -1,0 +1,64 @@
+A very high level todo list.
+
+* TODO Better memory allocation
+  Currently reading a book on this to get some solid theory backing for
+  this part.
+
+* TODO Finish ISRs
+  Needs to have all the interrupts implemented (copy pasted... ew!).
+
+* TODO Working IRQs
+  Looks pretty simple, just more drudge work and quite a bit of repetitive
+  code like the isrs that really can't be avoided.
+
+* TODO Keyboard driver
+
+* TODO File system
+  Maybe ext2, but I really would like to design a file system based in
+  part on a lisp library I wrote handling "tree nodes" with very
+  customizable dispatch. This might have some bearing on the [[RTTI]] choice
+  as well...
+
+* TODO Improved text mode
+  Scott does not mind if I take a look at how he handles his as far as
+  taking advantage of C++'s new lambda expressions.
+
+* TODO C library
+  This should be outside of kernel land at some point, basically the
+  standard system/program headers. Some parts of this will be non standard
+  C as to take advantage of some C++ features such as namespacing and
+  function overloading.
+
+* TODO C++ library
+
+* TODO RTTI
+  Do we want it? Will it help me implement common lisp like method
+  dispatch based on types?
+
+* TODO Get to x86-64
+  Switch to long mode and jump from 32bit to a 64bit kernel.
+
+* TODO Networking driver
+  Something to let us talk to that global network of tubes out there ;).
+
+* TODO Mouse driver
+  Handle mouse events (in text mode possibly?)
+
+* TODO Graphics driver
+  Get us some boxes on the screen other then text mode ;). Maybe even a
+  *gasp* cursor!
+
+* TODO Paging
+  Goes with the memory management issue as well, but get working page
+  tables.
+
+* TODO Multiprocess
+  More then one operating system process.
+
+* TODO Scheduler
+  Some way to work on which task to run next ;)
+
+* TODO PIC/system timer
+  Some way to respond to system events.
+
+* TODO Userland
