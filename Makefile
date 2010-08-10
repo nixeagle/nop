@@ -19,7 +19,7 @@ ignore_define := -U i386
 
 args := ${warnings} ${fthings} ${osdevops} ${experimentalops} \
 	 -Wwrite-strings ${includes} ${cxx_selection} -m32 ${ignore_define} \
-	 -O3
+	 -O1
 
 CXX ?= g++
 CXX_CHECK_SYNTAX := /usr/x86_64-pc-linux-gnu/i686-pc-linux-gnu/gcc-bin/4.5.0/i686-pc-linux-gnu-gcc
