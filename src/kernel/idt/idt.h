@@ -15,7 +15,7 @@ namespace kernel {
       Present               = 0x80,
     };
 
-    class IdtEntry {
+    class __attribute__((packed)) IdtEntry {
       uint16_t base_low;
       uint16_t selector; /// Code segment selector. (GDT or LDT)
       uint8_t zero; /// Byte should be 0.
@@ -40,7 +40,7 @@ namespace kernel {
 
       /** Show information about this entry */
       void inspect(size_t line_number);
-    } __attribute__((packed));
+    };
 
     /** Compute \e limit field for a gdt/idt/<etc> descriptor.
 
