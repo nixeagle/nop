@@ -3,6 +3,7 @@
 #include "kernel/panic/kpanic.h"
 #include "kernel/asm/lidt.h"
 #include "kernel/isr/isr.h"
+#include "kernel/asm/out.h"
 
 namespace kernel {
   namespace idt {
@@ -12,6 +13,20 @@ namespace kernel {
       //      asm volatile ("lidt %0" : : "m" (idtd));
     //    }
 
+    /** Remap the PIC */
+    static void remapPic(void) {
+      using kernel::inlasm::outb;
+      outb(0x20, 0x11);
+      outb(0xA0, 0x11);
+      outb(0x21, 0x20);
+      outb(0xA1, 0x28);
+      outb(0x21, 0x04);
+      outb(0xA1, 0x02);
+      outb(0x21, 0x01);
+      outb(0xA1, 0x01);
+      outb(0x21, 0x0);
+      outb(0xA1, 0x0);
+    }
     void IdtEntry::setEntry(void (*base)(), uint16_t selector, uint8_t flags) {
       setBase(reinterpret_cast<uint32_t>(base));
       setSelector(selector);
