@@ -76,6 +76,7 @@ namespace kernel {
         // idt.getBase()[3].setSelector(0x08);
         // idt.getBase()[3].setAccessByte(0x8E);
 
+        remapPic();
         asm("lidt %0" : : "m" (idt));
         //        kernel::inlasm::lidt(&idt);
         return idt;
