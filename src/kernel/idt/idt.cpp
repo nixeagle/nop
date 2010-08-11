@@ -1,10 +1,10 @@
 #include "idt.h"
 #include "kernel/gdt/descriptor.h"
 #include "kernel/panic/kpanic.h"
-#include "kernel/asm/lidt.h"
+//#include "kernel/asm/lidt.h"
 #include "kernel/isr/isr.h"
 #include "kernel/asm/out.h"
-
+#include "kernel/irq/irq.h"
 namespace kernel {
   namespace idt {
     //    static IdtDescriptor idtd;
@@ -12,6 +12,31 @@ namespace kernel {
     //    static inline void loadIdt(const Idtd idtd) {
       //      asm volatile ("lidt %0" : : "m" (idtd));
     //    }
+    using kernel::gdt::BaseDescriptor;
+
+    static BaseDescriptor<IdtEntry>* remapIrqTable(BaseDescriptor<IdtEntry>* idt) {
+      /// @todo figure out why using [] overload won't work with a pointer
+      /// here but works with the no pointer stuff in \ref init
+
+        idt->getBase()[32].setEntry(&irq0, 0x08, Present | Ring0);
+        idt->getBase()[33].setEntry(&irq1, 0x08, Present | Ring0);
+        idt->getBase()[34].setEntry(&irq2, 0x08, Present | Ring0);
+        idt->getBase()[35].setEntry(&irq3, 0x08, Present | Ring0);
+        idt->getBase()[36].setEntry(&irq4, 0x08, Present | Ring0);
+        idt->getBase()[37].setEntry(&irq5, 0x08, Present | Ring0);
+        idt->getBase()[38].setEntry(&irq6, 0x08, Present | Ring0);
+        idt->getBase()[39].setEntry(&irq7, 0x08, Present | Ring0);
+        idt->getBase()[40].setEntry(&irq8, 0x08, Present | Ring0);
+        idt->getBase()[41].setEntry(&irq9, 0x08, Present | Ring0);
+        idt->getBase()[42].setEntry(&irq10, 0x08, Present | Ring0);
+        idt->getBase()[43].setEntry(&irq11, 0x08, Present | Ring0);
+        idt->getBase()[44].setEntry(&irq12, 0x08, Present | Ring0);
+        idt->getBase()[45].setEntry(&irq13, 0x08, Present | Ring0);
+        idt->getBase()[46].setEntry(&irq14, 0x08, Present | Ring0);
+        idt->getBase()[47].setEntry(&irq15, 0x08, Present | Ring0);
+
+      return idt;
+    }
 
     /** Remap the PIC */
     static void remapPic(void) {
@@ -32,7 +57,7 @@ namespace kernel {
       setSelector(selector);
       setAccessByte(flags);
     }
-    using kernel::gdt::BaseDescriptor;
+
 
     BaseDescriptor<IdtEntry> init(uint16_t entry_count) {
       using kernel::idt::AccessOptions;
@@ -75,9 +100,9 @@ namespace kernel {
         // idt.getBase()[3].setBase(reinterpret_cast<uint32_t>(&isr3));
         // idt.getBase()[3].setSelector(0x08);
         // idt.getBase()[3].setAccessByte(0x8E);
-
-        remapPic();
         asm("lidt %0" : : "m" (idt));
+        remapPic();
+        remapIrqTable(&idt);
         //        kernel::inlasm::lidt(&idt);
         return idt;
       }

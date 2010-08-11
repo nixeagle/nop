@@ -3,7 +3,7 @@
 #include "kernel/gdt/gdt.h"
 #include "kernel/idt/idt.h"
 #include "kernel/gdt/descriptor.h"
-
+#include "kernel/asm/out.h"
 using kernel::text_mode::put_hex;
 using kernel::text_mode::puts;
 
@@ -42,17 +42,24 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
   BaseDescriptor<GdtEntry> descs = kernel::gdt::init();
   puts_allocated_memory();
 
-  descs.inspect(6);
+  //  descs.inspect(6);
   BaseDescriptor<IdtEntry> idt = kernel::idt::init(256);
-  //  idt.inspect(3);
+  idt.inspect(3);
   put_hex((size_t)&idt, 3, 60);
 
   puts_allocated_memory();
 
   //  asm volatile ("xchg %bx, %bx");
   //asm volatile ("int $0x3");
-  asm("int $0x3");
+  //
 
+  // timer tests.
+  kernel::inlasm::outb(0x43, 0x36);
+  kernel::inlasm::outb(0x40, 0x38);
+  kernel::inlasm::outb(0x40, 0x00);
+
+
+  asm("int $3");
   busy_loop();
   return;
 }
