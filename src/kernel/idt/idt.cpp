@@ -64,6 +64,7 @@ namespace kernel {
       if (256 < entry_count) {
         KPANIC("entry_count larger then 256", "Positive overflow");
       } else {
+        remapPic();
         BaseDescriptor<IdtEntry> idt = BaseDescriptor<IdtEntry>(256);
         idt[0]->setEntry(&isr0, 0x08, Present | Ring0);
         idt[1]->setEntry(&isr1, 0x08, Present | Ring0);
@@ -100,9 +101,10 @@ namespace kernel {
         // idt.getBase()[3].setBase(reinterpret_cast<uint32_t>(&isr3));
         // idt.getBase()[3].setSelector(0x08);
         // idt.getBase()[3].setAccessByte(0x8E);
-        asm("lidt %0" : : "m" (idt));
-        remapPic();
+
+
         remapIrqTable(&idt);
+        asm("lidt %0" : : "m" (idt));
         //        kernel::inlasm::lidt(&idt);
         return idt;
       }

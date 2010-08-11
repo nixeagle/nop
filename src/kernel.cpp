@@ -52,14 +52,14 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
   //  asm volatile ("xchg %bx, %bx");
   //asm volatile ("int $0x3");
   //
-
+  asm volatile("sti");
   // timer tests.
   kernel::inlasm::outb(0x43, 0x36);
   kernel::inlasm::outb(0x40, 0x38);
   kernel::inlasm::outb(0x40, 0x00);
 
 
-  asm("int $3");
+  //  asm("int $3");
   busy_loop();
   return;
 }
