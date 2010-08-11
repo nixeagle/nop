@@ -55,8 +55,8 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
   asm volatile("sti");
   // timer tests.
   kernel::inlasm::outb(0x43, 0x36);
-  kernel::inlasm::outb(0x40, 0x38);
-  kernel::inlasm::outb(0x40, 0x00);
+  kernel::inlasm::outb(0x40, 0xFF);
+  kernel::inlasm::outb(0x40, 0xFF);
 
 
   //  asm("int $3");
