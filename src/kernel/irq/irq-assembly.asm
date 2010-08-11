@@ -47,6 +47,10 @@ irq_common_stub:
         mov fs, bx
         mov gs, bx
 
+        pop gs
+        pop fs
+        pop es
+        pop ds
         popa                     ; Pops edi,esi,ebp...
         add esp, 8     ; Cleans up the pushed error code and pushed ISR number
         sti
