@@ -89,3 +89,13 @@ t:
 
 bochs: grub
 	bochs -rc .bochsdbg -q
+
+# Generate a BROWSE file for use with M-x ebrowse in emacs.
+ebrowse:
+	ebrowse **/*.h **/*.cpp
+
+etags:
+	/usr/bin/ctags -e --c++-kinds  --language-force=c++ -R --exclude='*.o' --exclude='*~' --exclude='*.asm' src/
+
+ctags:
+	ctags --declarations --defines --language=c++ --globals --members --typedefs-and-c++ **/*.h **/*.cpp
