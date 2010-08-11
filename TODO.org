@@ -4,6 +4,35 @@ A very high level todo list.
   Currently reading a book on this to get some solid theory backing for
   this part.
 
+*** Notes
+    - Objects allocated at about the same time are likely to die together.
+    - objects of different types are likely to serve different purposes
+      and die at different times.
+      - Avoid mixing different sizes in same region of memory. (bins?)
+
+***** Known strategies
+      - Deferred coalescing means to keep recently freed blocks around for
+        future allocations of blocks of the same size.
+        - Usually thought of as a speed improvement.
+        - Lower the fragmentation, the better deferred coalescing is
+        - Might change placement policy as unsplit free blocks won't be
+          considered for larger objects.
+        - Might decrease locality of reference.
+      - Deferred reuse means holding onto recently freed blocks.
+        - Affects fragmentation:
+          - Made worse by mixing objects of different phases
+          - Made better by slowly packing older areas with long lived
+            objects and giving time for neighbors of freed blocks a chance
+            to die.
+
+***** implementation?
+      - use a block header?
+        - Store size, relationship to neighbors?
+      - Footer?
+        - Simple optimization is to put the "inuse flag" in the following
+          header which means no footer is actually needed. [fn:1]
+
+
 * DONE Finish ISRs
   CLOSED: [2010-08-10 Tue 20:15]
   :LOGBOOK:
@@ -13,7 +42,11 @@ A very high level todo list.
 
   Used an operator overload to assist with this :>
 
-* TODO Working IRQs
+* DONE Working IRQs
+  CLOSED: [2010-08-11 Wed 18:40]
+  :LOGBOOK:
+  - State "DONE"       from "TODO"       [2010-08-11 Wed 18:41]
+  :END:
   Looks pretty simple, just more drudge work and quite a bit of repetitive
   code like the isrs that really can't be avoided.
 
@@ -68,3 +101,9 @@ A very high level todo list.
   Some way to respond to system events.
 
 * TODO Userland
+
+
+* Footnotes
+
+[fn:1] Dynamic storage allocation: A Survey and Critical Review. Written
+by Paul R. Wilson, Mark S. Johnstone, Micheal Neely, and David Boles
