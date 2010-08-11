@@ -35,9 +35,9 @@ GRUB_STAGE2 := stage2_eltorito
 AUXFILES := Makefile
 
 PROJDIRS := src
-SRCFILES := $(shell find -name "*.cpp")
-ASMFILES := $(shell find -name "*.asm")
-HDRFILES := $(shell find -name "*.h")
+SRCFILES := $(shell find "src" -name "*.cpp")
+ASMFILES := $(shell find "src" -name "*.asm")
+HDRFILES := $(shell find "src" -name "*.h")
 
 OBJFILES := $(patsubst %.cpp,%.o,$(SRCFILES))
 AOBJFILES := $(patsubst %.asm,%.o,$(ASMFILES))
