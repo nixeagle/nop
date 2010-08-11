@@ -4,6 +4,8 @@
 #include "kernel/idt/idt.h"
 #include "kernel/gdt/descriptor.h"
 #include "kernel/asm/out.h"
+#include "experiments/main.h"
+
 using kernel::text_mode::put_hex;
 using kernel::text_mode::puts;
 
@@ -59,6 +61,8 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
   kernel::inlasm::outb(0x40, 0xFF);
 
 
+  // Enter experiments function, this returns void.
+  experiments::main();
   //  asm("int $3");
   busy_loop();
   return;
