@@ -102,7 +102,7 @@ A very high level todo list.
 
 * TODO Userland
 
-
+* TODO Assert macro
 * Footnotes
 
 [fn:1] Dynamic storage allocation: A Survey and Critical Review. Written

@@ -18,7 +18,7 @@ void puts_allocated_memory() {
 void busy_loop() {
   // Busy loop.
   for(unsigned int i = 0;i < 0x1ff; i++) {
-    put_hex(i, 10,30);
+    put_hex(i, 2,50);
     for(volatile unsigned int i = 0; i < 10000000;) {
       i++;
     }
@@ -46,8 +46,8 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
 
   //  descs.inspect(6);
   BaseDescriptor<IdtEntry> idt = kernel::idt::init(256);
-  idt.inspect(3);
-  put_hex((size_t)&idt, 3, 60);
+  //  idt.inspect(3);
+  //  put_hex((size_t)&idt, 3, 60);
 
   puts_allocated_memory();
 
