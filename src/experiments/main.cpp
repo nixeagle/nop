@@ -18,5 +18,7 @@ namespace experiments {
     heap.getBlock(3).inspect(20);
     //    size_t address3 = reinterpret_cast<size_t>(heap.malloc(12));
     heap.inspect();
+
+    kernel::text_mode::put_hex((size_t)&heap,17,70);
   }
 }

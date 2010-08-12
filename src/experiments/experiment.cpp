@@ -5,7 +5,7 @@ namespace experiments {
   }
 
   void* Block::alloc(size_t start, uint16_t size) {
-    this->start = start;
+    this->start = start ;
     this->size = size;
     allocatedp = true;
     kernel::text_mode::put_hex(start, 7, 60);
@@ -37,7 +37,7 @@ namespace experiments {
   }
 
   bool Block::brandNewP() {
-    if(!allocatedp && start == 0x0 && size == 0xBEEF) {
+    if(!allocatedp && start == 0x0 && size == 0x0) {
       return true;
     } else {
       return false;
@@ -49,7 +49,7 @@ namespace experiments {
     kernel::text_mode::put_hex(memory_address, 12, 3);
     // Look for memory_address in the lookup array.
     for(int i = 0; i < heap_size; i++) {
-      if(heap[i].freeIf(memory_address)) {
+      if(heap[i].freeIf(memory_address - heap_start)) {
         return;
       }
       kernel::text_mode::put_hex(i, 12, 13);
@@ -75,13 +75,13 @@ namespace experiments {
     for(int i = 0; i < heap_size; i++) {
       void* new_memory = heap[i].allocIf(size);
       if(reinterpret_cast<void*>(0x0) != new_memory) {
-        kernel::text_mode::put_hex(reinterpret_cast<size_t>(new_memory), 5, 3);
+        kernel::text_mode::put_hex(reinterpret_cast<size_t>(new_memory) & 0x100000, 5, 3);
         return new_memory;
       }
     }
     void* new_memory = findBrandNewBlock()->alloc(heap_end, size);
     heap_end += size;
-    kernel::text_mode::put_hex(reinterpret_cast<size_t>(new_memory), 5, 3);
-    return new_memory;
+    kernel::text_mode::put_hex(reinterpret_cast<size_t>(new_memory) & 0x100000, 5, 3);
+    return reinterpret_cast<void*>(reinterpret_cast<size_t>(new_memory) + heap_start);
   }
 }

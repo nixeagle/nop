@@ -7,13 +7,14 @@
 #include "kernel/text_mode/text_mode.h"
 
 namespace experiments {
-  class Block {
-    size_t start;               /// Pointer to start of block.
-    uint16_t size;              /// Size in bytes of the block.
-    bool allocatedp;            /// True when block is allocated.
+  class __attribute__((packed)) Block {
+    bool allocatedp : 1;            /// True when block is allocated.
+    size_t start : 20;               /// Pointer to start of block.
+    uint16_t size : 11;              /// Size in bytes of the block.
+
 
   public:
-    Block() : start(0x0), size(0xBEEF), allocatedp(false) {};
+    Block() : start(0x0), size(0x00), allocatedp(false) {};
     /// Mark block as used.
     void* alloc(size_t start, uint16_t size);
     void free(void);            /// Mark block as free.
@@ -33,7 +34,7 @@ namespace experiments {
 
   /// Compiletime constant for the maximum objects allowed in our kernel
   /// malloc implementation.... Yes it is primative, but it works.
-  static const uint16_t heap_size = 16;
+  static const uint16_t heap_size = 256;
   /** First fit allocater */
   class Heap {
 
@@ -54,6 +55,6 @@ namespace experiments {
     void free(size_t memory_address);
     Heap(void) : heap_start(reinterpret_cast<size_t>(&kernel_end)
                             + kernel::memory::getAllocatedByteCount())
-               , heap_end(heap_start) {};
+               , heap_end(0x0) {};
   };
 }
