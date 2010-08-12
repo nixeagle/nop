@@ -99,3 +99,7 @@ etags:
 
 ctags:
 	ctags --declarations --defines --language=c++ --globals --members --typedefs-and-c++ **/*.h **/*.cpp
+
+asm:
+	@${CXX} -S -O2 -fverbose-asm -g  ${args} ${asm_file}.cpp -o ${asm_file}.s
+	as --32 -alhnd ${asm_file}.s
