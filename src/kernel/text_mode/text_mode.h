@@ -2,7 +2,7 @@
 #include "kernel/string/string.h"
 namespace kernel {
   namespace text_mode {
-    inline int put_char (char character, unsigned int line,
+    int put_char (char character, unsigned int line,
                          unsigned int column);
     // int puts(const tacospp::kernel::string::String *string,
     //          unsigned short int line, unsigned short int column);

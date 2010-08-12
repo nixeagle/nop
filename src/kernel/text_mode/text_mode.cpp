@@ -15,7 +15,7 @@ namespace kernel {
     /// Number of characters that fit on a \ref LINES.
     const unsigned short int COLUMNS = 80;
 
-    inline int put_char (char character, unsigned int line,
+    int put_char (char character, unsigned int line,
                          unsigned int column) {
       unsigned char *videoram = reinterpret_cast<unsigned char *> (VIDEORAM);
 
