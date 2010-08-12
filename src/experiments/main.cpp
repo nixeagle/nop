@@ -9,9 +9,9 @@ namespace experiments {
     size_t address = reinterpret_cast<size_t>(heap.malloc(12));
     heap.free(address);
     address = reinterpret_cast<size_t>(heap.malloc(12));
-    size_t address2 = reinterpret_cast<size_t>(heap.malloc(12));
-    heap.free(address);
-    address = reinterpret_cast<size_t>(heap.malloc(20));
+    // size_t address2 = reinterpret_cast<size_t>(heap.malloc(12));
+    // heap.free(address);
+    // address = reinterpret_cast<size_t>(heap.malloc(20));
     heap.getBlock(0).inspect(17);
     heap.getBlock(1).inspect(18);
     heap.getBlock(2).inspect(19);

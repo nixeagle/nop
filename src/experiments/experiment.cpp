@@ -5,8 +5,8 @@ namespace experiments {
   }
 
   void* Block::alloc(size_t start, uint16_t size) {
-    this->start = start ;
-    this->size = size;
+    this->start = start & 0xfffff;
+    this->size = size & 0b1111111111;
     allocatedp = true;
     kernel::text_mode::put_hex(start, 7, 60);
     kernel::text_mode::put_hex(this->start, 7, 70);

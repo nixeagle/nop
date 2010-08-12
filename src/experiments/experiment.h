@@ -14,7 +14,7 @@ namespace experiments {
 
 
   public:
-    Block() : start(0x0), size(0x00), allocatedp(false) {};
+    Block() : allocatedp(false), start(0x0), size(0x00) {};
     /// Mark block as used.
     void* alloc(size_t start, uint16_t size);
     void free(void);            /// Mark block as free.
