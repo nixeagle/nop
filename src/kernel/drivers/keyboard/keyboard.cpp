@@ -19,18 +19,23 @@ namespace kernel {
         static bool control = false; // state of the control key.
 
         switch(scan_code) {
-        case 0x2a:
+        case 0x36: // right shift
+        case 0x2a: // left shift
           shift = true;
           break;
-        case 0xaa:
+        case 0xb6: // Right shift break
+        case 0xaa: // left shift break
           shift = false;
           break;
         default:
           puts("Last 8 scancodes", 11, 0);
           put_hex(scan_code, 12, (keypress_number++ % 8) * 10);
-          put_char(scan_code + 67, 10, 30);
+          if(shift) {
+            put_char(keysym_us_shift[scan_code], 10, 30);
+          } else {
+            put_char(keysym_us[scan_code], 10, 30);
+          }
 
-          put_hex(KeySyms::kF12, 15, 0);
 
           break;
         }
