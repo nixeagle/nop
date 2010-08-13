@@ -34,7 +34,7 @@ namespace experiments {
 
   /// Compiletime constant for the maximum objects allowed in our kernel
   /// malloc implementation.... Yes it is primative, but it works.
-  static const uint16_t heap_size = 256;
+  static const uint16_t heap_size = 2048;
   /** First fit allocater */
   class Heap {
 
