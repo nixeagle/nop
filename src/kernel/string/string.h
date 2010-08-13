@@ -1,5 +1,6 @@
 #pragma once
 #include "types.h"
+#include "kernel/memory/memory.h"
 
 namespace kernel {
   namespace string {
@@ -8,7 +9,11 @@ namespace kernel {
     public:
       String(const char* string)
         : _length(length(string)),
-          string(string) { }
+          string(reinterpret_cast<char*>(kernel::memory::kmalloc(_length))) {
+        for(size_t i = 0; i < _length; i++) {
+          this->string[i] = string[i];
+        }
+      }
       static size_t length(const char* string) {
         size_t length = 0;
         while('\0' != string[length]) {
@@ -26,7 +31,7 @@ namespace kernel {
       /// @todo Make accessor function for the length.
       size_t _length;
     public:
-      const char* string;
+      char* string;
     };
     // string make_string(const char* string);
 
