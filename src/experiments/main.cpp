@@ -1,6 +1,7 @@
 #include "main.h"
 #include "experiment.h"
 
+#include "library/nlib/math/logi.h"
 namespace experiments {
 
   void main() {
@@ -19,6 +20,6 @@ namespace experiments {
     //    size_t address3 = reinterpret_cast<size_t>(heap.malloc(12));
     heap.inspect();
 
-    kernel::text_mode::put_hex((size_t)&heap,17,70);
+    kernel::text_mode::put_hex(nib::math::log10i(132), 23, 20);
   }
 }
