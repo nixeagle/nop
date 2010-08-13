@@ -19,6 +19,15 @@ namespace kernel {
     int puts(const char* string, unsigned int line,
              unsigned int column);
     int put_hex(unsigned int number,unsigned int line, unsigned int column);
+    /** Put any \a number in \a base to console.
+
+        \param number[in] to output.
+        \param base[in] of number to output. Should be in range [2 ... 36].
+        \param line[in] to print on.
+        \param column[in] to start on.
+    */
+    uint32_t putInteger(uint32_t number, uint8_t base, uint32_t line,
+                    uint32_t column);
     char hex2char(unsigned int hex_number);
 
     /** Clear a line on the console.
