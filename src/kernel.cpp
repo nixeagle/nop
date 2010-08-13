@@ -63,6 +63,8 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
 
   // Enter experiments function, this returns void.
   experiments::main();
+
+  kernel::text_mode::putInteger(0xa, 16, 24,0);
   //  asm("int $3");
   busy_loop();
   return;

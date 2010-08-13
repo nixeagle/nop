@@ -99,5 +99,20 @@ namespace kernel {
       }
       return 0; /// \suc0
     }
+
+    uint32_t putInteger(uint32_t number, uint8_t base, uint32_t line,
+                    uint32_t column) {
+      if(0 < number) {
+        uint32_t col = putInteger(number/base, base, line, column);
+        char digit = number % base;
+        if(10 > digit) {
+          put_char(digit + '0' , line, col);
+        } else {
+          put_char(digit - 10 + 'A', line, col);
+        }
+        return col + 1;
+      }
+      return column;
+    }
   }
 }
