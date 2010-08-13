@@ -20,6 +20,6 @@ namespace experiments {
     //    size_t address3 = reinterpret_cast<size_t>(heap.malloc(12));
     heap.inspect();
 
-    kernel::text_mode::put_hex(nib::math::log10i(132), 23, 20);
+
   }
 }
