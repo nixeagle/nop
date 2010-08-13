@@ -39,7 +39,20 @@ namespace kernel {
 												char* string;
 								};
 								String strcat(String *string1, String *string2) {
-												char temp_c_string[string1->length() + string2->length()];
+												char temp_c_string[string1->length() + string2->length() + 1];
+												int indice1=0;
+												int indice2=0;
+												while(string1->string[indice1]!="\0") {
+																temp_c_string[indice2] = string1->string[indice1];
+																indice1++;
+																indice2++;
+												}
+												indice1=0;
+												while(string2->string[indice1]!="\0") {
+																temp_c_string[indice2] = string1->string[indice1];
+																indice1++;
+																indice2++;
+												}
 												String *tempString = new String(temp_c_string);
 												return *tempString;
 								}
