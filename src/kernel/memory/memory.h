@@ -20,8 +20,10 @@ namespace kernel {
         \post \li System has allocated dynamic memory memory.
      */
     void* kmalloc(size_t size)
-      __attribute__((alloc_size(1),fastcall,malloc,warn_unused_result));
+      __attribute__((alloc_size(1),fastcall,malloc,warn_unused_result,warning ("depr"), optimize ("-O0")));
+    void* flat_kmalloc(size_t size);
     size_t getAllocatedByteCount(void);
+    void init(void);
   }
 }
 

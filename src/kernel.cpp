@@ -32,27 +32,24 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
   using kernel::idt::IdtEntry;
   // Setup memory:
   kernel::text_mode::clear_screen();
-
+  kernel::memory::init();
   if(0x2BADB002 != magic) {
     puts("ERROR: Bootloader magic does not match.", 15, 20);
     put_hex(magic,16,22);
   }
-
+  //  void* foo = kernel::memory::kmalloc(10);
   puts("nop", 0, 0);
-  puts_allocated_memory();
+  //  puts_allocated_memory();
 
   BaseDescriptor<GdtEntry> descs = kernel::gdt::init();
   puts_allocated_memory();
 
-  //  descs.inspect(6);
   BaseDescriptor<IdtEntry> idt = kernel::idt::init(256);
-  //  idt.inspect(3);
-  //  put_hex((size_t)&idt, 3, 60);
 
   puts_allocated_memory();
 
   //  asm volatile ("xchg %bx, %bx");
-  //asm volatile ("int $0x3");
+  // asm volatile ("int $0x3");
   //
   asm volatile("sti");
   // timer tests.
@@ -61,10 +58,15 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
   kernel::inlasm::outb(0x40, 0xFF);
 
 
-  // Enter experiments function, this returns void.
+  //  Enter experiments function, this returns void.
   experiments::main();
 
+  puts_allocated_memory();
   kernel::text_mode::putInteger(0xa, 16, 24,0);
+
+  put_hex((size_t)kernel::memory::kmalloc(123),14, 0);
+  put_hex((size_t)kernel::memory::kmalloc(123),14, 10);
+  puts_allocated_memory();
   //  asm("int $3");
   busy_loop();
   return;
