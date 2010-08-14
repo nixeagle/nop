@@ -6,4 +6,4 @@
 #include "kernel/memory/memory.h"
 #include "kernel/text_mode/text_mode.h"
 
-}
+
