@@ -21,6 +21,8 @@ args := ${warnings} ${fthings} ${osdevops} ${experimentalops} \
 	 -Wwrite-strings ${includes} ${cxx_selection} -m32 ${ignore_define} \
 	 -O3
 
+CODEGEN := -ftrapv -freg-struct-return -fno-common
+
 # -fforward-propagate -fregmove -fno-peephole2  -finline-small-functions
 
 CXX ?= g++
@@ -42,9 +44,6 @@ HDRFILES := $(shell find "src" -name "*.h")
 OBJFILES := $(patsubst %.cpp,%.o,$(SRCFILES))
 AOBJFILES := $(patsubst %.asm,%.o,$(ASMFILES))
 DEPFILES := $(patsubst %.cpp,%.d,$(SRCFILES))
-
-# declare that these rules don't exist elsewhere.
-.PHONY: all clean dist test testdrivers todolist
 
 all: nop.bin
 
@@ -68,8 +67,9 @@ check-syntax:
 	${CXX_CHECK_SYNTAX} ${args}  -o /dev/null -c ${CHK_SOURCES}
 
 clean:
-	$(RM) $(wildcard $(OBJFILES) $(DEPFILES) $(REGFILES) \
+	@$(RM) $(wildcard $(OBJFILES) $(DEPFILES) $(REGFILES) \
 		nop.bin nop.iso)
+	@find -name '*_flymake*' -delete
 
 grub:
 	@mkdir -p isofiles/boot/grub
