@@ -7,6 +7,8 @@ extern "C" int kernel_end;
 
 namespace kernel {
   namespace memory {
+    void* kmalloc(size_t size)
+      __attribute__((alloc_size(1),fastcall,malloc,warn_unused_result, optimize ("-O0")));
     /** Allocate memory off the end of the kernel.
 
         \warning This kmalloc has no equivalent free function. All memory
@@ -19,8 +21,6 @@ namespace kernel {
         \post \li \ref allocated_byte_count is incremented by \a size.
         \post \li System has allocated dynamic memory memory.
      */
-    void* kmalloc(size_t size)
-      __attribute__((alloc_size(1),fastcall,malloc,warn_unused_result,warning ("depr"), optimize ("-O0")));
     void* flat_kmalloc(size_t size);
     size_t getAllocatedByteCount(void);
     void init(void);
