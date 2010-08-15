@@ -2,25 +2,26 @@
 #include "kernel/string/string.h"
 namespace kernel {
   class VirtualConsole {
+    class Char {
+      uint8_t char_code;
+      uint8_t attributes;
+    public:
+      /// Zero out memory associated with char.
+      void clear(void);
+    };
+    /// Pointer to the currently active console.
     static VirtualConsole* current_console;
+
+    /// Max number of columns a virtual console can have.
     const static uint8_t columns = 80;
+
+    /// Max number of rows a virtual console can have.
     const static uint8_t rows = 25;
-
-    uint16_t cursor; /// Position of marker for text entry.
-
-    uint8_t input_cursor; /// User's input cursor, where text appears.
-
-    /// Height of the heads up display.
-    /** If the rest of the virtual console scrolls, text in this display
-        remains "constant"
-    */
-    uint8_t hud_height;
-    /// Height of input area
-    /** Should default to 1, but expanding is possible if user requires
-        more then one line of input to enter a command.
-    */
-    uint8_t input_height;
-
+    /// No copy constructor
+		/// \param no_copy[in] test
+    VirtualConsole(const VirtualConsole& no_copy) = delete;
+    /// No assignment operator.
+    VirtualConsole& operator=(VirtualConsole no_assignment) = delete;
     // Sure this is a good idea to have it non const/static? As is we
     // require dynamic memory management, might work if we allocate
     // batches of say 25 rows of memory instead of just one. The allocater
@@ -30,13 +31,42 @@ namespace kernel {
     /** Note that currently displaying items count as scrollback as a copy
         of it must be maintained at all times for scrolling to work as
         scrolling means being able to go forward and backwards ;)
+
+        Currently made constant.
     */
-    uint16_t scrollback_rows;
+    const static uint16_t scrollback_rows = 500;
+
+    /// Height of the heads up display.
+    /** If the rest of the virtual console scrolls, text in this display
+        remains "constant"
+    */
+    const static uint16_t hud_height = 4;
+
+    /// Maximum number of rows a user's input can cover.
+    /** This is currently static, maybe later this should become dynamic
+     */
+    const static uint16_t max_input_height = 5;
+
+    /// Location for printed output
+    Char* output_buffer[columns * scrollback_rows];
+
+    /// Location for user to input commands
+    Char* input_buffer[columns * max_input_height];
+
+    uint16_t cursor; /// Position of marker for text entry.
+
+    uint8_t input_cursor; /// User's input cursor, where text appears.
+
+    /// Height of input area
+    /** Should default to 1, but expanding is possible if user requires
+        more then one line of input to enter a command.
+    */
+    uint8_t input_height;
 
     uint16_t visible_buffer_bottom_row; /// Last visible row on screen.
   public:
     VirtualConsole(void)
-      : cursor(0), input_height(1), scrollback_rows(500) {};
+      : cursor(0), input_height(1) {};
     kernel::string::String* getUserInput(void) const;
     void clearUserInput(void);
     // scrolling
