@@ -85,6 +85,8 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
 
   vc[1].setCurrent();
   VirtualConsole::currentConsole()->put(100);
+  VirtualConsole::currentConsole()->putc('\n');
+  VirtualConsole::currentConsole()->put("Hi!");
   VirtualConsole::currentConsole()->put(VirtualConsole::currentConsole());
   VirtualConsole::currentConsole()->updateOutputVideoRam();
   //  asm("int $3");

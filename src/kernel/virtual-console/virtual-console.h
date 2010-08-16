@@ -62,7 +62,7 @@ namespace kernel {
     /// Location for user to input commands
     //    char* input_buffer[columns * max_input_height];
 
-    uint16_t output_cursor; /// Position of marker for text entry.
+    uint32_t output_cursor; /// Position of marker for text entry.
 
     uint8_t input_cursor; /// User's input cursor, where text appears.
 
@@ -75,8 +75,8 @@ namespace kernel {
     uint16_t visible_buffer_bottom_row; /// Last visible row on screen.
   public:
     VirtualConsole(void)
-      : output_cursor(0)
-      , output_buffer(reinterpret_cast<Char*>(kernel::memory::flat_kmalloc(sizeof(Char) * COLUMNS * ROWS)))
+      :  output_buffer(reinterpret_cast<Char*>(kernel::memory::flat_kmalloc(sizeof(Char) * COLUMNS * ROWS)))
+      , output_cursor(0)
       , input_height(1) {
       this->clearBuffer();
     };
