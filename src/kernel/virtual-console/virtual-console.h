@@ -101,19 +101,19 @@ namespace kernel {
     void clearBuffer(void);     /// Clear scrollback buffer.
 
     // hud
-    void showHud(void);    /// Shows the hud, this will cover up some of the buffer.
-    void hideHud(void);    /// Hide the hud, shows more of the scrollback.
+    void showHud(void); /// Shows the hud, this will cover up some of the buffer.
+    void hideHud(void); /// Hide the hud, shows more of the scrollback.
 
     // inserting things to buffer. (non user input/hud portions)
     void put(const kernel::string::String* string); /// pascal strings
-    void put(const char* string); /// C strings, must terminate in null.
-    void put(uint32_t integer); /// Unsigned integer.
-    void put(int integer);/// Print a possibly negative integer.
+    void put(const char* string);  /// C strings, must terminate in null.
+    void put(uint32_t integer);    /// Unsigned integer.
+    void put(int integer);         /// Print a possibly negative integer.
     void put(const void* pointer); /// Pointer/address to something.
-    void put(char character); /// A single character.
+    void put(char character);      /// A single character.
 
     // Generic visible buffer clearing.
-    void clearLine(uint8_t line); ///Clear a specific line.
+    void clearLine(uint8_t line); /// Clear a specific line.
 
     // updating display ram
     void updateOutputVideoRam(void);
