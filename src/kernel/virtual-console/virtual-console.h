@@ -80,6 +80,7 @@ namespace kernel {
       , output_cursor(0)
       , input_height(1) {
       this->clearBuffer();
+      this->clearInputBuffer();
     };
 
     static VirtualConsole* currentConsole(void) {

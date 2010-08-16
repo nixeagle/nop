@@ -15,7 +15,11 @@ namespace kernel {
     }
   }
 
-
+  void VirtualConsole::clearInputBuffer() {
+    for(size_t i = 0; i < max_input_height; i++) {
+      input_buffer[i].clear();
+    }
+  }
 
   void VirtualConsole::putc(char character) {
     switch(character) {
