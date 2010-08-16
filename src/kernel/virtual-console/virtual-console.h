@@ -64,7 +64,7 @@ namespace kernel {
 
     uint32_t output_cursor; /// Position of marker for text entry.
 
-    uint8_t input_cursor; /// User's input cursor, where text appears.
+    uint32_t input_cursor; /// User's input cursor, where text appears.
 
     /// Height of input area
     /** Should default to 1, but expanding is possible if user requires
@@ -72,12 +72,14 @@ namespace kernel {
     */
     uint8_t input_height;
 
-    uint16_t visible_buffer_bottom_row; /// Last visible row on screen.
+    /// Pointer to start of last visible row
+    uint32_t visible_buffer_bottom_row;
   public:
     VirtualConsole(void)
       :  output_buffer(reinterpret_cast<Char*>(kernel::memory::flat_kmalloc(sizeof(Char) * COLUMNS * ROWS)))
       , input_buffer(reinterpret_cast<Char*>(kernel::memory::flat_kmalloc(sizeof(Char) * COLUMNS * max_input_height)))
       , output_cursor(0)
+      , input_cursor(0)
       , input_height(1) {
       this->clearBuffer();
       this->clearInputBuffer();
@@ -94,13 +96,15 @@ namespace kernel {
       current_console = this;
     }
     kernel::string::String* getUserInput(void) const;
-    void clearInputBuffer(void);
+
     // scrolling
     void scrollUp(uint16_t rows);
     void scrollDown(uint16_t rows);
+    void scrollToCursor(void);  /// Scroll to where current cursor is.
     void scrollToBottom(void);  /// Scroll to very bottom of buffer.
     void scrollToTop(void);     /// Scroll to very top of buffer.
     void clearBuffer(void);     /// Clear scrollback buffer.
+    void clearInputBuffer(void);
 
     // hud
     void showHud(void); /// Shows the hud, this will cover up some of the buffer.
@@ -119,6 +123,7 @@ namespace kernel {
 
     // updating display ram
     void updateOutputVideoRam(void);
+    void updateInputVideoRam(void);
   };
 
 }
