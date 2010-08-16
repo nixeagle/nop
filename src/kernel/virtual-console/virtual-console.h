@@ -60,7 +60,7 @@ namespace kernel {
     Char* output_buffer;
 
     /// Location for user to input commands
-    //    char* input_buffer[columns * max_input_height];
+    Char* input_buffer;
 
     uint32_t output_cursor; /// Position of marker for text entry.
 
@@ -76,6 +76,7 @@ namespace kernel {
   public:
     VirtualConsole(void)
       :  output_buffer(reinterpret_cast<Char*>(kernel::memory::flat_kmalloc(sizeof(Char) * COLUMNS * ROWS)))
+      , input_buffer(reinterpret_cast<Char*>(kernel::memory::flat_kmalloc(sizeof(Char) * COLUMNS * max_input_height)))
       , output_cursor(0)
       , input_height(1) {
       this->clearBuffer();
@@ -92,7 +93,7 @@ namespace kernel {
       current_console = this;
     }
     kernel::string::String* getUserInput(void) const;
-    void clearUserInput(void);
+    void clearInputBuffer(void);
     // scrolling
     void scrollUp(uint16_t rows);
     void scrollDown(uint16_t rows);
