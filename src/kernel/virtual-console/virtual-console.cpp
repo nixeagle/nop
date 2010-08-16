@@ -44,6 +44,13 @@ namespace kernel {
       } else {
         putc(static_cast<uint8_t>(digit - 10 + 'A'));
       }
+  void VirtualConsole::putc(char character) {
+    switch(character) {
+    case '\n':
+      output_cursor += COLUMNS - output_cursor % COLUMNS;
+      break;
+    default:
+      output_buffer[output_cursor++].setChar(character);
     }
   }
 
