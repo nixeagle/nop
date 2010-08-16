@@ -16,4 +16,4 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic);
 void puts_allocated_memory(void);
 
 /// Loop and print out current point in loop to console.
-void busy_loop();
+void busy_loop(size_t limit);

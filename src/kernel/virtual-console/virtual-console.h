@@ -1,27 +1,36 @@
 #include "types.h"
 #include "kernel/string/string.h"
+#include "kernel/memory/memory.h"
+
 namespace kernel {
   class VirtualConsole {
     class Char {
-      uint8_t char_code;
+      uint8_t character;
       uint8_t attributes;
     public:
       /// Zero out memory associated with char.
       void clear(void);
+      inline void setAttributes(uint8_t attributes) { this->attributes = attributes; }
+      inline void setChar(unsigned char character) {
+        this->character = character;
+        this->attributes = 0x07;
+      }
     };
     /// Pointer to the currently active console.
     static VirtualConsole* current_console;
-
+    static uint8_t console_count;
     /// Max number of columns a virtual console can have.
-    const static uint8_t columns = 80;
+    const static uint8_t COLUMNS = 80;
 
     /// Max number of rows a virtual console can have.
-    const static uint8_t rows = 25;
+    const static uint8_t ROWS = 25;
+
+    const static size_t VIDEORAM = 0xb8000;
     /// No copy constructor
 		/// \param no_copy[in] test
-    VirtualConsole(const VirtualConsole& no_copy) = delete;
+    //    VirtualConsole(const VirtualConsole& no_copy) = delete;
     /// No assignment operator.
-    VirtualConsole& operator=(VirtualConsole no_assignment) = delete;
+    //    VirtualConsole& operator=(VirtualConsole no_assignment) = delete;
     // Sure this is a good idea to have it non const/static? As is we
     // require dynamic memory management, might work if we allocate
     // batches of say 25 rows of memory instead of just one. The allocater
@@ -48,12 +57,12 @@ namespace kernel {
     const static uint16_t max_input_height = 5;
 
     /// Location for printed output
-    Char* output_buffer[columns * scrollback_rows];
+    Char* output_buffer;
 
     /// Location for user to input commands
-    Char* input_buffer[columns * max_input_height];
+    //    char* input_buffer[columns * max_input_height];
 
-    uint16_t cursor; /// Position of marker for text entry.
+    uint16_t output_cursor; /// Position of marker for text entry.
 
     uint8_t input_cursor; /// User's input cursor, where text appears.
 
@@ -66,7 +75,22 @@ namespace kernel {
     uint16_t visible_buffer_bottom_row; /// Last visible row on screen.
   public:
     VirtualConsole(void)
-      : cursor(0), input_height(1) {};
+      : output_cursor(0)
+      , output_buffer(reinterpret_cast<Char*>(kernel::memory::flat_kmalloc(sizeof(Char) * COLUMNS * ROWS)))
+      , input_height(1) {
+      this->clearBuffer();
+    };
+
+    static VirtualConsole* currentConsole(void) {
+      return VirtualConsole::current_console;
+    }
+    static void setCurrentConsole (VirtualConsole* console) {
+      current_console = console;
+    }
+
+    void setCurrent (void) {
+      current_console = this;
+    }
     kernel::string::String* getUserInput(void) const;
     void clearUserInput(void);
     // scrolling
@@ -90,5 +114,9 @@ namespace kernel {
 
     // Generic visible buffer clearing.
     void clearLine(uint8_t line); ///Clear a specific line.
+
+    // updating display ram
+    void updateOutputVideoRam(void);
   };
+
 }

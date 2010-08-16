@@ -26,7 +26,7 @@ namespace kernel {
         void* __attribute__((optimize ("-O0"),malloc))malloc(uint16_t size);
         void free(size_t memory_address);
         Index(void) : heap_start(reinterpret_cast<size_t>(&kernel_end)
-                                 + 0x2000
+                                 + 0x10000
                                  + kernel::memory::getAllocatedByteCount())
                    , heap_end(0x0) {};
       };

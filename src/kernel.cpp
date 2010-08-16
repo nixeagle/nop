@@ -4,6 +4,7 @@
 #include "kernel/idt/idt.h"
 #include "kernel/gdt/descriptor.h"
 #include "kernel/asm/out.h"
+#include "kernel/virtual-console/virtual-console.h"
 #include "experiments/main.h"
 
 using kernel::text_mode::put_hex;
@@ -15,10 +16,9 @@ void puts_allocated_memory() {
   put_hex(reinterpret_cast<unsigned int>(&kernel_end), 1, 70);
 }
 
-void busy_loop() {
+void busy_loop(size_t limit) {
   // Busy loop.
-  for(unsigned int i = 0;i < 0x1ff; i++) {
-    put_hex(i, 2,50);
+  for(unsigned int i = 0;i < limit; i++) {
     for(volatile unsigned int i = 0; i < 10000000;) {
       i++;
     }
@@ -30,9 +30,13 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
   using kernel::gdt::BaseDescriptor;
   using kernel::gdt::GdtEntry;
   using kernel::idt::IdtEntry;
+  using kernel::VirtualConsole;
+  using kernel::VirtualConsole;
   // Setup memory:
   kernel::text_mode::clear_screen();
+
   kernel::memory::init();
+
   if(0x2BADB002 != magic) {
     puts("ERROR: Bootloader magic does not match.", 15, 20);
     put_hex(magic,16,22);
@@ -46,6 +50,7 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
 
   BaseDescriptor<IdtEntry> idt = kernel::idt::init(256);
 
+  kernel::VirtualConsole vc[6];
   puts_allocated_memory();
 
   //  asm volatile ("xchg %bx, %bx");
@@ -67,7 +72,21 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
   put_hex((size_t)kernel::memory::kmalloc(123),14, 0);
   put_hex((size_t)kernel::memory::kmalloc(123),14, 10);
   puts_allocated_memory();
+
+  //  vc[0].setCurrent();
+  vc[0].setCurrent();
+  VirtualConsole::currentConsole()->clearBuffer();
+  VirtualConsole::currentConsole()->put("test!");
+  VirtualConsole::currentConsole()->put(" Hi?");
+  VirtualConsole::currentConsole()->updateOutputVideoRam();
+
+  busy_loop(0x10);
+
+  vc[1].setCurrent();
+  VirtualConsole::currentConsole()->updateOutputVideoRam();
   //  asm("int $3");
-  busy_loop();
+
+  busy_loop(0x1ff);
   return;
 }
+
