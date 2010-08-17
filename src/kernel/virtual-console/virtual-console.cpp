@@ -31,7 +31,10 @@ namespace kernel {
     }
   }
 
-
+  void VirtualConsole::setCurrent () {
+    current_console = this;
+    //kernel::global::key_event = ((this).*(VirtualConsole::handleKey));
+  }
 
 
   void VirtualConsole::updateOutputVideoRam() {

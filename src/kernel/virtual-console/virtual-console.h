@@ -92,9 +92,7 @@ namespace kernel {
       current_console = console;
     }
 
-    void setCurrent (void) {
-      current_console = this;
-    }
+    void setCurrent (void);
     kernel::string::String* getUserInput(void) const;
 
     // scrolling
