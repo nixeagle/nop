@@ -1,8 +1,16 @@
+#pragma once
 #include "types.h"
 #include "kernel/string/string.h"
 #include "kernel/memory/memory.h"
+//#include "global.h"
 
 namespace kernel {
+  namespace drivers {
+    namespace keyboard {
+      class KeyEvent;           // Forward declaration.
+    }
+  }
+
   class VirtualConsole {
     class Char {
       uint8_t character;
@@ -122,6 +130,9 @@ namespace kernel {
     // updating display ram
     void updateOutputVideoRam(void);
     void updateInputVideoRam(void);
+
+    // Inserting user's key inputs
+    void handleKey(drivers::keyboard::KeyEvent event);
   };
 
 }
