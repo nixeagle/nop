@@ -29,7 +29,6 @@ vga: extension=vbe
 cpu: count=1:1:1, ips=4000000, quantum=5, reset_on_triple_fault=1, cpuid_limit_winnt=0
 print_timestamps: enabled=0
 debugger_log: -
-magic_break: enabled=0
 port_e9_hack: enabled=0
 text_snapshot_check: enabled=0
 private_colormap: enabled=0
