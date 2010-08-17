@@ -58,9 +58,7 @@ namespace kernel {
        */
       __attribute__((optimize ("-O0"))) BaseDescriptor(uint16_t entry_count)
         : limit(static_cast<uint16_t>((entry_count * sizeof(T)) - 1))
-         {
-
-           base = (reinterpret_cast<T*>(kernel::memory::flat_kmalloc(limit + 1)));
+        , base(reinterpret_cast<T*>(kernel::memory::flat_kmalloc(limit + 1))) {
 
             }
 
