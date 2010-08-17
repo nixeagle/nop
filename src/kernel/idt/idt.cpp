@@ -58,14 +58,19 @@ namespace kernel {
       setAccessByte(flags);
     }
 
-
+    /// Global descriptor table.
+    /** \note this must be outside the function definition and as a global
+        variable for the time being as we do not have working local static
+        variables yet.
+        \todo Implement __cxa_guard_release and __cxa_guard_acquire.
+     */
+    BaseDescriptor<IdtEntry> idt = BaseDescriptor<IdtEntry>(256);
     BaseDescriptor<IdtEntry> init(uint16_t entry_count) {
       using kernel::idt::AccessOptions;
       if (256 < entry_count) {
         KPANIC("entry_count larger then 256", "Positive overflow");
       } else {
         remapPic();
-        BaseDescriptor<IdtEntry> idt = BaseDescriptor<IdtEntry>(256);
         idt[0]->setEntry(&isr0, 0x08, Present | Ring0);
         idt[1]->setEntry(&isr1, 0x08, Present | Ring0);
         idt[2]->setEntry(&isr2, 0x08, Present | Ring0);
