@@ -26,6 +26,13 @@ void busy_loop(size_t limit) {
   return;
 }
 
+
+template<class T>
+void show_type(const T&)
+{
+  kernel::VirtualConsole::currentConsole()->put(__PRETTY_FUNCTION__);
+}
+
 extern "C" void kmain(struct mb_header *header, unsigned int magic) {
   using kernel::gdt::BaseDescriptor;
   using kernel::gdt::GdtEntry;
@@ -53,9 +60,9 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
   kernel::VirtualConsole vc[6];
   puts_allocated_memory();
 
-  //  asm volatile ("xchg %bx, %bx");
-  // asm volatile ("int $0x3");
-  //
+  // //  asm volatile ("xchg %bx, %bx");
+  // // asm volatile ("int $0x3");
+  // //
   asm volatile("sti");
   // timer tests.
   kernel::inlasm::outb(0x43, 0x36);
@@ -63,7 +70,7 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
   kernel::inlasm::outb(0x40, 0xFF);
 
 
-  //  Enter experiments function, this returns void.
+  // //  Enter experiments function, this returns void.
   experiments::main();
 
   puts_allocated_memory();
@@ -81,6 +88,7 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
   VirtualConsole::currentConsole()->put(100);
   VirtualConsole::currentConsole()->updateOutputVideoRam();
 
+
   busy_loop(0x10);
 
   vc[1].setCurrent();
@@ -88,8 +96,12 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
   VirtualConsole::currentConsole()->putc('\n');
   VirtualConsole::currentConsole()->put("Hi!");
   VirtualConsole::currentConsole()->put(VirtualConsole::currentConsole());
+  VirtualConsole::currentConsole()->putc('\n');
+  show_type([](){});
   VirtualConsole::currentConsole()->updateOutputVideoRam();
   //  asm("int $3");
+
+
 
   busy_loop(0x1ff);
   return;
