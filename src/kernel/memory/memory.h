@@ -27,6 +27,26 @@ namespace kernel {
   }
 }
 
+void *operator new(size_t size)
+{
+  return kernel::memory::kmalloc(size);
+}
+
+void *operator new[](size_t size)
+{
+    return kernel::memory::kmalloc(size);
+}
+
+void operator delete(void *p)
+{
+  //free(p);
+}
+
+void operator delete[](void *p)
+{
+  //free(p);
+}
+
 #endif /* _MEMORY_H_ */
 
 
