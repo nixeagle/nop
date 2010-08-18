@@ -2,7 +2,6 @@
 #include "types.h"
 #include "kernel/string/string.h"
 #include "kernel/memory/memory.h"
-//#include "global.h"
 
 namespace kernel {
   namespace drivers {
@@ -132,7 +131,8 @@ namespace kernel {
     void updateInputVideoRam(void);
 
     // Inserting user's key inputs
-    void handleKey(drivers::keyboard::KeyEvent event);
+    static void handleKey(void* object,
+                          const drivers::keyboard::KeyEvent* event);
   };
 
 }

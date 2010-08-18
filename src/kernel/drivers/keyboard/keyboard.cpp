@@ -3,6 +3,11 @@
 #include "kernel/asm/out.h"
 #include "kernel/asm/in.h"
 #include "keysyms.h"
+#include "kernel/virtual-console/virtual-console.h"
+#include "global.h"
+#include "key-event.h"
+#include "kernel/memory/memory.h"
+
 namespace kernel {
   namespace drivers {
     namespace keyboard {
@@ -35,7 +40,9 @@ namespace kernel {
           } else {
             put_char(keysym_us[scan_code], 10, 30);
           }
-
+          KeyEvent* a = new KeyEvent();
+          (kernel::global::key_event)(kernel::VirtualConsole::currentConsole(),
+                                      a);
 
           break;
         }

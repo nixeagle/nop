@@ -13,6 +13,7 @@ namespace kernel {
         bool control;
         /// keysym pressed.
         uint32_t code;
+      public:
         KeyEvent() : shift(false), control(false), code(0) {}
       };
     }
