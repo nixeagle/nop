@@ -35,13 +35,13 @@ inline void *operator new[](size_t size) {
   return kernel::memory::kmalloc(size);
 }
 
-inline void operator delete(void *p) {
-  //free(p);
-}
+// inline void operator delete(void *p) {
+//   //free(p);
+// }
 
-inline void operator delete[](void *p) {
-  //free(p);
-}
+// inline void operator delete[](void *p) {
+//   //free(p);
+// }
 
 #endif /* _MEMORY_H_ */
 
