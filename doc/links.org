@@ -1,0 +1,11 @@
+Various useful links as I come across them:
+
+* Keyboard
+  http://www.win.tue.nl/~aeb/linux/kbd/scancodes-1.html - Really good
+  document on keyboard scan codes. Tells literally everything you might
+  want to know about them in all the gory details.
+
+* Spin locks
+  http://lwn.net/Articles/267968/ - Talks about the implementation of
+  ticket spinlocks in the linux kernel and explains to some extent why
+  these are better then normal spin locks on machines with many cpus.
