@@ -27,19 +27,19 @@ namespace kernel {
   }
 }
 
-void *operator new(size_t size) {
+inline void *operator new(size_t size) {
   return kernel::memory::kmalloc(size);
 }
 
-void *operator new[](size_t size) {
+inline void *operator new[](size_t size) {
   return kernel::memory::kmalloc(size);
 }
 
-void operator delete(void *p) {
+inline void operator delete(void *p) {
   //free(p);
 }
 
-void operator delete[](void *p) {
+inline void operator delete[](void *p) {
   //free(p);
 }
 
