@@ -1,5 +1,5 @@
 # warn if format string is a literal
-warnings := -Wall -Wextra -Wunused -Wformat=2 -Winit-self -Wmissing-include-dirs -Wstrict-overflow=4 -Wfloat-equal -Wreorder -Wsign-promo -Wwrite-strings -Wconversion -Wlogical-op -Wundef -Wunsafe-loop-optimizations -Wtrigraphs -Wunused-parameter -Wunknown-pragmas -Wcast-align -Wswitch-default -Wswitch-enum -Wmissing-noreturn -Wmissing-format-attribute -Wpacked -Wredundant-decls -Wunreachable-code -Winline -Winvalid-pch -Wmissing-declarations -Wdisabled-optimization -Wstack-protector -Woverloaded-virtual -Wsign-promo -Woverloaded-virtual -Wold-style-cast -Wstrict-null-sentinel -Wunused-macros
+warnings := -Wall -Wextra -Wunused -Wformat=2 -Winit-self -Wmissing-include-dirs -Wstrict-overflow=4 -Wfloat-equal -Wreorder -Wsign-promo -Wwrite-strings -Wconversion -Wlogical-op -Wundef -Wunsafe-loop-optimizations -Wtrigraphs -Wunused-parameter -Wunknown-pragmas -Wcast-align -Wswitch-default -Wswitch-enum -Wmissing-noreturn -Wmissing-format-attribute -Wpacked -Wredundant-decls -Wunreachable-code -Winline -Winvalid-pch -Wmissing-declarations -Wdisabled-optimization -Wstack-protector -Woverloaded-virtual -Wsign-promo -Woverloaded-virtual -Wold-style-cast -Wstrict-null-sentinel -Wunused-macros -Wno-pmf-conversions
 # -Weffc++
 #-Waggregate-return : aggrevating is more the term.
 osdevops :=-nostdinc++	-nostdinc -nostartfiles	-fno-exceptions	-fno-builtin -fno-stack-protector -nostdlib -nodefaultlibs -fno-rtti
@@ -50,14 +50,14 @@ all: nop.bin
 nop.bin: $(OBJFILES) ${AOBJFILES}
 	@nasm -f elf -o loader.o loader.s
 	@${LD} ${LDFLAGS} -melf_i386 -nostdlib -T linker.ld -o nop.bin loader.o ${OBJFILES} ${AOBJFILES}
-	@echo "Done! Linked the following into nop.bin:" ${OBJFILES}
+#	@echo "Done! Linked the following into nop.bin:" ${OBJFILES}
 
 %.o: %.cpp Makefile
 	@$(CXX) $(args) -save-temps -MMD -MP -MT "$*.d $*.o"  -c $< -o $@
-	@echo "Compiled" $<
+#	@echo "Compiled" $<
 
 %.o: %.asm Makefile
-	nasm -f elf -o $@ $<
+	@nasm -f elf -o $@ $<
 
 floppy:
 	dd if=/dev/zero of=pad bs=1 count=750
