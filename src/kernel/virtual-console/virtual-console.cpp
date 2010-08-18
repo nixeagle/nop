@@ -40,7 +40,8 @@ namespace kernel {
 
   void VirtualConsole::handleKey(void* object,
                                  const drivers::keyboard::KeyEvent* event) {
-    reinterpret_cast<VirtualConsole*>(object)->put("\naaaaa");
+    reinterpret_cast<VirtualConsole*>(object)->put(static_cast<uint8_t>(event->getAsciiKey()), 16);
+    reinterpret_cast<VirtualConsole*>(object)->put(" ");
     reinterpret_cast<VirtualConsole*>(object)->updateOutputVideoRam();
   }
 
