@@ -17,11 +17,13 @@ includes := -I./src
 
 ignore_define := -U i386
 
+
+#-ftrapv can't use yet because some internal funcctions are not defined.
+CODEGEN := -freg-struct-return -fno-common
+
 args := ${warnings} ${fthings} ${osdevops} ${experimentalops} \
 	 -Wwrite-strings ${includes} ${cxx_selection} -m32 ${ignore_define} \
-	 -O3
-
-CODEGEN := -ftrapv -freg-struct-return -fno-common
+	 -O3 ${CODEGEN}
 
 # -fforward-propagate -fregmove -fno-peephole2  -finline-small-functions
 
@@ -44,6 +46,8 @@ HDRFILES := $(shell find "src" -name "*.h")
 OBJFILES := $(patsubst %.cpp,%.o,$(SRCFILES))
 AOBJFILES := $(patsubst %.asm,%.o,$(ASMFILES))
 DEPFILES := $(patsubst %.cpp,%.d,$(SRCFILES))
+
+BUILD_TYPE := debug
 
 all: nop.bin
 
@@ -104,5 +108,5 @@ asm:
 	@${CXX} -S -O2 -fverbose-asm -g  ${args} ${asm_file}.cpp -o ${asm_file}.s
 	as --32 -alhnd ${asm_file}.s
 
-stats:
+ stats:
 	@echo "commits" $(shell git log --oneline | wc -l) "additions" $(shell git log -p | grep -v '+++' | grep -c '^+') "removals" $(shell git log -p | grep -v -e '---' | grep -c '^-')
