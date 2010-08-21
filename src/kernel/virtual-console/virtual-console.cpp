@@ -1,7 +1,7 @@
 #include "virtual-console.h"
 #include "library/c/memory/memcpy.h"
 #include "global.h"
-#include "kernel/drivers/keyboard/key-event.h"
+
 namespace kernel {
   // static members
   VirtualConsole* VirtualConsole::current_console = 0;
@@ -36,13 +36,6 @@ namespace kernel {
   void VirtualConsole::setCurrent () {
     current_console = this;
     kernel::global::key_event = this->handleKey;
-  }
-
-  void VirtualConsole::handleKey(void* object,
-                                 const drivers::keyboard::KeyEvent* event) {
-    reinterpret_cast<VirtualConsole*>(object)->put(static_cast<uint8_t>(event->getAsciiKey()), 16);
-    reinterpret_cast<VirtualConsole*>(object)->put(" ");
-    reinterpret_cast<VirtualConsole*>(object)->updateOutputVideoRam();
   }
 
   void VirtualConsole::updateOutputVideoRam() {
