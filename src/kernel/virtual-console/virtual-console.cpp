@@ -5,7 +5,7 @@
 namespace kernel {
   // static members
   VirtualConsole* VirtualConsole::current_console = 0;
-
+  VirtualConsole* global::virtual_consoles = 0;
   void VirtualConsole::Char::clear(void) {
     character = 0;
     attributes = 0;

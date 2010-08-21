@@ -2,6 +2,6 @@
 
 namespace kernel {
   namespace global {
-    void (*key_event)(void*, const drivers::keyboard::KeyEvent*) =  0;
+    void (*key_event)(const drivers::keyboard::KeyEvent*) =  0;
   }
 }

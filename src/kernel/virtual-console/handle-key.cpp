@@ -9,12 +9,33 @@ namespace kernel {
   inline static bool keyBreakP(uint8_t key_code) {
     return (key_code & 0x80) >> 7;
   }
-  void VirtualConsole::handleKey(void* object,
-                                 const drivers::keyboard::KeyEvent* event) {
+  void VirtualConsole::handleKey(const drivers::keyboard::KeyEvent* event) {
     if(!keyBreakP(event->getAsciiKey())) {
-      reinterpret_cast<VirtualConsole*>(object)->put(static_cast<uint8_t>(event->getAsciiKey()), 16);
-      reinterpret_cast<VirtualConsole*>(object)->put(" ");
-      reinterpret_cast<VirtualConsole*>(object)->updateOutputVideoRam();
+      switch (event->getAsciiKey()) {
+      case 0x3b:
+        kernel::global::virtual_consoles[0].setCurrent();
+        break;
+      case 0x3c:
+        kernel::global::virtual_consoles[1].setCurrent();
+        break;
+      case 0x3d:
+        kernel::global::virtual_consoles[2].setCurrent();
+        break;
+      case 0x3e:
+        kernel::global::virtual_consoles[3].setCurrent();
+        break;
+      case 0x3f:
+        kernel::global::virtual_consoles[4].setCurrent();
+        break;
+      case 0x40:
+        kernel::global::virtual_consoles[5].setCurrent();
+        break;
+
+      default:
+        VirtualConsole::currentConsole()->put(static_cast<uint8_t>(event->getAsciiKey()), 16);
+        VirtualConsole::currentConsole()->put(" ");
+      }
+      VirtualConsole::currentConsole()->updateOutputVideoRam();
     }
   }
 }

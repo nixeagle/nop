@@ -45,8 +45,7 @@ namespace kernel {
        long as object is the whole virtual console and not just some
        smaller part of it.
      */
-    extern void (*key_event)(void* object,
-                             const drivers::keyboard::KeyEvent* event);
+    extern void (*key_event)(const drivers::keyboard::KeyEvent* event);
   }
 }
 

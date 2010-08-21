@@ -57,7 +57,8 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
 
   BaseDescriptor<IdtEntry> idt = kernel::idt::init(256);
 
-  kernel::VirtualConsole vc[6];
+  //  kernel::VirtualConsole vc[6];
+
   puts_allocated_memory();
 
   // //  asm volatile ("xchg %bx, %bx");
@@ -81,7 +82,8 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
   puts_allocated_memory();
 
   //  vc[0].setCurrent();
-  vc[0].setCurrent();
+  kernel::global::virtual_consoles = new VirtualConsole[6];
+  kernel::global::virtual_consoles[0].setCurrent();
   VirtualConsole::currentConsole()->clearBuffer();
   VirtualConsole::currentConsole()->put("test!");
   VirtualConsole::currentConsole()->put(" Hi?");
@@ -91,7 +93,7 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
 
   busy_loop(0x10);
 
-  vc[1].setCurrent();
+  kernel::global::virtual_consoles[1].setCurrent();
   VirtualConsole::currentConsole()->put(100);
   VirtualConsole::currentConsole()->putc('\n');
   VirtualConsole::currentConsole()->put("Hi!");

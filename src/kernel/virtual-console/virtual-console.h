@@ -82,6 +82,7 @@ namespace kernel {
     /// Pointer to start of last visible row
     uint32_t visible_buffer_bottom_row;
   public:
+
     VirtualConsole(void)
       :  output_buffer(reinterpret_cast<Char*>(kernel::memory::flat_kmalloc(sizeof(Char) * COLUMNS * ROWS)))
       , input_buffer(reinterpret_cast<Char*>(kernel::memory::flat_kmalloc(sizeof(Char) * COLUMNS * max_input_height)))
@@ -91,7 +92,6 @@ namespace kernel {
       this->clearBuffer();
       this->clearInputBuffer();
     };
-
     static VirtualConsole* currentConsole(void) {
       return VirtualConsole::current_console;
     }
@@ -131,8 +131,9 @@ namespace kernel {
     void updateInputVideoRam(void);
 
     // Inserting user's key inputs
-    static void handleKey(void* object,
-                          const drivers::keyboard::KeyEvent* event);
+    static void handleKey(const drivers::keyboard::KeyEvent* event);
   };
-
+  namespace global {
+    extern VirtualConsole* virtual_consoles;
+  }
 }
