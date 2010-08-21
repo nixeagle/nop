@@ -4,10 +4,7 @@
 namespace kernel {
   namespace drivers {
     namespace keyboard {
-
-      /** Keyboard event */
-      class KeyEvent {
-        static struct {
+      typedef struct {
           /// Was shift pressed?
           /// \pre Assumes only one keyboard is attached.
           bool shift : 1;
@@ -20,15 +17,19 @@ namespace kernel {
           bool super : 1;
           bool menu : 1;
           bool scroll_lock : 1;
-        } modifier;
+      } ModifierKeys;
+      /** Keyboard event */
+      class KeyEvent {
+        static ModifierKeys modifier;
         /// keysym pressed.
         uint32_t code;
+
+        bool handleModifierKey(void);
       public:
-        KeyEvent(uint32_t code)
-          : code(code) {}
-        char getAsciiKey(void) const {
-          return static_cast<char>(code);
-        }
+        KeyEvent(uint32_t code);
+
+        uint32_t getCode(void) const { return code; }
+        char getAsciiKey(void) const;
       };
     }
   }

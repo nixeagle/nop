@@ -22,6 +22,7 @@ namespace kernel {
         this->character = character;
         this->attributes = 0x07;
       }
+      Char() : character(0), attributes(0) {};
     };
     /// Pointer to the currently active console.
     static VirtualConsole* current_console;
@@ -76,6 +77,8 @@ namespace kernel {
     /// Height of input area
     /** Should default to 1, but expanding is possible if user requires
         more then one line of input to enter a command.
+
+        @todo Compute this from the current (non zero) length of the input buffer)
     */
     uint8_t input_height;
 
@@ -84,7 +87,7 @@ namespace kernel {
   public:
 
     VirtualConsole(void)
-      :  output_buffer(reinterpret_cast<Char*>(kernel::memory::flat_kmalloc(sizeof(Char) * COLUMNS * ROWS)))
+      : output_buffer(reinterpret_cast<Char*>(kernel::memory::flat_kmalloc(sizeof(Char) * COLUMNS * ROWS)))
       , input_buffer(reinterpret_cast<Char*>(kernel::memory::flat_kmalloc(sizeof(Char) * COLUMNS * max_input_height)))
       , output_cursor(0)
       , input_cursor(0)
@@ -101,7 +104,15 @@ namespace kernel {
 
     void setCurrent (void);
     kernel::string::String* getUserInput(void) const;
+    /// Insert a char to the user input buffer
+    /** \param input[in] A printable ASCII character.
 
+        \pre \ref input_buffer must have space for one character.
+
+        \post A character is added to the \ref input_buffer and \ref
+        input_cursor is incremented by one.
+    */
+    void insertUserInput(uint8_t input);
     // scrolling
     void scrollUp(uint16_t rows);
     void scrollDown(uint16_t rows);

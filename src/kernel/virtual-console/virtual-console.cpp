@@ -33,6 +33,10 @@ namespace kernel {
     }
   }
 
+  void VirtualConsole::insertUserInput(uint8_t input) {
+    /// @todo Validate input as a printable ASCII char.
+    input_buffer[input_cursor++].setChar(input);
+  }
   void VirtualConsole::setCurrent () {
     current_console = this;
     kernel::global::key_event = this->handleKey;
@@ -41,6 +45,13 @@ namespace kernel {
   void VirtualConsole::updateOutputVideoRam() {
     Char* videoram = reinterpret_cast<Char*>(VIDEORAM);
     c::memcpy(videoram + (COLUMNS * hud_height), output_buffer,
-              sizeof(Char) * COLUMNS * (ROWS - hud_height));
+              sizeof(Char) * COLUMNS
+              * (ROWS - hud_height - input_height));
+  }
+  void VirtualConsole::updateInputVideoRam() {
+    Char* videoram = reinterpret_cast<Char*>(VIDEORAM);
+    c::memcpy(videoram + COLUMNS * (ROWS - input_height),
+              input_buffer,
+              sizeof(Char) * COLUMNS * input_height);
   }
 }

@@ -10,8 +10,8 @@ namespace kernel {
     return (key_code & 0x80) >> 7;
   }
   void VirtualConsole::handleKey(const drivers::keyboard::KeyEvent* event) {
-    if(!keyBreakP(event->getAsciiKey())) {
-      switch (event->getAsciiKey()) {
+    if(!keyBreakP(static_cast<uint8_t>(event->getCode()))) {
+      switch (event->getCode()) {
       case 0x3b:
         kernel::global::virtual_consoles[0].setCurrent();
         break;
@@ -32,10 +32,12 @@ namespace kernel {
         break;
 
       default:
-        VirtualConsole::currentConsole()->put(static_cast<uint8_t>(event->getAsciiKey()), 16);
+        VirtualConsole::currentConsole()->put(static_cast<uint8_t>(event->getCode()), 16);
         VirtualConsole::currentConsole()->put(" ");
+        VirtualConsole::currentConsole()->insertUserInput(static_cast<uint8_t>(event->getAsciiKey()));
       }
       VirtualConsole::currentConsole()->updateOutputVideoRam();
+      VirtualConsole::currentConsole()->updateInputVideoRam();
     }
   }
 }
