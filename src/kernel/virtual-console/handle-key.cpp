@@ -12,6 +12,8 @@ namespace kernel {
   void VirtualConsole::handleKey(const drivers::keyboard::KeyEvent* event) {
     if(!keyBreakP(static_cast<uint8_t>(event->getCode()))) {
       switch (event->getCode()) {
+      case 0xFFFFFFFF: // Key event was a modifier key.
+        break;
       case 0x3b:
         kernel::global::virtual_consoles[0].setCurrent();
         break;

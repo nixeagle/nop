@@ -6,7 +6,7 @@ namespace kernel {
     namespace keyboard {
       ModifierKeys KeyEvent::modifier = {false,false,false,false,false,false,false,false};
       char KeyEvent::getAsciiKey(void) const {
-        if (modifier.shift) {
+        if (modifier.shift || modifier.caps_lock) {
           return static_cast<char>(keysym_us_shift[code]);
         } else {
           return static_cast<char>(keysym_us[code]);
@@ -23,13 +23,16 @@ namespace kernel {
         case 0xaa: // Left shift break
           modifier.shift = false;
           return true;
+        case 0x3a: // Capslock
+          modifier.caps_lock = !modifier.caps_lock;
+          return true;
         default:
           return false;
         }
       }
 
       KeyEvent::KeyEvent(uint32_t code) : code(code) {
-        handleModifierKey();
+        if(handleModifierKey()) { this->code = 0xFFFFFFFF; }
       }
     }
   }
