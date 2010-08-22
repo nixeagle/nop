@@ -26,7 +26,7 @@ namespace kernel {
       inline uint8_t getCharacter(void) const {
         return character;
       }
-      inline bool nullp(void) const { return character & 0x01; }
+      inline bool nullp(void) const { return character; }
       Char() : character(0), attributes(0) {};
     };
     /// Pointer to the currently active console.
