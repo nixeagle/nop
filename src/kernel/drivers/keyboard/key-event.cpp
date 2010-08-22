@@ -26,6 +26,31 @@ namespace kernel {
         case 0x3a: // Capslock
           modifier.caps_lock = !modifier.caps_lock;
           return true;
+        case 0x1d: // left control
+        case 0xe0: // right control
+          modifier.control = true;
+          return true;
+        case 0x9d: // left and right control break
+          modifier.control = false;
+          return true;
+        case 0x38: // left meta (alt)
+          modifier.meta = true;
+          return true;
+        case 0xb8: // left meta (alt) break
+          modifier.meta = false;
+          return true;
+        case 0x5d: // menu
+          modifier.menu = true;
+          return true;
+        case 0xdd: // menu break
+          modifier.menu = false;
+          return true;
+        case 0x5b:
+          modifier.super = true;
+          return true;
+        case 0xdb:
+          modifier.super = false;
+          return true;
         default:
           return false;
         }

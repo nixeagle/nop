@@ -32,14 +32,19 @@ namespace kernel {
       case 0x40:
         kernel::global::virtual_consoles[5].setCurrent();
         break;
+      case 0x41:
+        for(int i = 0; i < 256; i++) {
+          VirtualConsole::currentConsole()->put(i, 16);
+          VirtualConsole::currentConsole()->put(" ");
+        }
 
       default:
-        VirtualConsole::currentConsole()->put(static_cast<uint8_t>(event->getCode()), 16);
-        VirtualConsole::currentConsole()->put(" ");
         VirtualConsole::currentConsole()->insertUserInput(static_cast<uint8_t>(event->getAsciiKey()));
       }
-      VirtualConsole::currentConsole()->updateOutputVideoRam();
       VirtualConsole::currentConsole()->updateInputVideoRam();
     }
+    VirtualConsole::currentConsole()->put(static_cast<uint8_t>(event->getCode()), 16);
+    VirtualConsole::currentConsole()->put(" ");
+    VirtualConsole::currentConsole()->updateOutputVideoRam();
   }
 }
