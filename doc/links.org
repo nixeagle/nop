@@ -5,7 +5,21 @@ Various useful links as I come across them:
   document on keyboard scan codes. Tells literally everything you might
   want to know about them in all the gory details.
 
-* Spin locks
-  http://lwn.net/Articles/267968/ - Talks about the implementation of
-  ticket spinlocks in the linux kernel and explains to some extent why
-  these are better then normal spin locks on machines with many cpus.
+
+* Concurrency
+  - http://www.oamk.fi/~joleppaj/personal/jleppaja_gradu_080511.pdf -
+    Historical overview of methods used. Good for understanding what has
+    been done in the past and why it was done.
+
+  - http://www.greenteapress.com/semaphores/downey08semaphores.pdf -
+    Explains in depth what "concurrent" means in simple language. Covers
+    various concurrent algorithms.
+
+*** Spin locks
+    - http://lwn.net/Articles/267968/ - Talks about the implementation of
+      ticket spinlocks in the linux kernel and explains to some extent why
+      these are better then normal spin locks on machines with many cpus.
+
+*** Lock free
+***** Queue
+      - http://www.research.ibm.com/people/m/michael/podc-1996.pdf
