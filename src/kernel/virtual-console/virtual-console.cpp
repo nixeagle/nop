@@ -1,7 +1,7 @@
 #include "virtual-console.h"
 #include "library/c/memory/memcpy.h"
 #include "global.h"
-
+#include "kernel/string/string.h"
 namespace kernel {
   // static members
   VirtualConsole* VirtualConsole::current_console = 0;
@@ -55,5 +55,22 @@ namespace kernel {
     c::memcpy(videoram + COLUMNS * (ROWS - input_height),
               input_buffer,
               sizeof(Char) * COLUMNS * input_height);
+  }
+
+  uint16_t VirtualConsole::charBufferLength(const Char* buffer) {
+    uint16_t i = 0;
+    while (buffer[i].nullp()) {
+      i++;
+    }
+    return i;
+  }
+  kernel::string::String* VirtualConsole::getUserInput(void) const {
+    using string::String;
+
+    String *string = new String(charBufferLength(input_buffer));
+    for(uint16_t i = 0; i < string->length(); i++) {
+      (*string)[i] = input_buffer[i].getCharacter();
+    }
+    return string; /// \retval String* is copied string from input.
   }
 }

@@ -1,6 +1,7 @@
 #pragma once
 #include "types.h"
 #include "kernel/memory/memory.h"
+#include "kernel/virtual-console/virtual-console.h"
 
 namespace kernel {
   namespace string {
@@ -14,15 +15,21 @@ namespace kernel {
           this->string[i] = string[i];
         }
       }
+      String(uint32_t length)
+        : _length(length)
+        , string(new char[length]) {}
+
       static size_t length(const char* string) {
         size_t length = 0;
         while('\0' != string[length]) {
           length++;
         }
+        kernel::VirtualConsole::currentConsole()->put("LENGTH:");
+        kernel::VirtualConsole::currentConsole()->put(length);
         return length;
       }
 
-      inline size_t length() const { return _length; };
+        size_t length() const {  return _length; };
       inline static size_t length(const String* string) {
         return string->length();
       }
@@ -32,6 +39,16 @@ namespace kernel {
           number+=(this->string[i] - 0x30) * power;
         }
         return number;
+      }
+
+      char const &operator[] (int i) const {
+        return string[i];
+      }
+      char& operator[] (int i) {
+        return string[i];
+      }
+      char  &at(int i)  {
+        return string[i];
       }
     private:
       /// @todo Make accessor function for the length.

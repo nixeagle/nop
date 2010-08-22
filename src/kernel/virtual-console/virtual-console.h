@@ -1,6 +1,5 @@
 #pragma once
 #include "types.h"
-#include "kernel/string/string.h"
 #include "kernel/memory/memory.h"
 
 namespace kernel {
@@ -9,7 +8,9 @@ namespace kernel {
       class KeyEvent;           // Forward declaration.
     }
   }
-
+  namespace string {
+    class String;
+  }
   class VirtualConsole {
     class Char {
       uint8_t character;
@@ -22,6 +23,10 @@ namespace kernel {
         this->character = character;
         this->attributes = 0x07;
       }
+      inline uint8_t getCharacter(void) const {
+        return character;
+      }
+      inline bool nullp(void) const { return character & 0x01; }
       Char() : character(0), attributes(0) {};
     };
     /// Pointer to the currently active console.
@@ -84,6 +89,7 @@ namespace kernel {
 
     /// Pointer to start of last visible row
     uint32_t visible_buffer_bottom_row;
+    static uint16_t charBufferLength(const Char* buffer);
   public:
 
     VirtualConsole(void)
@@ -127,7 +133,8 @@ namespace kernel {
     void hideHud(void); /// Hide the hud, shows more of the scrollback.
 
     // inserting things to buffer. (non user input/hud portions)
-    void put(const kernel::string::String* string); /// pascal strings
+    void put(kernel::string::String& string); /// pascal strings
+    void put(kernel::string::String* string); /// pascal strings
     void put(const char* string);  /// C strings, must terminate in null.
     void put(uint32_t integer, uint8_t base = 10);    /// Unsigned integer.
     //    void put(int integer);         /// Print a possibly negative integer.

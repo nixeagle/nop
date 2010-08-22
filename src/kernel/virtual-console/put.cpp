@@ -1,6 +1,17 @@
 #include "virtual-console.h"
+#include "kernel/string/string.h"
 
 namespace kernel {
+  void VirtualConsole::put(string::String& string) {
+    for(uint16_t i = 0; i < string.length(); i++) {
+      putc(string.at(i));
+    }
+  }
+  void VirtualConsole::put(string::String* string) {
+    for(uint16_t i = 0; i < string->length(); i++) {
+      putc(string->at(i));
+    }
+  }
   void VirtualConsole::put(const char* string) {
     while('\0' != *string) {
       putc(*string++);
