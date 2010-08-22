@@ -22,6 +22,7 @@ namespace kernel {
     for(size_t i = 0; i < COLUMNS * max_input_height; i++) {
       input_buffer[i].clear();
     }
+    input_cursor = 0; // Set cursor back to start.
   }
 
   void VirtualConsole::putc(char character) {
