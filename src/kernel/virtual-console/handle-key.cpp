@@ -52,8 +52,6 @@ namespace kernel {
       }
       VirtualConsole::currentConsole()->updateInputVideoRam();
     }
-    VirtualConsole::currentConsole()->put(static_cast<uint8_t>(event->getCode()), 16);
-    VirtualConsole::currentConsole()->put(" ");
     VirtualConsole::currentConsole()->updateOutputVideoRam();
   }
 }
