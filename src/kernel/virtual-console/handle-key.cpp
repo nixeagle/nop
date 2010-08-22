@@ -39,15 +39,13 @@ namespace kernel {
           VirtualConsole::currentConsole()->put(" ");
         }
         break;
-      case 0x42: // F8
-        VirtualConsole::currentConsole()->clearInputBuffer();
-        break;
       case 0x43: // F9
         VirtualConsole::currentConsole()->clearBuffer();
         break;
       case 0x1c:
         VirtualConsole::currentConsole()->put(VirtualConsole::currentConsole()->getUserInput());
         VirtualConsole::currentConsole()->put("\n");
+        VirtualConsole::currentConsole()->clearInputBuffer();
         break;
       default:
         VirtualConsole::currentConsole()->insertUserInput(static_cast<uint8_t>(event->getAsciiKey()));
