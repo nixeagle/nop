@@ -16,7 +16,7 @@ namespace kernel {
     /// \todo base being larger then 36 ought to cause an error instead of
     /// being silently ignored.
     if(0 < number && 36 >= base) {
-      put(number/base);
+      put(number/base, base);
       // digit can't be larger then 36.
       unsigned char digit = static_cast<uint8_t>(number % base);
       // It is not possible for digit to be larger then 91
