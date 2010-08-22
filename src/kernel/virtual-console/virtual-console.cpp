@@ -15,6 +15,7 @@ namespace kernel {
     for(size_t i = 0; i < COLUMNS * ROWS; i++) {
       output_buffer[i].clear();
     }
+    output_cursor = 0; // Set cursor back to start.
   }
 
   void VirtualConsole::clearInputBuffer() {
