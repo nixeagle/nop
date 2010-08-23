@@ -18,7 +18,9 @@ namespace kernel {
       String(uint32_t length)
         : _length(length)
         , string(new char[length]) {}
-
+      ~String() {
+        delete string;
+      }
       static size_t length(const char* string) {
         size_t length = 0;
         while('\0' != string[length]) {
