@@ -8,8 +8,8 @@ namespace kernel {
 
       class __attribute__((packed)) Block {
         bool allocatedp : 1;            /// True when block is allocated.
-        size_t start : 19;               /// Pointer to start of block.
-        uint16_t size : 12;              /// Size in bytes of the block.
+        size_t start : 23;               /// Pointer to start of block.
+        uint16_t size : 16;              /// Size in bytes of the block.
 
 
       public:
