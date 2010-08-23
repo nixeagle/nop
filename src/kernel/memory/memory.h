@@ -7,7 +7,7 @@ extern "C" int kernel_end;
 
 namespace kernel {
   namespace memory {
-    void* kmalloc(size_t size)
+    extern void* kmalloc(size_t size)
       __attribute__((alloc_size(1),fastcall,malloc,warn_unused_result, optimize ("-O0")));
     /** Allocate memory off the end of the kernel.
 

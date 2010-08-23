@@ -33,6 +33,9 @@ namespace kernel {
     default:
       output_buffer[output_cursor++].setChar(character);
     }
+    if(output_scroll_cursor/COLUMNS == output_cursor/COLUMNS) {
+      output_scroll_cursor += COLUMNS;
+    }
   }
 
   void VirtualConsole::insertUserInput(uint8_t input) {
@@ -46,7 +49,8 @@ namespace kernel {
 
   void VirtualConsole::updateOutputVideoRam() {
     Char* videoram = reinterpret_cast<Char*>(VIDEORAM);
-    c::memcpy(videoram + (COLUMNS * hud_height), output_buffer,
+    c::memcpy(videoram + (COLUMNS * hud_height),
+              output_buffer - (COLUMNS * 20) + output_scroll_cursor,
               sizeof(Char) * COLUMNS
               * (ROWS - hud_height - input_height));
   }

@@ -75,6 +75,8 @@ namespace kernel {
     /// Location for user to input commands
     Char* input_buffer;
 
+
+
     uint32_t output_cursor; /// Position of marker for text entry.
 
     uint32_t input_cursor; /// User's input cursor, where text appears.
@@ -86,7 +88,7 @@ namespace kernel {
         @todo Compute this from the current (non zero) length of the input buffer)
     */
     uint8_t input_height;
-
+    uint32_t output_scroll_cursor; /// First line to show in scrollback.
     /// Pointer to start of last visible row
     uint32_t visible_buffer_bottom_row;
     static uint16_t charBufferLength(const Char* buffer);
@@ -97,7 +99,8 @@ namespace kernel {
       , input_buffer(reinterpret_cast<Char*>(kernel::memory::flat_kmalloc(sizeof(Char) * COLUMNS * max_input_height)))
       , output_cursor(0)
       , input_cursor(0)
-      , input_height(1) {
+      , input_height(1)
+      , output_scroll_cursor((ROWS - hud_height - input_height ) * COLUMNS){
       this->clearBuffer();
       this->clearInputBuffer();
     };
@@ -139,7 +142,12 @@ namespace kernel {
     void put(uint32_t integer, uint8_t base = 10);    /// Unsigned integer.
     //    void put(int integer);         /// Print a possibly negative integer.
     void put(const void* pointer); /// Pointer/address to something.
-    void putc(char character);      /// A single character.
+    /// A single character.
+    /** \post \ref output_cursor changed.
+        \post \ref output_scroll_cursor moved by \ref COLUMNS
+        \post single ascii \a character placed on \ref output_buffer.
+     */
+    void putc(char character);
 
     // Generic visible buffer clearing.
     void clearLine(uint8_t line); /// Clear a specific line.

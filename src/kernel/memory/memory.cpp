@@ -15,7 +15,7 @@ namespace kernel {
       allocated_byte_count += size;
       return pointer;
     }
-    void* kmalloc(size_t size) {
+    extern void* kmalloc(size_t size) {
 
       kernel::text_mode::putInteger(size, 10, 7, 40);
       void* pointer = heap.malloc(size);
