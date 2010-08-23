@@ -89,8 +89,6 @@ namespace kernel {
     */
     uint8_t input_height;
     uint32_t output_scroll_cursor; /// First line to show in scrollback.
-    /// Pointer to start of last visible row
-    uint32_t visible_buffer_bottom_row;
     __attribute__ ((pure))
     static uint16_t charBufferLength(const Char* buffer);
     __attribute__ ((pure))
