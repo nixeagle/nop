@@ -17,13 +17,15 @@ namespace kernel {
     }
     extern void* kmalloc(size_t size) {
 
-      kernel::text_mode::putInteger(size, 10, 7, 40);
       void* pointer = heap.malloc(size);
       kernel::text_mode::put_hex((size_t)pointer, 2, 7);
 
       //heap.inspect();
 
       return pointer;
+    }
+    extern void kfree(void *p) {
+      heap.free(p);
     }
     size_t getAllocatedByteCount() {
       heap.inspect();

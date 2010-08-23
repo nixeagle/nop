@@ -24,6 +24,7 @@ namespace kernel {
     void* flat_kmalloc(size_t size);
     size_t getAllocatedByteCount(void);
     void init(void);
+    void kfree(void *p);
   }
 }
 
@@ -35,13 +36,13 @@ inline void *operator new[](size_t size) {
   return kernel::memory::kmalloc(size);
 }
 
-// inline void operator delete(void *p) {
-//   //free(p);
-// }
+inline void operator delete(void *p) {
+  kernel::memory::kfree(p);
+}
 
-// inline void operator delete[](void *p) {
-//   //free(p);
-// }
+inline void operator delete[](void *p) {
+  kernel::memory::kfree(p);
+}
 
 #endif /* _MEMORY_H_ */
 

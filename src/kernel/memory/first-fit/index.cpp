@@ -6,10 +6,11 @@ namespace kernel {
 
       using kernel::text_mode::puts;
       using kernel::text_mode::putInteger;
-      void Index::free(size_t memory_address) {
+      void Index::free(void* memory_address) {
         // Look for memory_address in the lookup array.
         for(int i = 0; i < heap_size; i++) {
-          if(heap[i].freeIf(memory_address - heap_start)) {
+          if(heap[i].freeIf(reinterpret_cast<size_t>(memory_address)
+                            - heap_start)) {
             return;
           }
         }
@@ -32,12 +33,12 @@ namespace kernel {
           kernel::text_mode::put_hex(heap_start, 4, 4);
           void* new_memory = heap[i].allocIf(size);
           if(reinterpret_cast<void*>(0xFFFFFFFF) != new_memory) {
-            return new_memory;
+            return new_memory + heap_start;
           }
         }
         void* new_memory = findBrandNewBlock()->alloc(heap_end, size);
         kernel::text_mode::put_hex((size_t)new_memory, 3, 10);
-        heap_end += size;
+        ;        heap_end += size;
 
         return reinterpret_cast<void*>(reinterpret_cast<size_t>(new_memory) + heap_start);
       }

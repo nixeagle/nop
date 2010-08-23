@@ -17,6 +17,8 @@ namespace kernel {
         return reinterpret_cast<void*>(start);
       }
       bool Block::freeIf(size_t memory_address) {
+        kernel::text_mode::put_hex(memory_address, 3, 60);
+        kernel::text_mode::put_hex(start, 3, 70);
         if(memory_address == start) {
           free();
           return true;

@@ -24,7 +24,7 @@ namespace kernel {
         }
         Block getBlock (int i) { return heap[i];}
         void* __attribute__((optimize ("-O0"),malloc))malloc(uint16_t size);
-        void free(size_t memory_address);
+        void free(void* memory_address);
         Index(void) : heap_start(reinterpret_cast<size_t>(&kernel_end)
                                  + 0x10000
                                  + kernel::memory::getAllocatedByteCount())
