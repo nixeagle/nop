@@ -93,15 +93,19 @@ namespace kernel {
     uint32_t visible_buffer_bottom_row;
     __attribute__ ((pure))
     static uint16_t charBufferLength(const Char* buffer);
+    __attribute__ ((pure))
+    uint8_t outputHeight(void) {
+      return static_cast<uint8_t>(ROWS - hud_height - input_height);
+    }
   public:
 
     VirtualConsole(void)
-      : output_buffer(reinterpret_cast<Char*>(kernel::memory::flat_kmalloc(sizeof(Char) * COLUMNS * scrollback_rows)))
-      , input_buffer(reinterpret_cast<Char*>(kernel::memory::flat_kmalloc(sizeof(Char) * COLUMNS * max_input_height)))
+      : output_buffer(new Char[COLUMNS * scrollback_rows])
+      , input_buffer(new Char[COLUMNS * max_input_height])
       , output_cursor(0)
       , input_cursor(0)
       , input_height(1)
-      , output_scroll_cursor((ROWS - hud_height - input_height ) * COLUMNS){
+      , output_scroll_cursor(outputHeight() * COLUMNS) {
       this->clearBuffer();
       this->clearInputBuffer();
     };

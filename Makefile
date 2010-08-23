@@ -13,7 +13,7 @@ dangerous_o_flags := -fmerge-all-constants -funsafe-loop-optimizations -fsched-s
 # -flto == has not been enabled in this configuration (looks cool, I want)
 
 # -floop-interchange -fgraphite-identity -floop-parallelize-all -floop-block === This optimization applies to all the languages supported by GCC and is not limited to Fortran. To use this code transformation, GCC has to be configured with --with-ppl and --with-cloog to enable the Graphite loop transformation infrastructure.
-fthings := -fstrict-aliasing -fno-rtti -fweb -fkeep-inline-functions -fmodulo-sched -fmodulo-sched-allow-regmoves -fgcse-sm -fgcse-las  -fgcse-after-reload -fsched-pressure -fsched2-use-superblocks -fschedule-insns2  -fipa-pta -ftree-loop-linear -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model -ftracer -fvariable-expansion-in-unroller -freorder-blocks-and-partition -falign-jumps -fbranch-target-load-optimize -fbranch-target-load-optimize2 ${dangerous_o_flags}
+fthings := -O3 -fstrict-aliasing -fno-rtti -fweb -fkeep-inline-functions -fmodulo-sched -fmodulo-sched-allow-regmoves -fgcse-sm -fgcse-las  -fgcse-after-reload -fsched-pressure -fsched2-use-superblocks -fschedule-insns2  -fipa-pta -ftree-loop-linear  -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model -ftracer -fvariable-expansion-in-unroller -freorder-blocks-and-partition -falign-jumps -fbranch-target-load-optimize2 ${dangerous_o_flags}
 
 gcc46 := -ftree-bit-ccp
 

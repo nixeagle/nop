@@ -19,7 +19,7 @@ namespace kernel {
 
       kernel::text_mode::putInteger(size, 10, 7, 40);
       void* pointer = heap.malloc(size);
-      kernel::text_mode::put_hex((size_t)pointer, 21, 70);
+      kernel::text_mode::put_hex((size_t)pointer, 2, 7);
 
       //heap.inspect();
 

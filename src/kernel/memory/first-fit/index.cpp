@@ -36,6 +36,7 @@ namespace kernel {
           }
         }
         void* new_memory = findBrandNewBlock()->alloc(heap_end, size);
+        kernel::text_mode::put_hex((size_t)new_memory, 3, 10);
         heap_end += size;
 
         return reinterpret_cast<void*>(reinterpret_cast<size_t>(new_memory) + heap_start);

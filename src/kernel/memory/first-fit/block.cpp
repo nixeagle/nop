@@ -7,10 +7,10 @@ namespace kernel {
         allocatedp = false;
       }
 
-      void* Block::alloc(size_t start, uint16_t size) {
+      void* Block::alloc(size_t start, size_t size) {
 
-        this->start = start & 0x7ffff;
-        this->size = size & 0b111111111111;
+        this->start = start & 0x7fffff;
+        this->size = size & 0xffff;
         allocatedp = true;
 
         /// \retval void* is a pointer to newly allocated memory block.
@@ -25,7 +25,7 @@ namespace kernel {
         }
       }
 
-      void* Block::allocIf(uint16_t size) {
+      void* Block::allocIf(size_t size) {
         if (!allocatedp && start != 0x0 && this->size >= size) {
           /// \retval "any non null pointer" is a pointer to newly alloated
           /// memory.

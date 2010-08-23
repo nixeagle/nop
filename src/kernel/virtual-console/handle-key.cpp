@@ -61,10 +61,6 @@ namespace kernel {
       case 0x1c:
         out.put(out.getUserInput());
         out.put("\n");
-        out.put(out.output_cursor);
-        out.put(" -- ");
-        out.put(out.output_scroll_cursor);
-        out.put(" ::");
         out.clearInputBuffer();
         break;
       default:

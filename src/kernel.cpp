@@ -84,7 +84,7 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
   //  vc[0].setCurrent();
   kernel::global::virtual_consoles = new VirtualConsole[6];
   kernel::global::virtual_consoles[0].setCurrent();
-
+  puts_allocated_memory();
   busy_loop(0xfff);
   return;
 }

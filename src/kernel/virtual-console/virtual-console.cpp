@@ -12,7 +12,7 @@ namespace kernel {
   }
 
   void VirtualConsole::clearBuffer() {
-    for(size_t i = 0; i < COLUMNS * ROWS; i++) {
+    for(size_t i = 0; i < COLUMNS * scrollback_rows; i++) {
       output_buffer[i].clear();
     }
     output_cursor = 0; // Set cursor back to start.
@@ -50,9 +50,8 @@ namespace kernel {
   void VirtualConsole::updateOutputVideoRam() {
     Char* videoram = reinterpret_cast<Char*>(VIDEORAM);
     c::memcpy(videoram + (COLUMNS * hud_height),
-              output_buffer - (COLUMNS * 20) + output_scroll_cursor,
-              sizeof(Char) * COLUMNS
-              * (ROWS - hud_height - input_height));
+              output_buffer - (COLUMNS * outputHeight()) + output_scroll_cursor,
+              sizeof(Char) * COLUMNS * outputHeight());
   }
   void VirtualConsole::updateInputVideoRam() {
     Char* videoram = reinterpret_cast<Char*>(VIDEORAM);
