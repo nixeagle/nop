@@ -74,8 +74,6 @@ namespace kernel {
       }
       out.updateInputVideoRam();
     }
-    out.put(static_cast<uint8_t>(event->getCode()), 16);
-    out.put(" ");
     out.updateOutputVideoRam();
   }
 }
