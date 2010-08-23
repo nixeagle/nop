@@ -59,13 +59,18 @@ namespace kernel {
       case 0x4D: // right
         break;
       case 0x1c:
-        out.put(out.getUserInput());
-        out.put("\n");
-        out.clearInputBuffer();
+        {
+          string::String* input = out.getUserInput();
+          out.put(input);
+          delete input;
+          out.put("\n");
+          out.clearInputBuffer();
+        }
         break;
       default:
         out.insertUserInput(static_cast<uint8_t>(event->getAsciiKey()));
         out.updateInputVideoRam();
+        break;
       }
       out.updateInputVideoRam();
     }

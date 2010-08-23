@@ -50,7 +50,7 @@ namespace kernel {
         // }
         KeyEvent* event = new KeyEvent(scan_code);
         (kernel::global::key_event)(event);
-        // delete event;
+        delete event;
       }
     }
   }
