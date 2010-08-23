@@ -64,15 +64,11 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
   // //  asm volatile ("xchg %bx, %bx");
   // // asm volatile ("int $0x3");
   // //
-  asm volatile("sti");
+
   // timer tests.
   kernel::inlasm::outb(0x43, 0x36);
   kernel::inlasm::outb(0x40, 0xFF);
   kernel::inlasm::outb(0x40, 0xFF);
-
-
-  // //  Enter experiments function, this returns void.
-  experiments::main();
 
   puts_allocated_memory();
   kernel::text_mode::putInteger(0xa, 16, 24,0);
@@ -85,6 +81,10 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
   kernel::global::virtual_consoles = new VirtualConsole[6];
   kernel::global::virtual_consoles[0].setCurrent();
   puts_allocated_memory();
+
+  asm volatile("sti");
+  // //  Enter experiments function, this returns void.
+  experiments::main();
   busy_loop(0xfff);
   return;
 }
