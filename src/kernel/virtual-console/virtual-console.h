@@ -56,7 +56,7 @@ namespace kernel {
 
         Currently made constant.
     */
-    const static uint16_t scrollback_rows = 500;
+    const static uint16_t scrollback_rows = 400;
 
     /// Height of the heads up display.
     /** If the rest of the virtual console scrolls, text in this display
@@ -91,11 +91,12 @@ namespace kernel {
     uint32_t output_scroll_cursor; /// First line to show in scrollback.
     /// Pointer to start of last visible row
     uint32_t visible_buffer_bottom_row;
+    __attribute__ ((pure))
     static uint16_t charBufferLength(const Char* buffer);
   public:
 
     VirtualConsole(void)
-      : output_buffer(reinterpret_cast<Char*>(kernel::memory::flat_kmalloc(sizeof(Char) * COLUMNS * ROWS)))
+      : output_buffer(reinterpret_cast<Char*>(kernel::memory::flat_kmalloc(sizeof(Char) * COLUMNS * scrollback_rows)))
       , input_buffer(reinterpret_cast<Char*>(kernel::memory::flat_kmalloc(sizeof(Char) * COLUMNS * max_input_height)))
       , output_cursor(0)
       , input_cursor(0)
@@ -104,6 +105,7 @@ namespace kernel {
       this->clearBuffer();
       this->clearInputBuffer();
     };
+    __attribute__ ((pure))
     static VirtualConsole* currentConsole(void) {
       return VirtualConsole::current_console;
     }
