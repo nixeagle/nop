@@ -8,8 +8,18 @@ experimentalops := -fextended-identifiers
 
 assembly_output :=-masm=intel -save-temps
 
-fthings := -fstrict-aliasing -fno-rtti
+dangerous_o_flags := -fmerge-all-constants -funsafe-loop-optimizations -fsched-spec-load-dangerous -fipa-struct-reorg -fipa-matrix-reorg -ffast-math -funsafe-math-optimizations -ffinite-math-only -frename-registers
 
+# -flto == has not been enabled in this configuration (looks cool, I want)
+
+# -floop-interchange -fgraphite-identity -floop-parallelize-all -floop-block === This optimization applies to all the languages supported by GCC and is not limited to Fortran. To use this code transformation, GCC has to be configured with --with-ppl and --with-cloog to enable the Graphite loop transformation infrastructure.
+fthings := -fstrict-aliasing -fno-rtti -fweb -fkeep-inline-functions -fmodulo-sched -fmodulo-sched-allow-regmoves -fgcse-sm -fgcse-las  -fgcse-after-reload -fsched-pressure -fsched2-use-superblocks -fschedule-insns2  -fipa-pta -ftree-loop-linear -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model -ftracer -fvariable-expansion-in-unroller -freorder-blocks-and-partition -falign-jumps -fbranch-target-load-optimize -fbranch-target-load-optimize2 ${dangerous_o_flags}
+
+gcc46 := -ftree-bit-ccp
+
+
+#-fwhole-program == problems
+# ???? -ftree-loop-if-convert
 # Compiling C++ no matter what the file extensions are when invoking gcc.
 cxx_selection := -std=gnu++0x -x c++
 
@@ -23,7 +33,7 @@ CODEGEN := -freg-struct-return -fno-common
 
 args := ${warnings} ${fthings} ${osdevops} ${experimentalops} \
 	 -Wwrite-strings ${includes} ${cxx_selection} -m32 ${ignore_define} \
-	 -O3 ${CODEGEN}
+	 ${CODEGEN} -pipe
 
 # -fforward-propagate -fregmove -fno-peephole2  -finline-small-functions
 
@@ -53,11 +63,11 @@ all: nop.bin
 
 nop.bin: $(OBJFILES) ${AOBJFILES}
 	@nasm -f elf -o loader.o loader.s
-	@${LD} ${LDFLAGS} -melf_i386 -nostdlib -T linker.ld -o nop.bin loader.o ${OBJFILES} ${AOBJFILES}
+	@${CXX} ${LDFLAGS} --strip -nostdlib -T linker.ld -o nop.bin loader.o ${OBJFILES} ${AOBJFILES}
 #	@echo "Done! Linked the following into nop.bin:" ${OBJFILES}
 
 %.o: %.cpp Makefile
-	@$(CXX) $(args) -save-temps -MMD -MP -MT "$*.d $*.o"  -c $< -o $@
+	@$(CXX) $(args) -MMD -MP -MT "$*.d $*.o"  -c $< -o $@
 #	@echo "Compiled" $<
 
 %.o: %.asm Makefile
