@@ -6,6 +6,7 @@ namespace kernel {
   // static members
   VirtualConsole* VirtualConsole::current_console = 0;
   VirtualConsole* global::virtual_consoles = 0;
+  VirtualConsole& global::kout = *global::virtual_consoles;
   void VirtualConsole::Char::clear(void) {
     character = 0;
     attributes = 0;
@@ -43,6 +44,7 @@ namespace kernel {
     input_buffer[input_cursor++].setChar(input);
   }
   void VirtualConsole::setCurrent () {
+    global::kout = *this;
     current_console = this;
     kernel::global::key_event = this->handleKey;
   }

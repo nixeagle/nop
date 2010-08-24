@@ -162,8 +162,34 @@ namespace kernel {
 
     // Inserting user's key inputs
     static void handleKey(const drivers::keyboard::KeyEvent* event);
+
+    VirtualConsole& operator<< (uint32_t& integer) {
+      put(integer);
+      return *this;
+    }
+    VirtualConsole& operator<< (uint32_t integer) {
+      put(integer);
+      return *this;
+    }
+    VirtualConsole& operator<< (const char* string) {
+      put(string);
+      return *this;
+    }
+    VirtualConsole& operator<< (kernel::string::String& string) {
+      put(string);
+      return *this;
+    }
+    VirtualConsole& operator<< (kernel::string::String* string) {
+      put(string);
+      return *this;
+    }
+    VirtualConsole& operator<< (void* pointer) {
+      put(pointer);
+      return *this;
+    }
   };
   namespace global {
     extern VirtualConsole* virtual_consoles;
+    extern VirtualConsole& kout;
   }
 }
