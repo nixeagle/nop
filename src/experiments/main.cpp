@@ -1,6 +1,8 @@
 #include "main.h"
 #include "experiment.h"
 #include "kcommon.h"
+#include "library/nlib/lock-free/queue.h"
+
 namespace experiments {
 
   void main() {
@@ -15,5 +17,14 @@ namespace experiments {
     __sync_bool_compare_and_swap(&a, 1, 2);
     __builtin_return_address(0);
     __builtin_frame_address(0);
+
+    nib::Queue<int> que;
+    que.push(a);
+
+    kout << "Queue size: " << que.size() << " Start: " << que.front();
+    que.push(a);
+    //    que.pop();
+    kout << " size: ";
+    kout << que.size();
   }
 }
