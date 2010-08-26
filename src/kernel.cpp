@@ -1,4 +1,5 @@
 #include "kernel.h"
+#include "kcommon.h"
 #include "icxxabi.h"
 //#include "kernel/text_mode/text_mode.h"
 #include "kernel/gdt/gdt.h"
@@ -29,11 +30,12 @@ void busy_loop(size_t limit) {
 
 
 template<class T>
-void show_type(const T&)
-{
+void show_type(const T&) {
   kernel::VirtualConsole::currentConsole()->put(__PRETTY_FUNCTION__);
 }
-  extern "C" size_t start_tests, end_tests;
+extern "C" size_t start_tests, end_tests;
+
+  T(it, kernel::global::testout << "hi????"; return false;);
 
 extern "C" void kmain(struct mb_header *header, unsigned int magic) {
   using kernel::gdt::BaseDescriptor;
@@ -51,6 +53,12 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
     put_hex(magic,16,22);
   }
 
+  /// initialize consoles right away so we have a place to print test data
+  /// out to.
+  kernel::global::virtual_consoles = new VirtualConsole[6];
+  kernel::global::virtual_consoles[0].setCurrent();
+  kernel::global::testout = kernel::global::virtual_consoles[5];
+
   BaseDescriptor<GdtEntry> descs = kernel::gdt::init();
   puts_allocated_memory();
 
@@ -59,6 +67,8 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
   //  kernel::VirtualConsole vc[6];
 
   puts_allocated_memory();
+
+
 
   // //  asm volatile ("xchg %bx, %bx");
   // // asm volatile ("int $0x3");
@@ -79,15 +89,16 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
   //  vc[0].setCurrent();
   kernel::global::virtual_consoles = new VirtualConsole[6];
   kernel::global::virtual_consoles[0].setCurrent();
+  kernel::global::testout = kernel::global::virtual_consoles[5];
   puts_allocated_memory();
 
   asm volatile("sti");
-  for(size_t *test = reinterpret_cast<size_t*>(&start_tests); test < reinterpret_cast<size_t*>(&end_tests)  ;test++) {
-    ((bool (*) (void))(*test))();
-  }
+  put_hex((size_t)&start_tests, 0, 0);
+  put_hex((size_t)&end_tests, 0, 10);
+  tests::runTests();
 
 
-  // //  Enter experiments function, this returns void.
+
   experiments::main();
   busy_loop(0xfff);
   return;

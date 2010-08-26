@@ -6,6 +6,8 @@ namespace kernel {
   // static members
   VirtualConsole* VirtualConsole::current_console = 0;
   VirtualConsole* global::virtual_consoles = 0;
+  VirtualConsole* _testout = 0;
+  VirtualConsole& global::testout = *_testout;
   VirtualConsole& global::kout = *global::virtual_consoles;
   void VirtualConsole::Char::clear(void) {
     character = 0;

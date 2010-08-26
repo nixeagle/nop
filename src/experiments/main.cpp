@@ -3,7 +3,7 @@
 #include "kcommon.h"
 #include "library/nlib/lock-free/queue.h"
 
-#define T(NAME, X) __attribute__((section ("tests"))) bool (*NAME)() = [](){ X;};
+
 T(test1, kernel::global::kout << "HIIIAAAASLLLLSLLSLLSLLS"; return true;);
 namespace experiments {
   nib::Queue<bool (*)()>* tests = 0;

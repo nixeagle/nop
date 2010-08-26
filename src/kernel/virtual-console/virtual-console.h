@@ -191,5 +191,6 @@ namespace kernel {
   namespace global {
     extern VirtualConsole* virtual_consoles;
     extern VirtualConsole& kout;
+    extern VirtualConsole& testout;
   }
 }
