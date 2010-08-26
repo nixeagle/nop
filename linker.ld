@@ -25,6 +25,10 @@ SECTIONS
 		*(.ctor*)
 		end_ctors = .;
 
+                start_tests = .;
+                *(tests*)
+                end_tests = .;
+
 		start_dtors = .;
 		*(.dtor*)
 		end_dtors = .;

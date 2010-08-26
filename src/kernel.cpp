@@ -33,6 +33,7 @@ void show_type(const T&)
 {
   kernel::VirtualConsole::currentConsole()->put(__PRETTY_FUNCTION__);
 }
+  extern "C" size_t start_tests, end_tests;
 
 extern "C" void kmain(struct mb_header *header, unsigned int magic) {
   using kernel::gdt::BaseDescriptor;
@@ -81,6 +82,11 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
   puts_allocated_memory();
 
   asm volatile("sti");
+  for(size_t *test = reinterpret_cast<size_t*>(&start_tests); test < reinterpret_cast<size_t*>(&end_tests)  ;test++) {
+    ((bool (*) (void))(*test))();
+  }
+
+
   // //  Enter experiments function, this returns void.
   experiments::main();
   busy_loop(0xfff);

@@ -63,7 +63,7 @@ all: nop.bin
 
 nop.bin: $(OBJFILES) ${AOBJFILES}
 	@nasm -f elf -o loader.o loader.s
-	@${CXX} ${LDFLAGS} --strip -nostdlib -T linker.ld -o nop.bin loader.o ${OBJFILES} ${AOBJFILES}
+	@${CXX} ${LDFLAGS} -O3 --strip -nostdlib -T linker.ld -o nop.bin loader.o ${OBJFILES} ${AOBJFILES}
 #	@echo "Done! Linked the following into nop.bin:" ${OBJFILES}
 
 %.o: %.cpp Makefile
@@ -118,5 +118,8 @@ asm:
 	@${CXX} -S -O2 -fverbose-asm -g  ${args} ${asm_file}.cpp -o ${asm_file}.s
 	as --32 -alhnd ${asm_file}.s
 
- stats:
+stats:
 	@echo "commits" $(shell git log --oneline | wc -l) "additions" $(shell git log -p | grep -v '+++' | grep -c '^+') "removals" $(shell git log -p | grep -v -e '---' | grep -c '^-')
+
+testlink:
+	${LD} ${LDFLAGS} -M -O0 -nostdlib -T linker.ld -o nop.bin loader.o ${OBJFILES} ${AOBJFILES}
