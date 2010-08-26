@@ -51,7 +51,7 @@ namespace kernel {
 
   void VirtualConsole::updateOutputVideoRam() {
     Char* videoram = reinterpret_cast<Char*>(VIDEORAM);
-    c::memcpy(videoram + (COLUMNS * hud_height),
+    c::memcpy(videoram + (COLUMNS * kHUD_HEIGHT),
               output_buffer - (COLUMNS * outputHeight()) + output_scroll_cursor,
               sizeof(Char) * COLUMNS * outputHeight());
   }

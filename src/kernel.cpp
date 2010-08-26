@@ -1,4 +1,5 @@
 #include "kernel.h"
+#include "icxxabi.h"
 //#include "kernel/text_mode/text_mode.h"
 #include "kernel/gdt/gdt.h"
 #include "kernel/idt/idt.h"
@@ -42,15 +43,12 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
   // Setup memory:
   kernel::text_mode::clear_screen();
 
-  kernel::memory::init();
+  kernel::text_mode::clear_screen();
 
   if(0x2BADB002 != magic) {
     puts("ERROR: Bootloader magic does not match.", 15, 20);
     put_hex(magic,16,22);
   }
-  //  void* foo = kernel::memory::kmalloc(10);
-  puts("nop", 0, 0);
-  //  puts_allocated_memory();
 
   BaseDescriptor<GdtEntry> descs = kernel::gdt::init();
   puts_allocated_memory();

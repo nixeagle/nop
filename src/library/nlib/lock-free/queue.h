@@ -1,3 +1,4 @@
+#pragma once
 #include "kcommon.h"
 #include "types.h"
 /** Eventually implement lockfree algorithm.
@@ -29,10 +30,26 @@ namespace  nib {
       if(end->emptyp()) {
         end->setElement(element);
         end->setNextNode(*end);
-        kout << "\n" << "Next node: " << &end->getNextNode();
+        kout << "\n" << "node: " << end << " Next node: " << &end->getNextNode();
       } else {
         Node<T>& next = *new Node<T>(element);
-        kout << "\n" << "Next node: " << &next << "\n";
+        kout << "\n" << "node: " << end << " Next node: " << &next << "\n";
+        //end = &(end->getNextNode());
+        end->setNextNode(next);
+        end = &next;
+        kout << "\n" << end;
+        //kout << "\n" << "Next node?: " << &(end->getNextNode()) << "\n";
+        ; // end moves up.
+      }
+    }
+    void push(T&& element) {
+      if(end->emptyp()) {
+        end->setElement(element);
+        end->setNextNode(*end);
+        kout << "\n" << "node: " << end << " Next node: " << &end->getNextNode();
+      } else {
+        Node<T>& next = *new Node<T>(element);
+        kout << "\n" << "node: " << end << " Next node: " << &next << "\n";
         //end = &(end->getNextNode());
         end->setNextNode(next);
         end = &next;
@@ -48,9 +65,13 @@ namespace  nib {
     */
     void pop(void) {
       Node<T>& node = *start;
-      start = &node.getNextNode();
-      start->setNextNode(*start);
-      delete &node;
+      if(node.tailp()) {
+        node.markEmpty();
+      } else {
+        start = &node.getNextNode();
+        start->setNextNode(*start);
+        delete &node;
+      }
     }
     size_t size() {
       if(start->emptyp()) {
@@ -76,6 +97,7 @@ namespace  nib {
         : element(element), next_node(next) {}
       /// Node is "empty" if both pointers are null.
       bool emptyp () { return (reinterpret_cast<void*>(&getElement()) == reinterpret_cast<void*>(&getNextNode()));}
+      void markEmpty(void) { element = 0; next_node = 0;};
       R& getElement (void) const { return *element; }
       Node<R>& getNextNode(void) const { return *next_node; }
       void setElement (R& element) { this->element = &element; }
