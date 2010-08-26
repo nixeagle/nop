@@ -5,6 +5,7 @@
 */
 
 namespace  nib {
+  using kernel::global::kout;
   template<typename T>
   class Queue {
     template<typename R>
@@ -15,7 +16,7 @@ namespace  nib {
     /// Delete the entire queue.
     /// @todo what happens when the queue is not empty?
     ~Queue() {
-      delete &start;
+      delete start;
     }
     T& front(void) {
       return start->getElement();
@@ -24,48 +25,46 @@ namespace  nib {
       return start->getElement();
     }
     /// Push \a element into the queue.
-  void push(T& element) {
-    kernel::global::kout << "\n" << "Start: " << &start
-                         << " End: " << &end << "\n";
-    if(end->emptyp()) {
-      end->setElement(element);
-      end->setNextNode(*end);
-      kernel::global::kout << "\n" << "Next node" << &end->getNextNode();
-    } else {
-      Node<T>& next = *new Node<T>(element);
-      kernel::global::kout << "\n" << "Next node" << &next;
-
-      end->setNextNode(next);
-      kernel::global::kout << "\n" << "Next node?" << &end->getNextNode();
-      end = &end->getNextNode(); // end moves up.
+    void push(T& element) {
+      if(end->emptyp()) {
+        end->setElement(element);
+        end->setNextNode(*end);
+        kout << "\n" << "Next node: " << &end->getNextNode();
+      } else {
+        Node<T>& next = *new Node<T>(element);
+        kout << "\n" << "Next node: " << &next << "\n";
+        //end = &(end->getNextNode());
+        end->setNextNode(next);
+        end = &next;
+        kout << "\n" << end;
+        //kout << "\n" << "Next node?: " << &(end->getNextNode()) << "\n";
+        ; // end moves up.
+      }
     }
-    kernel::global::kout << "\n" << "Start: " << &start
-                         << " End: " << &end << "\n";
-  }
     //    void push(T& element);
     /// Remove oldest element from the queue.
     /**
        \pre queue cannot be empty.
-     */
+    */
     void pop(void) {
-      Node<T>& node = start;
-      start = node.getNextNode();
-      start.setNextNode(start);
+      Node<T>& node = *start;
+      start = &node.getNextNode();
+      start->setNextNode(*start);
       delete &node;
     }
     size_t size() {
-    if(start->emptyp()) {
-      return 0;
-    } else {
-      Node<T>& node = *start;
-      int i;
-      for(i = 1; !node.tailp(); i++) {
-        node = node.getNextNode();
+      if(start->emptyp()) {
+        return 0;
+      } else {
+        Node<T>* node = start;
+        int i;
+        for(i = 1; !node->tailp() && i < 99; i++) {
+          node = & (node->getNextNode());
+        }
+        return i;
       }
-      return i;
+      return 10;
     }
-    return 10;
-  }
   private:
     template<class R>
     class Node {
