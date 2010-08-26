@@ -29,7 +29,7 @@ Various useful links as I come across them:
 
 * C++
   - http://www.sgi.com/tech/stl - Good stl reference
-
+  - http://eden.rutgers.edu/~lauderda/ctutorial/yeesh.htm - gcc pointers.
 
 * Link farms
   - http://www.stepanovpapers.com/
