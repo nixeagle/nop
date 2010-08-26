@@ -102,13 +102,21 @@ namespace kernel {
 
     uint32_t putInteger(uint32_t number, uint8_t base, uint32_t line,
                     uint32_t column) {
+      /// @bug When number is initially 0 we print nothing. We should be
+      /// printing '0'.
       if(0 < number) {
         uint32_t col = putInteger(number/base, base, line, column);
-        char digit = number % base;
+        // digit (and base) is 36 or less, no danger of overflow.
+        uint8_t digit = static_cast<uint8_t>(number % base);
         if(10 > digit) {
-          put_char(digit + '0' , line, col);
+          // digit (9) + '0' (48) = '9' (57) is < 256, no overflow.
+          put_char(static_cast<uint8_t>(digit + '0'), line, col);
+        } else if (36 > digit) {
+          // digit (35) - 10 + 'A' (65) = 'Z' (90) < 256
+          put_char(static_cast<uint8_t>(digit - 10 + 'A'), line, col);
         } else {
-          put_char(digit - 10 + 'A', line, col);
+          KPANIC("digit >= 36: No way to print base 37 and up!",
+                 "Integer overflow");
         }
         return col + 1;
       }
