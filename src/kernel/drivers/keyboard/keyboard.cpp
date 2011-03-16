@@ -17,6 +17,7 @@ namespace kernel {
       using kernel::text_mode::put_hex;
       using kernel::text_mode::put_char;
       using kernel::VirtualConsole;
+      static uint32_t keypress_number = 0;
       void handleEvent() {
         uint8_t scan_code = inb(0x60);
 

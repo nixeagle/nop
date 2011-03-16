@@ -1,6 +1,4 @@
 #include "kernel.h"
-#include "kcommon.h"
-#include "icxxabi.h"
 //#include "kernel/text_mode/text_mode.h"
 #include "kernel/gdt/gdt.h"
 #include "kernel/idt/idt.h"
@@ -8,7 +6,7 @@
 #include "kernel/asm/out.h"
 #include "kernel/virtual-console/virtual-console.h"
 #include "experiments/main.h"
-extern "C" size_t start_tests, end_tests;
+
 using kernel::text_mode::put_hex;
 using kernel::text_mode::puts;
 
@@ -28,53 +26,65 @@ void busy_loop(size_t limit) {
   return;
 }
 
-static void initTimer () {
-  kernel::inlasm::outb(0x43, 0x36);
-  kernel::inlasm::outb(0x40, 0xFF);
-  kernel::inlasm::outb(0x40, 0xFF);
-}
 
 template<class T>
-void show_type(const T&) {
+void show_type(const T&)
+{
   kernel::VirtualConsole::currentConsole()->put(__PRETTY_FUNCTION__);
 }
-
-/// Quick demonstration test
-T(demoTest, return true;);
 
 extern "C" void kmain(struct mb_header *header, unsigned int magic) {
   using kernel::gdt::BaseDescriptor;
   using kernel::gdt::GdtEntry;
   using kernel::idt::IdtEntry;
   using kernel::VirtualConsole;
+  using kernel::VirtualConsole;
   // Setup memory:
   kernel::text_mode::clear_screen();
+
+  kernel::memory::init();
 
   if(0x2BADB002 != magic) {
     puts("ERROR: Bootloader magic does not match.", 15, 20);
     put_hex(magic,16,22);
   }
-  // setup virtual consoles
-  kernel::global::virtual_consoles = new VirtualConsole[6];
-  kernel::global::testout = kernel::global::virtual_consoles[5];
-  kernel::global::virtual_consoles[0].setCurrent();
+  //  void* foo = kernel::memory::kmalloc(10);
+  puts("nop", 0, 0);
+  //  puts_allocated_memory();
 
-  // setup idt/gdt
   BaseDescriptor<GdtEntry> descs = kernel::gdt::init();
+  puts_allocated_memory();
+
   BaseDescriptor<IdtEntry> idt = kernel::idt::init(256);
-  puts_allocated_memory();
 
-  initTimer();
-
-  asm volatile("sti");          // interrupts turned on.
-  put_hex((size_t)&start_tests, 0, 0);
-  put_hex((size_t)&end_tests, 0, 10);
-  tests::runTests();
+  //  kernel::VirtualConsole vc[6];
 
   puts_allocated_memory();
+
+  // //  asm volatile ("xchg %bx, %bx");
+  // // asm volatile ("int $0x3");
+  // //
+
+  // timer tests.
+  kernel::inlasm::outb(0x43, 0x36);
+  kernel::inlasm::outb(0x40, 0xFF);
+  kernel::inlasm::outb(0x40, 0xFF);
+
+  puts_allocated_memory();
+  kernel::text_mode::putInteger(0xa, 16, 24,0);
+
+  put_hex((size_t)kernel::memory::kmalloc(123),14, 0);
+  put_hex((size_t)kernel::memory::kmalloc(123),14, 10);
+  puts_allocated_memory();
+
+  //  vc[0].setCurrent();
+  kernel::global::virtual_consoles = new VirtualConsole[6];
+  kernel::global::virtual_consoles[0].setCurrent();
+  puts_allocated_memory();
+
+  asm volatile("sti");
+  // //  Enter experiments function, this returns void.
   experiments::main();
-
-  puts_allocated_memory();
   busy_loop(0xfff);
   return;
 }

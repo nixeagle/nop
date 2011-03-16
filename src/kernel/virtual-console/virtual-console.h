@@ -62,7 +62,7 @@ namespace kernel {
     /** If the rest of the virtual console scrolls, text in this display
         remains "constant"
     */
-    const static uint16_t kHUD_HEIGHT = 4;
+    const static uint16_t hud_height = 4;
 
     /// Maximum number of rows a user's input can cover.
     /** This is currently static, maybe later this should become dynamic
@@ -93,7 +93,7 @@ namespace kernel {
     static uint16_t charBufferLength(const Char* buffer);
     __attribute__ ((pure))
     uint8_t outputHeight(void) {
-      return static_cast<uint8_t>(ROWS - kHUD_HEIGHT - input_height);
+      return static_cast<uint8_t>(ROWS - hud_height - input_height);
     }
   public:
 
@@ -162,35 +162,8 @@ namespace kernel {
 
     // Inserting user's key inputs
     static void handleKey(const drivers::keyboard::KeyEvent* event);
-
-    VirtualConsole& operator<< (uint32_t& integer) {
-      put(integer);
-      return *this;
-    }
-    VirtualConsole& operator<< (uint32_t integer) {
-      put(integer);
-      return *this;
-    }
-    VirtualConsole& operator<< (const char* string) {
-      put(string);
-      return *this;
-    }
-    VirtualConsole& operator<< (kernel::string::String& string) {
-      put(string);
-      return *this;
-    }
-    VirtualConsole& operator<< (kernel::string::String* string) {
-      put(string);
-      return *this;
-    }
-    VirtualConsole& operator<< (void* pointer) {
-      put(pointer);
-      return *this;
-    }
   };
   namespace global {
     extern VirtualConsole* virtual_consoles;
-    extern VirtualConsole& kout;
-    extern VirtualConsole& testout;
   }
 }

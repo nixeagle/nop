@@ -18,7 +18,7 @@ namespace kernel {
     extern void* kmalloc(size_t size) {
 
       void* pointer = heap.malloc(size);
-      kernel::text_mode::put_hex(reinterpret_cast<size_t>(pointer), 2, 7);
+      kernel::text_mode::put_hex((size_t)pointer, 2, 7);
 
       //heap.inspect();
 

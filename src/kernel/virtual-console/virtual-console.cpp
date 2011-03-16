@@ -6,9 +6,6 @@ namespace kernel {
   // static members
   VirtualConsole* VirtualConsole::current_console = 0;
   VirtualConsole* global::virtual_consoles = 0;
-  VirtualConsole* _testout = 0;
-  VirtualConsole& global::testout = *_testout;
-  VirtualConsole& global::kout = *global::virtual_consoles;
   void VirtualConsole::Char::clear(void) {
     character = 0;
     attributes = 0;
@@ -46,14 +43,13 @@ namespace kernel {
     input_buffer[input_cursor++].setChar(input);
   }
   void VirtualConsole::setCurrent () {
-    global::kout = *this;
     current_console = this;
     kernel::global::key_event = this->handleKey;
   }
 
   void VirtualConsole::updateOutputVideoRam() {
     Char* videoram = reinterpret_cast<Char*>(VIDEORAM);
-    c::memcpy(videoram + (COLUMNS * kHUD_HEIGHT),
+    c::memcpy(videoram + (COLUMNS * hud_height),
               output_buffer - (COLUMNS * outputHeight()) + output_scroll_cursor,
               sizeof(Char) * COLUMNS * outputHeight());
   }

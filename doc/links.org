@@ -23,13 +23,3 @@ Various useful links as I come across them:
 *** Lock free
 ***** Queue
       - http://www.research.ibm.com/people/m/michael/podc-1996.pdf
-
-* Data structures (general)
-  - [[http://www.itl.nist.gov/div897/sqg/dads/][Directory of algorithms and data structures]].
-
-* C++
-  - http://www.sgi.com/tech/stl - Good stl reference
-  - http://eden.rutgers.edu/~lauderda/ctutorial/yeesh.htm - gcc pointers.
-
-* Link farms
-  - http://www.stepanovpapers.com/

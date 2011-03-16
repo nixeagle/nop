@@ -11,7 +11,6 @@ namespace kernel {
     return (key_code & 0x80) >> 7;
   }
   void VirtualConsole::handleKey(const drivers::keyboard::KeyEvent* event) {
-    using kernel::global::kout;
     VirtualConsole& out = *VirtualConsole::currentConsole();
     if(!keyBreakP(static_cast<uint8_t>(event->getCode()))) {
       switch (event->getCode()) {
@@ -42,8 +41,9 @@ namespace kernel {
       case 0x1c:
         {
           string::String* input = out.getUserInput();
-          kout << input << "\n";
+          out.put(input);
           delete input;
+          out.put("\n");
           out.clearInputBuffer();
         }
         break;

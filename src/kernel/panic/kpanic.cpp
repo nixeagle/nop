@@ -28,7 +28,6 @@ namespace kernel {
       header(message, function, line, file, timestamp);
       puts(issue, 6, 0);
       asm("hlt");
-      __builtin_unreachable();
     }
   }
 }

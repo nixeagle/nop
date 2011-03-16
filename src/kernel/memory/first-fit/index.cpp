@@ -1,5 +1,4 @@
 #include "index.h"
-#include "kernel/panic/kpanic.h"
 
 namespace kernel {
   namespace memory {
@@ -15,9 +14,7 @@ namespace kernel {
             return;
           }
         }
-        KPANIC("Unable to free a memory block.",
-               "Memory deallocation error.");
-        //asm("int $6;");             // Something went wrong.
+        asm("int $6;");             // Something went wrong.
       }
 
       Block* Index::findBrandNewBlock(void) {
@@ -26,8 +23,8 @@ namespace kernel {
             return &heap[i];
           }
         }
-        KPANIC("No more free blocks to allocate.",
-               "Memory allocation error.");
+        // oh crap! out of suitable ram.
+        asm("int $4");
       }
 
       void* Index::malloc(uint16_t size) {
@@ -40,7 +37,7 @@ namespace kernel {
           }
         }
         void* new_memory = findBrandNewBlock()->alloc(heap_end, size);
-        kernel::text_mode::put_hex(reinterpret_cast<size_t>(new_memory), 3, 10);
+        kernel::text_mode::put_hex((size_t)new_memory, 3, 10);
         ;        heap_end += size;
 
         return reinterpret_cast<void*>(reinterpret_cast<size_t>(new_memory) + heap_start);
