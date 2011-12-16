@@ -3,6 +3,9 @@ doxygen/
 *.t
 *.ii
 *.s
+*.o
+*#
+*~
 /stage2_eltorito
 /isofiles/boot/grub/stage2_eltorito
 /isofiles/boot/nop.bin
