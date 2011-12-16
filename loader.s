@@ -10,7 +10,6 @@ CHECKSUM    equ -(MAGIC + FLAGS)        ; checksum required
 
 section .__mbHeader
 
-align 0x4
 align 4
 MultiBootHeader:
    dd MAGIC
