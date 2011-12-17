@@ -95,10 +95,74 @@ namespace kernel {
     /// Processor specific values.length
     /// @range [0 ... 15]
     uint processorStepping(void);
-    
-    /// Does this processor support HyperThreading?
-    inline bool isHyperThreading(void);
 
-    
+    u8 clflushChunckCount(void);
+    u8 logicalCpuCount(void);
+    u8 apicId(void);
+
+    bool hasSSE3(void);
+    bool hasPCLMUL(void);
+    bool hasDTES64(void);
+    bool hasMON(void);
+    bool hasDSCPL(void);
+    bool hasVMX(void);
+    bool hasSMX(void);
+    bool hasEST(void);
+    bool hasTM2(void);
+    bool hasSSSE3(void);
+    bool hasCID(void);
+    bool hasFMA(void);
+    bool hasCX16(void);
+    bool hasETPRD(void);
+    bool hasPDCM(void);
+    bool hasPCID(void);
+    bool hasDCA(void);
+    bool hasSSE4_1(void);
+    bool hasSSE4_2(void);
+    bool hasX2APIC(void);
+    bool hasMOVBE(void);
+    bool hasPOPCNT(void);
+    bool hasTSCD(void);
+    bool hasAES(void);
+    bool hasXSAVE(void);
+    bool hasOSXSAVE(void);
+    bool hasAVX(void);
+    bool hasF16C(void);
+    bool hasRDRAND(void);
+
+    bool hasFPU(void);
+    bool hasVME(void);
+    bool hasDE(void);
+    bool hasPSE(void);
+    bool hasTSC(void);
+    bool hasMSR(void);
+    bool hasPAE(void);
+    bool hasCX8(void);
+    bool hasAPIC(void);
+    bool hasSEP(void);
+    bool hasMTRR(void);
+    bool hasPGE(void);
+    bool hasMCA(void);
+    bool hasCMOV(void);
+    bool hasPAT(void);
+    bool hasPSE36(void);
+    /// Processor Serial Number
+    /// Disabled on more recent processors due to privacy issues.
+    bool hasPSN(void);
+    bool hasCLFL(void);
+    bool hasDTES(void);
+    bool hasACPI(void);
+    bool hasMMX(void);
+    bool hasFXSR(void);
+    bool hasSSE(void);
+    bool hasSSE2(void);
+    bool hasSS(void);
+
+    /// Does this processor support HyperThreading?
+    bool hasHTT(void);
+    bool hasTM1(void);
+    bool hasIA64(void);
+    bool hasPBE(void);
+
   }
 }
