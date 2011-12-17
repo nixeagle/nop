@@ -91,6 +91,10 @@ namespace kernel {
     };
 
     ProcessorType processorType(void);
+
+    /// Processor specific values.length
+    /// @range [0 ... 15]
+    uint processorStepping(void);
     
     /// Does this processor support HyperThreading?
     inline bool isHyperThreading(void);

@@ -13,5 +13,9 @@ namespace kernel {
       default: return ProcessorType::INVALID;
       }
     }
+
+    uint processorStepping(void) {
+      cpuid(1).eax() & 0b1111;
+    }
   }
 }
