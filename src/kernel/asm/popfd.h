@@ -8,7 +8,7 @@ namespace kernel {
     /// executing this assembly instruction. The resulting machine state of
     /// the stack is unmodified after this instruction.
     inline void popfd(u32 flags) {
-      asm volatile("push %0;popfd": "=r"(flags));
+      asm volatile("push %0;popf": "=r"(flags));
       return;
     }
   }

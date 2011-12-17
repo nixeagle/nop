@@ -11,7 +11,7 @@ namespace kernel {
     /// portions of the OS. 
     inline u32 pushfd(void) {
       u32 eflags = 0xffffffff;
-      asm ("pushfd; pop eax": "=eax"(eflags));
+      asm volatile("pushf; pop %0": "=r"(eflags));
       return eflags;
     }
   }

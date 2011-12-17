@@ -50,6 +50,9 @@ namespace kernel {
       return CpuidResults(a,b,c,d);
     }
 
+    /// True if the processor supports the CPUID instruction.
+    bool hasCPUID(void);
+
     /// Enumerates CPU makers.
     /// @TODO Add other CPU venders.
     enum class MachineVendor {
