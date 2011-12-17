@@ -93,7 +93,7 @@ grub:
 	@genisoimage -R -b boot/grub/stage2_eltorito -no-emul-boot -boot-load-size 4                 -boot-info-table --input-charset utf-8 -o nop.iso isofiles
 
 qemu: grub
-	qemu -monitor stdio -cdrom nop.iso
+	@qemu -cpu phenom -m 32M -mem-path '/tmp/nop-ram' -name 'nop' -no-shutdown -writeconfig '/tmp/nop-device-config' -monitor stdio -cdrom nop.iso
 
 doxygen: all
 	doxygen .doxygenrc
