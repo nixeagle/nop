@@ -161,8 +161,12 @@ namespace kernel {
 
     /// SSSE3 instructions are supported.
     bool hasSSSE3(void);
-    
+
+    /// Processor allows L1 data cache to be set as adaptive or shared.
+    /// Context ID is toggled with MISC_ENABLE.L1DCCM.
+    /// @note only known to be supported on some Intel processors.
     bool hasCID(void);
+    
     bool hasFMA(void);
     bool hasCX16(void);
     bool hasETPRD(void);

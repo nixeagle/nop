@@ -119,6 +119,11 @@ namespace kernel {
     bool hasSSE3(void) {
       return isBitSet(cpuid(1).ecx(), 9);
     }
+
+    bool hasCID(void) {
+      return (isBitSet(cpuid(1).ecx(), 10) && isIntel());
+    }
+    
     // Tests under cpuid(1).edx()
     bool hasFPU(void) {
       return isBitSet(cpuid(1).edx(), 0);
