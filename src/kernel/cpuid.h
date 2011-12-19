@@ -190,8 +190,13 @@ namespace kernel {
     /// Compare and Exchange on 16 bytes is supported.
     /// Means CMPXCHG16B instruction is implemented.
     bool hasCX16(void);
-    
+
+    /// Support for the xTPR Update Control over Task Priority messages.
+    /// Task Priority messages can be optionally disabled through toggling
+    /// bit 23 of the MISC_ENABLE model specific registers.
+    /// @note Currently only intel is known to support this.
     bool hasETPRD(void);
+    
     bool hasPDCM(void);
     bool hasPCID(void);
     bool hasDCA(void);

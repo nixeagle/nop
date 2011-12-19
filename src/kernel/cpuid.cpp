@@ -137,6 +137,10 @@ namespace kernel {
     bool hasCX16(void) {
       return (isBitSet(cpuid(1).ecx(), 13));
     }
+
+    bool hasETPRD(void) {
+      return (isBitSet(cpuid(1).ecx(), 14) && isIntel());
+    }
     // Tests under cpuid(1).edx()
     bool hasFPU(void) {
       return isBitSet(cpuid(1).edx(), 0);
