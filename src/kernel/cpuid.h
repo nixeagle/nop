@@ -15,22 +15,22 @@ namespace kernel {
     /// Represents all important results from a CPUID instruction.
     class CpuidResults {
     public:
-      CpuidResults(size_t ax, size_t bx, size_t cx, size_t dx) :
-        _ax(ax), _bx(bx), _cx(cx), _dx(dx) { }
+    CpuidResults(size_t ax, size_t bx, size_t cx, size_t dx) :
+      _ax(ax), _bx(bx), _cx(cx), _dx(dx) { }
       // Following functions mask off the low bits to get the specifc parts
       // of the various registers that are needed.
-      u32 eax(void) const { return _ax & 0xFFFFFFFF; }
-      u32 ebx(void) const { return _bx & 0xFFFFFFFF; }
-      u32 ecx(void) const { return _cx & 0xFFFFFFFF; }
-      u32 edx(void) const { return _dx & 0xFFFFFFFF; }
-      u16 ax(void)  const { return _ax & 0xFFFF;     }
-      u16 bx(void)  const { return _bx & 0xFFFF;     }
-      u16 cx(void)  const { return _cx & 0xFFFF;     }
-      u16 dx(void)  const { return _dx & 0xFFFF;     }
-      u8  al(void)  const { return _ax & 0xFF;       }
-      u8  bl(void)  const { return _bx & 0xFF;       }
-      u8  cl(void)  const { return _cx & 0xFF;       }
-      u8  dl(void)  const { return _dx & 0xFF;       }
+      inline u32 eax(void) const { return _ax & 0xFFFFFFFF; }
+      inline u32 ebx(void) const { return _bx & 0xFFFFFFFF; }
+      inline u32 ecx(void) const { return _cx & 0xFFFFFFFF; }
+      inline u32 edx(void) const { return _dx & 0xFFFFFFFF; }
+      inline u16 ax(void)  const { return _ax & 0xFFFF;     }
+      inline u16 bx(void)  const { return _bx & 0xFFFF;     }
+      inline u16 cx(void)  const { return _cx & 0xFFFF;     }
+      inline u16 dx(void)  const { return _dx & 0xFFFF;     }
+      inline u8  al(void)  const { return _ax & 0xFF;       }
+      inline u8  bl(void)  const { return _bx & 0xFF;       }
+      inline u8  cl(void)  const { return _cx & 0xFF;       }
+      inline u8  dl(void)  const { return _dx & 0xFF;       }
 
     private:
       const size_t _ax;
@@ -41,14 +41,7 @@ namespace kernel {
 
     /// API interface to the CPUID instruction.
     /// @TODO Cache results to prevent excessive CPUID calls.
-    inline CpuidResults cpuid(size_t function_code) {
-      //static inline void cpuid(int code, dword *a, dword *d) {
-      size_t a,b,c,d;
-      asm volatile ("cpuid":"=eax"(a),"=edx"(d),"=ebx"(b),"=ecx"(c):
-                    "0"(function_code)/*:
-                                        "ecx","ebx"*/);
-      return CpuidResults(a,b,c,d);
-    }
+    __attribute__((noinline)) CpuidResults cpuid(size_t function_code);
 
     /// True if the processor supports the CPUID instruction.
     bool hasCPUID(void);
@@ -103,16 +96,72 @@ namespace kernel {
     u8 logicalCpuCount(void);
     u8 apicId(void);
 
+    /// True if the SSE3 extensions are supported.
     bool hasSSE3(void);
+    /// True if MXCSR is supported.
+    bool hasMXCSR(void);
+    /// True if CR4.OSXMMEXCPT is supported.
+    bool hasCR4_OSXMMEXCPT(void);
+    /// True if #XF is supported.
+    bool hasXF(void);
+    /// True if FISTTP is supported.
+    bool hasFISTTP(void);
+
+    /// True if the PCLMULQDQ instruction is supported.
     bool hasPCLMUL(void);
+
+    /// True if cpu supports 64 bit Debug Trace and EMON store MSRs.
     bool hasDTES64(void);
+
+    /// Cpu supports the MONITOR and MWAIT instructions.
+    /// Additionally as a direct consequence MISC_ENABLE_MONE,
+    /// MISC_ENABLE_LCMV, MONITOR_FILTER_LINE_SIZE MSR.
     bool hasMON(void);
+    
+    /// Indicates that a CPL qualified debug store is supported.
+    /// @note No known source actually tells us what a CPL qualified debug
+    /// store even is! Sandpile and wikipedia both have a very short
+    /// summary with no real good elaboration. CPUID docs from intel and
+    /// AMD both seem to skip over the issue. Processor documentation
+    /// probably has it, but a quick search over 4000+ pages did not turn
+    /// up anything.
     bool hasDSCPL(void);
+
+    /// True when Virtual Machine Extensions are supported.
+    /// This is an Intel extension and is not binary compatable with AMD's.
+    /// Enabled instructions on Intel are:
+    /// CR4.VMPTRLD, VMPTRST, VMCLEAR, VMREAD, VMWRITE, VMLAUNCH, VMRESUME,
+    /// VMXOFF, VMXON, INVEPT, INVVPID, VMCALL, VMFUNC.
     bool hasVMX(void);
+    
+    /// True when Secure Virtual Machine instructions are supported.
+    /// This is an AMD extension and is not binary compatable with Intel's.
+    /// Enabled instructions are:
+    /// CR4.VMPTRLD, CLGI, INVLPGA, SKINIT, STGI, VMLOAD, VMMCALL, VMRUN,
+    /// VMSAVE.
+    bool hasSVM(void);
+    
+    /// Are Safer Mode Extensions, e.g. the GETSEC instruction enabled?
+    /// Chip has to be an Intel. When available, CR4.SMXE can be used to
+    /// turn on and off this feature.
     bool hasSMX(void);
+
+    /// Enhanced Intel SpeedStep Technology is supported.
+    /// Means that IA32_PERF_STS and IA32_PERF_CTL registers are
+    /// implemented.
     bool hasEST(void);
+
+    /// Processor has the Thermal Monitor 2 control circuit.
+    /// Means the following are available:
+    /// THERM_INTERRUPT, THERM_STATUS MSRs, 
+    /// THERM2_CONTROL MSR, xAPIC thermal LVT entry,
+    /// @note This is an Intel only extension. AMD's CPUID reference manual
+    /// makes no mention of this.
     bool hasTM2(void);
+
+    /// SSSE3 instructions are supported.
     bool hasSSSE3(void);
+    
     bool hasCID(void);
     bool hasFMA(void);
     bool hasCX16(void);
