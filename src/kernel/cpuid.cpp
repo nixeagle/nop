@@ -32,11 +32,11 @@ namespace kernel {
 
     /// True if cpu is from Intel.
     static inline bool isIntel(void) {
-      return (MachineVendor::INTEL == machineVender());
+      return (MachineVendor::INTEL == machineVendor());
     }
     /// True if cpu is from AMD.
     static inline bool isAMD(void) {
-      return (MachineVendor::AMD == machineVender());
+      return (MachineVendor::AMD == machineVendor());
     }
     
     ProcessorType processorType(void) {
