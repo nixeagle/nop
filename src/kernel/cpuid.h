@@ -66,7 +66,8 @@ namespace kernel {
       OVERDRIVE,
       SECONDARY,
       RESERVED,
-      INVALID
+      INVALID,
+      UNUSED_BY_VENDOR
     };
 
     ProcessorType processorType(void);
