@@ -123,6 +123,16 @@ namespace kernel {
     bool hasCID(void) {
       return (isBitSet(cpuid(1).ecx(), 10) && isIntel());
     }
+
+    bool hasFMA(void) {
+      return (isBitSet(cpuid(1).ecx(), 12));
+    }
+    bool hasFMA3(void) {
+      return (isBitSet(cpuid(1).ecx(), 12) && isIntel());
+    }
+    bool hasFMA4(void) {
+      return (isBitSet(cpuid(1).ecx(), 12) && isAMD());
+    }
     
     // Tests under cpuid(1).edx()
     bool hasFPU(void) {

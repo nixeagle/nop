@@ -166,8 +166,27 @@ namespace kernel {
     /// Context ID is toggled with MISC_ENABLE.L1DCCM.
     /// @note only known to be supported on some Intel processors.
     bool hasCID(void);
-    
+
+    /// Has Fused Multiply Add support.
+    /// @note Intel processors support FMA3 while AMD supports FMA4. It is
+    /// not yet known if there will be crossover support. Reference
+    /// https://en.wikipedia.org/wiki/FMA_instruction_set for more
+    /// details. This means that we really can't know if a processor
+    /// supports FMA3 or FMA4 without also knowing the processor brand.
     bool hasFMA(void);
+    /// Has Fused Multiply Add 3 support.
+    /// @note Don't rely on this too much as correct answers depend on the
+    /// cpu maker and must be added to the implementation. That is, it is
+    /// possible for a processor to support FMA3 while this function
+    /// returns false. 
+    bool hasFMA3(void);
+    /// Has Fused Multiply Add 4 support.
+    /// @note Don't rely on this too much as correct answers depend on the
+    /// cpu maker and must be added to the implementation. That is, it is
+    /// possible for a processor to support FMA3 while this function
+    /// returns false.
+    bool hasFMA4(void);
+    
     bool hasCX16(void);
     bool hasETPRD(void);
     bool hasPDCM(void);
