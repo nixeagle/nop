@@ -55,18 +55,8 @@ namespace kernel {
       UNKNOWN
     };
 
-    inline MachineVendor machineVendor (void) {
-      switch (cpuid(0).edx()) {
-      case 0x696E6549: // 'ineI' for Intel
-        return MachineVendor::INTEL;
-      case 0x656E7469: // 'enti' for AuthenticAMD
-        return MachineVendor::AMD;
-      case 0x61757248: // 'aurH' (short of CentaurHauls) for VIA.
-        return MachineVendor::VIA; 
-      default:
-        return MachineVendor::UNKNOWN;
-      }
-    }
+    /// Who does the processor claim to be made by?
+    MachineVendor machineVendor (void);
 
     /// How many standard function calls are supported on this CPU?
     /// Basically if CPUID is supported, we know at leasat code=0 is
