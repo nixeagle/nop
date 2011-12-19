@@ -23,14 +23,6 @@ namespace kernel {
       inline u32 ebx(void) const { return _bx & 0xFFFFFFFF; }
       inline u32 ecx(void) const { return _cx & 0xFFFFFFFF; }
       inline u32 edx(void) const { return _dx & 0xFFFFFFFF; }
-      inline u16 ax(void)  const { return _ax & 0xFFFF;     }
-      inline u16 bx(void)  const { return _bx & 0xFFFF;     }
-      inline u16 cx(void)  const { return _cx & 0xFFFF;     }
-      inline u16 dx(void)  const { return _dx & 0xFFFF;     }
-      inline u8  al(void)  const { return _ax & 0xFF;       }
-      inline u8  bl(void)  const { return _bx & 0xFF;       }
-      inline u8  cl(void)  const { return _cx & 0xFF;       }
-      inline u8  dl(void)  const { return _dx & 0xFF;       }
 
     private:
       const size_t _ax;
