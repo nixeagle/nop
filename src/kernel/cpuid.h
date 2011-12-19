@@ -186,8 +186,11 @@ namespace kernel {
     /// possible for a processor to support FMA3 while this function
     /// returns false.
     bool hasFMA4(void);
-    
+
+    /// Compare and Exchange on 16 bytes is supported.
+    /// Means CMPXCHG16B instruction is implemented.
     bool hasCX16(void);
+    
     bool hasETPRD(void);
     bool hasPDCM(void);
     bool hasPCID(void);

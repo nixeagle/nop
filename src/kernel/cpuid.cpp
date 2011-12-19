@@ -133,7 +133,10 @@ namespace kernel {
     bool hasFMA4(void) {
       return (isBitSet(cpuid(1).ecx(), 12) && isAMD());
     }
-    
+
+    bool hasCX16(void) {
+      return (isBitSet(cpuid(1).ecx(), 13));
+    }
     // Tests under cpuid(1).edx()
     bool hasFPU(void) {
       return isBitSet(cpuid(1).edx(), 0);
