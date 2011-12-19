@@ -44,7 +44,8 @@ namespace kernel {
       INTEL,
       AMD,
       VIA,
-      UNKNOWN
+      UNKNOWN,
+      UNINITIALIZED
     };
 
     /// Who does the processor claim to be made by?
