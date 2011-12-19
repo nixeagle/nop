@@ -59,7 +59,7 @@ namespace kernel {
       switch (cpuid(0).edx()) {
       case 0x696E6549: // 'ineI' for Intel
         return MachineVendor::INTEL;
-      case 0x65967449: // 'enti' for AuthenticAMD
+      case 0x656E7469: // 'enti' for AuthenticAMD
         return MachineVendor::AMD;
       case 0x61757248: // 'aurH' (short of CentaurHauls) for VIA.
         return MachineVendor::VIA; 
