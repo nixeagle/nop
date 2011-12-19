@@ -116,7 +116,7 @@ namespace kernel {
       return (isBitSet(cpuid(1).ecx(), 8) && isIntel());
     }
 
-    bool hasSSE3(void) {
+    bool hasSSSE3(void) {
       return isBitSet(cpuid(1).ecx(), 9);
     }
 
