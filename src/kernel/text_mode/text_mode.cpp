@@ -101,14 +101,21 @@ namespace kernel {
     }
 
     uint32_t putInteger(uint32_t number, uint8_t base, uint32_t line,
-                    uint32_t column) {
+                        uint32_t column) {
+      if(base > 36) {
+        KPANIC("Given base was larger then 36.",
+               "Putting an integer to console failed.");
+      } else if (base < 1) {
+        KPANIC("Given base was 0.",
+               "Putting an integer to console failed.");
+      }
       if(0 < number) {
         uint32_t col = putInteger(number/base, base, line, column);
-        char digit = number % base;
+        char digit = static_cast<char>(number % base);
         if(10 > digit) {
-          put_char(digit + '0' , line, col);
+          put_char(static_cast<char>(digit + '0') , line, col);
         } else {
-          put_char(digit - 10 + 'A', line, col);
+          put_char(static_cast<char>(digit - 10 + 'A'), line, col);
         }
         return col + 1;
       }
