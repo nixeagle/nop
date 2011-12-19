@@ -82,7 +82,7 @@ namespace kernel {
       return hasSSE3() && hasFPU();
     }
     
-    bool hasPCMUL(void) {
+    bool hasPCLMUL(void) {
       return isBitSet(cpuid(1).ecx(), 1);
     }
     bool hasDTES64(void) {
