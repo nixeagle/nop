@@ -21,7 +21,7 @@ namespace kernel {
       return old_flags != new_flags;
     }
 
-    inline CpuidResults cpuid(size_t function_code) {
+    CpuidResults cpuid(size_t function_code) {
       //static inline void cpuid(int code, dword *a, dword *d) {
       size_t a,b,c,d;
       asm volatile ("cpuid":"=eax"(a),"=edx"(d),"=ebx"(b),"=ecx"(c):
