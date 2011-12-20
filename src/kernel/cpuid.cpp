@@ -4,7 +4,7 @@
 
 namespace kernel {
   namespace cpuid {
-    namespace {
+
       static MachineVendor machineVendor (uint edx) {
         switch (edx) {
         case 0x696E6549: // 'ineI' for Intel
@@ -17,42 +17,25 @@ namespace kernel {
           return MachineVendor::UNKNOWN;
         }
       }
-      struct CpuInfo {
-        CpuInfo (void) {
-          has_cpuid = hasCPUID();
-          if (!has_cpuid) { return ; }
-          u8 max_function_code;
-          {
-            const CpuidResults result = cpuid(0);
-            max_function_code = static_cast<u8>(result.eax());
-            machine_vendor = machineVendor(result.edx());
-          }
-          if (1 > max_function_code) { return; }
-          {
-            const CpuidResults result = cpuid(1);
-            fn0000_0001_eax(result.eax());
-            misc_features_ecx = result.ecx();
-            misc_features_edx = result.edx();
-            fn0000_0001_ebx(result.ebx());
-          }
+      
+      CpuInfo::CpuInfo (void) {
+        has_cpuid = hasCPUID();
+        if (!has_cpuid) { return ; }
+        u8 max_function_code;
+        {
+          const CpuidResults result = cpuid(0);
+          max_function_code = static_cast<u8>(result.eax());
+          machine_vendor = machineVendor(result.edx());
         }
-        bool has_cpuid;
-        MachineVendor machine_vendor;
-        ProcessorType processor_type;
-        u8 family;   /// Combination of basefamily and extended family.
-        u8 model;    /// Combination of basemodel and extended model.
-        u8 stepping; /// Only lower 4 bits are ever used.
-        u32 misc_features_ecx;
-        u32 misc_features_edx;
-        u8 local_apic_id;
-        u8 logical_processor_count;
-        u8 clflush_size;
-        u8 brand_id;
-      private:
-        void fn0000_0001_eax(uint eax);
-        void fn0000_0001_ebx(uint ebx);
-        void fn0000_0002_eax(uint eax);
-      };
+        if (1 > max_function_code) { return; }
+        {
+          const CpuidResults result = cpuid(1);
+          fn0000_0001_eax(result.eax());
+          misc_features_ecx = result.ecx();
+          misc_features_edx = result.edx();
+          fn0000_0001_ebx(result.ebx());
+        }
+      }
       void CpuInfo::fn0000_0001_eax(uint eax) {
         // We want to get bits [11:8].
         const u8 base_family = static_cast<u8>((0x700 & eax) >> 8);
@@ -93,8 +76,8 @@ namespace kernel {
         brand_id = (0xFF & ebx);
         return;
       }
-      CpuInfo initial_cpu;
-    }
+      static CpuInfo initial_cpu;
+
     
 
     inline bool isBitSet(uint x, uint i) {

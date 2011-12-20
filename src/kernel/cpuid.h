@@ -11,7 +11,7 @@
 
 namespace kernel {
   namespace cpuid {
-
+    
     /// Represents all important results from a CPUID instruction.
     class CpuidResults {
     public:
@@ -71,6 +71,32 @@ namespace kernel {
     };
 
     ProcessorType processorType(void);
+    
+
+    struct CpuInfo {
+      CpuInfo (void);
+      bool has_cpuid;
+      
+      MachineVendor machine_vendor;
+      ProcessorType processor_type;
+      u8 family;   /// Combination of basefamily and extended family.
+      u8 model;    /// Combination of basemodel and extended model.
+      u8 stepping; /// Only lower 4 bits are ever used.
+      
+      u32 misc_features_ecx;
+      u32 misc_features_edx;
+      u8 local_apic_id;
+      u8 logical_processor_count;
+      u8 clflush_size;
+      u8 brand_id;
+    private:
+      void fn0000_0001_eax(uint eax);
+      void fn0000_0001_ebx(uint ebx);
+      void fn0000_0002_eax(uint eax);
+    };
+
+
+
 
     /// Processor specific values.length
     /// @range [0 ... 15]
