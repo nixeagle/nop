@@ -199,6 +199,52 @@ namespace kernel {
       return (isBitSet(_features_ecx, 15));
     }
 
+    bool CpuInfo::hasPCID(void) const {
+      return (isBitSet(_features_ecx, 17));
+    }
+
+    bool CpuInfo::hasDCA(void) const {
+      return (isBitSet(_features_ecx, 18));
+    }
+    bool CpuInfo::hasSSE4_1(void) const {
+      return (isBitSet(_features_ecx, 19));
+    }
+    bool CpuInfo::hasSSE4_2(void) const {
+      return (isBitSet(_features_ecx, 20));
+    }
+    bool CpuInfo::hasX2APIC(void) const {
+      return (isBitSet(_features_ecx, 21));
+    }
+    bool CpuInfo::hasMOVBE(void) const {
+      return (isBitSet(_features_ecx, 22));
+    }
+    bool CpuInfo::hasPOPCNT(void) const {
+      return (isBitSet(_features_ecx, 23));
+    }
+    bool CpuInfo::hasTSCD(void) const {
+      return (isBitSet(_features_ecx, 24));
+    }
+    bool CpuInfo::hasAES(void) const {
+      return (isBitSet(_features_ecx, 25));
+    }
+    bool CpuInfo::hasXSAVE(void) const {
+      return (isBitSet(_features_ecx, 26));
+    }
+    bool CpuInfo::hasOSXSAVE(void) const {
+      return (isBitSet(_features_ecx, 27));
+    }
+    bool CpuInfo::hasAVX(void) const {
+      return (isBitSet(_features_ecx, 28));
+    }
+    bool CpuInfo::hasF16C(void) const {
+      return (isBitSet(_features_ecx, 29));
+    }
+    bool CpuInfo::hasRDRAND(void) const {
+      return (isBitSet(_features_ecx, 30));
+    }
+    bool CpuInfo::hasHypervisor(void) const {
+      return (isBitSet(_features_ecx, 30));
+    }
     // Tests under cpuid(1).edx()
     bool CpuInfo::hasFPU(void) const {
       return isBitSet(_features_edx, 0);

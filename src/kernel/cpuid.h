@@ -188,21 +188,80 @@ namespace kernel {
       /// For Intel this means MSR 0x345.
       /// @note AMD's CPUID manual makes no mention of this.
       bool hasPDCM(void) const;
-      bool hasPCID(void) const;
-      bool hasDCA(void) const;
-      bool hasSSE4_1(void) const;
-      bool hasSSE4_2(void) const;
-      bool hasX2APIC(void) const;
-      bool hasMOVBE(void) const;
-      bool hasPOPCNT(void) const;
-      bool hasTSCD(void) const;
-      bool hasAES(void) const;
-      bool hasXSAVE(void) const;
-      bool hasOSXSAVE(void) const;
-      bool hasAVX(void) const;
-      bool hasF16C(void) const;
-      bool hasRDRAND(void) const;
 
+      /// Process Context Identifiers
+      /// Software may set CR4.PCIDE to 1.
+      bool hasPCID(void) const;
+      /// Direct Cache Access
+      /// @note What this is used for is not well documented in the intel
+      /// or AMD manuals.
+      /// @todo Look up what this processor feature is for!
+      bool hasDCA(void) const;
+      /// SSE4.1 instructions are supported.
+      bool hasSSE4_1(void) const;
+      /// SSS4.2 instructions are supported.
+      bool hasSSE4_2(void) const;
+      
+      /// Advanced Programmable Interrupt Controller version 2.
+      /// See http://www.intel.com/Assets/pdf/manual/318148.pdf
+      /// @note This is currently Intel only. 2011-11-20.
+      bool hasX2APIC(void) const;
+
+      /// Support for moving data after swapping bytes.
+      /// Meant to assist with translating big endian data to little endian
+      /// data. For example various internet protocols are done in big
+      /// endian. Instruction, when availible, is MOVBE.
+      /// @note This is currently only supported on Intel Atom
+      /// processors. Newer Intel processors lack support for this
+      /// instruction and no other CPU companies seem to have it as of
+      /// 2011-11-20.
+      bool hasMOVBE(void) const;
+      
+      /// Support for Population Count.
+      /// The POPCNT instruction when supported computes the Hamming
+      /// weight. This is the number of '1' bits there are in the operand.
+      bool hasPOPCNT(void) const;
+
+      /// One shot operation using a Time Stamp Counter.
+      /// Local APIC timer is capable of one shot operation by using a Time
+      /// Stamp Counter deadline value.
+      /// @todo Figure out why someone would want to use this feature!
+      bool hasTSCD(void) const;
+      
+      /// Advanced Encryption Standard instruction set support.
+      /// Instructions added are:
+      /// AESENC, AESENCLAST, AESDEC, AESDECLAST, AESKEYGENASSIST, AESIMC,
+      /// PCLMULQDQ. 
+      bool hasAES(void) const;
+      
+      /// Allows full or partial save of processor state components.
+      /// Support for the following instructions:
+      /// XSAVE, XRESTOR, XSETBV, XGETBV
+      bool hasXSAVE(void) const;
+      
+      /// Allows the OS to turn on XSAVE.
+      /// @todo What is this used for? Why is it useful/needed?
+      bool hasOSXSAVE(void) const;
+      
+      /// Advanced Vector Extensions
+      /// New YYM registers supported.
+      bool hasAVX(void) const;
+      
+      /// Conversion of floating point vectors to half precision support.
+      /// @note As of 2011-11 only AMD has support. Unknown if Intel will
+      /// also pick it up or not.
+      bool hasF16C(void) const;
+      
+      /// On chip Random Number Generator
+      /// Indicates that cryptographically secure random numbers can be
+      /// requested from the processor through the RDRAND instruction.
+      /// @note Currently only some intel chips starting at Ivy Bridge have
+      /// plans to support this instruction.  
+      bool hasRDRAND(void) const;
+      /// Normally zero unless we are running under a hypervisor.
+      bool hasHypervisor(void) const;
+      
+      /// x87 Floating Point Unit supported.
       bool hasFPU(void) const;
       bool hasVME(void) const;
       bool hasDE(void) const;
