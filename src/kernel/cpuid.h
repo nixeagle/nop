@@ -85,12 +85,16 @@ namespace kernel {
 
       /// True if the SSE3 extensions are supported.
       bool hasSSE3(void) const;
+      
       /// True if MXCSR is supported.
       bool hasMXCSR(void) const;
+      
       /// True if CR4.OSXMMEXCPT is supported.
       bool hasCR4_OSXMMEXCPT(void) const;
+      
       /// True if #XF is supported.
       bool hasXF(void) const;
+      
       /// True if FISTTP is supported.
       bool hasFISTTP(void) const;
 
@@ -161,12 +165,14 @@ namespace kernel {
       /// details. This means that we really can't know if a processor
       /// supports FMA3 or FMA4 without also knowing the processor brand.
       bool hasFMA(void) const;
+      
       /// Has Fused Multiply Add 3 support.
       /// @note Don't rely on this too much as correct answers depend on the
       /// cpu maker and must be added to the implementation. That is, it is
       /// possible for a processor to support FMA3 while this function
-      /// returns false. 
+      /// returns false.
       bool hasFMA3(void) const;
+      
       /// Has Fused Multiply Add 4 support.
       /// @note Don't rely on this too much as correct answers depend on the
       /// cpu maker and must be added to the implementation. That is, it is
@@ -192,13 +198,16 @@ namespace kernel {
       /// Process Context Identifiers
       /// Software may set CR4.PCIDE to 1.
       bool hasPCID(void) const;
+      
       /// Direct Cache Access
       /// @note What this is used for is not well documented in the intel
       /// or AMD manuals.
       /// @todo Look up what this processor feature is for!
       bool hasDCA(void) const;
+      
       /// SSE4.1 instructions are supported.
       bool hasSSE4_1(void) const;
+      
       /// SSS4.2 instructions are supported.
       bool hasSSE4_2(void) const;
       
@@ -258,6 +267,7 @@ namespace kernel {
       /// @note Currently only some intel chips starting at Ivy Bridge have
       /// plans to support this instruction.  
       bool hasRDRAND(void) const;
+      
       /// Normally zero unless we are running under a hypervisor.
       bool hasHypervisor(void) const;
       
