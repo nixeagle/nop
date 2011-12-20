@@ -4,8 +4,100 @@
 
 namespace kernel {
   namespace cpuid {
-    /// Test if the unsigned integer x has bit i set or not.
-    static inline bool isBitSet(uint x, uint i) {
+    namespace {
+      static MachineVendor machineVendor (uint edx) {
+        switch (edx) {
+        case 0x696E6549: // 'ineI' for Intel
+          return MachineVendor::INTEL;
+        case 0x656E7469: // 'enti' for AuthenticAMD
+          return MachineVendor::AMD;
+        case 0x61757248: // 'aurH' (short of CentaurHauls) for VIA.
+          return MachineVendor::VIA; 
+        default:
+          return MachineVendor::UNKNOWN;
+        }
+      }
+      struct CpuInfo {
+        CpuInfo (void) {
+          has_cpuid = hasCPUID();
+          if (!has_cpuid) { return ; }
+          u8 max_function_code;
+          {
+            const CpuidResults result = cpuid(0);
+            max_function_code = static_cast<u8>(result.eax());
+            machine_vendor = machineVendor(result.edx());
+          }
+          if (1 > max_function_code) { return; }
+          {
+            const CpuidResults result = cpuid(1);
+            fn0000_0001_eax(result.eax());
+            misc_features_ecx = result.ecx();
+            misc_features_edx = result.edx();
+            fn0000_0001_ebx(result.ebx());
+          }
+        }
+        bool has_cpuid;
+        MachineVendor machine_vendor;
+        ProcessorType processor_type;
+        u8 family;   /// Combination of basefamily and extended family.
+        u8 model;    /// Combination of basemodel and extended model.
+        u8 stepping; /// Only lower 4 bits are ever used.
+        u32 misc_features_ecx;
+        u32 misc_features_edx;
+        u8 local_apic_id;
+        u8 logical_processor_count;
+        u8 clflush_size;
+        u8 brand_id;
+      private:
+        void fn0000_0001_eax(uint eax);
+        void fn0000_0001_ebx(uint ebx);
+        void fn0000_0002_eax(uint eax);
+      };
+      void CpuInfo::fn0000_0001_eax(uint eax) {
+        // We want to get bits [11:8].
+        const u8 base_family = static_cast<u8>((0x700 & eax) >> 8);
+        const u8 base_model = static_cast<u8>((0x70 & eax) >> 4);
+
+        // Test if extended family and model are supported.
+        if (0xF == base_family) { 
+          const u8 extended_family = static_cast<u8>((0x0FF00000 & eax) >> 20);
+          const u8 extended_model = static_cast<u8>((0x000F0000 & eax) >> 16);
+        
+          // CPUID documentation from AMD says to do this. There is an
+          // implicit assumption that extended_family will not be larger
+          // than 0xf0. 
+          family = static_cast<u8>(base_family + extended_family);
+          // And model is defined as {ExtendedModel[3:0],BaseModel[3:0]}.
+          model = static_cast<u8>((extended_model << 4) + base_model);
+        } else { // We treat extended_family as reserved and ignore it.
+          family = base_family;
+          model  = base_model;
+        }
+        stepping = (0xF & eax);
+
+        if (machine_vendor == MachineVendor::INTEL) {
+          static constexpr ProcessorType table[4] = {ProcessorType::PRIMARY,
+                                                     ProcessorType::OVERDRIVE,
+                                                     ProcessorType::SECONDARY,
+                                                     ProcessorType::RESERVED};
+          processor_type = table[(eax & 0x00003000) >> 12];
+        } else { // CPU Vendor does not use these bits for anything.
+          processor_type = ProcessorType::UNUSED_BY_VENDOR;
+        }
+        return;
+      }
+      void CpuInfo::fn0000_0001_ebx(uint ebx) {
+        local_apic_id = static_cast<u8>((0xFF & (ebx >> 24)));
+        logical_processor_count = (0xFF & (ebx >> 16));
+        clflush_size = (0xFF & (ebx >> 8));
+        brand_id = (0xFF & ebx);
+        return;
+      }
+      CpuInfo initial_cpu;
+    }
+    
+
+    inline bool isBitSet(uint x, uint i) {
       return (0 != (x & (1UL << i)));
     }
     bool hasCPUID(void) {
@@ -30,36 +122,23 @@ namespace kernel {
       return CpuidResults(a,b,c,d);
     }
 
+    
     MachineVendor machineVendor (void) {
-      switch (cpuid(0).edx()) {
-      case 0x696E6549: // 'ineI' for Intel
-        return MachineVendor::INTEL;
-      case 0x656E7469: // 'enti' for AuthenticAMD
-        return MachineVendor::AMD;
-      case 0x61757248: // 'aurH' (short of CentaurHauls) for VIA.
-        return MachineVendor::VIA; 
-      default:
-        return MachineVendor::UNKNOWN;
-      }
+      return initial_cpu.machine_vendor;
     }
 
     /// True if cpu is from Intel.
     static inline bool isIntel(void) {
-      return (MachineVendor::INTEL == machineVendor());
+      return (MachineVendor::INTEL == initial_cpu.machine_vendor);
     }
     /// True if cpu is from AMD.
     static inline bool isAMD(void) {
-      return (MachineVendor::AMD == machineVendor());
+      return (MachineVendor::AMD == initial_cpu.machine_vendor);
     }
     
     ProcessorType processorType(void) {
-      static constexpr ProcessorType table[4] = { ProcessorType::PRIMARY,
-                                           ProcessorType::OVERDRIVE,
-                                           ProcessorType::SECONDARY,
-                                           ProcessorType::RESERVED };
-      const u32 eax = cpuid(1).eax();
       // Type is given as bits {13..12} of the eax register.
-      return table[(eax & 0x00003000) >> 12];
+      return initial_cpu.processor_type;
       /*
       switch ((eax & 0x00003000) >> 12) {
       case 0: return ProcessorType::PRIMARY;
