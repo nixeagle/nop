@@ -76,7 +76,7 @@ namespace kernel {
       bool hasCPUID(void) const { return _has_cpuid; }
       MachineVendor vendor(void) const { return _machine_vendor; }
       ProcessorType type(void) const { return _processor_type; }
-      u8 acicId(void) const { return _local_apic_id; }
+      u8 apicId(void) const { return _local_apic_id; }
 
       /// Processor specific values.length
       /// @range [0 ... 15]
