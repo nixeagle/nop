@@ -36,7 +36,6 @@ namespace kernel {
     __attribute__((noinline)) CpuidResults cpuid(size_t function_code);
 
     /// True if the processor supports the CPUID instruction.
-    bool hasCPUID(void);
 
     /// Enumerates CPU makers.
     /// @TODO Add other CPU venders.
@@ -70,18 +69,180 @@ namespace kernel {
       UNUSED_BY_VENDOR
     };
 
-    ProcessorType processorType(void);
-    
+    class CpuInfo {
+    public:
+      CpuInfo(void);
 
-    struct CpuInfo {
-      CpuInfo (void);
+      bool hasCPUID(void) const { return has_cpuid; }
+      MachineVendor vendor(void) const { return machine_vendor; }
+      ProcessorType type(void) const { return processor_type; }
+      u8 acicId(void) const { return local_apic_id; }
+
+      /// Processor specific values.length
+      /// @range [0 ... 15]
+      u8 stepping(void) const { return _stepping & 0xF; }
+
+
+
+      /// True if the SSE3 extensions are supported.
+      bool hasSSE3(void) const;
+      /// True if MXCSR is supported.
+      bool hasMXCSR(void) const;
+      /// True if CR4.OSXMMEXCPT is supported.
+      bool hasCR4_OSXMMEXCPT(void) const;
+      /// True if #XF is supported.
+      bool hasXF(void) const;
+      /// True if FISTTP is supported.
+      bool hasFISTTP(void) const;
+
+      /// True if the PCLMULQDQ instruction is supported.
+      bool hasPCLMUL(void) const;
+
+      /// True if cpu supports 64 bit Debug Trace and EMON store MSRs.
+      bool hasDTES64(void) const;
+
+      /// Cpu supports the MONITOR and MWAIT instructions.
+      /// Additionally as a direct consequence MISC_ENABLE_MONE,
+      /// MISC_ENABLE_LCMV, MONITOR_FILTER_LINE_SIZE MSR.
+      bool hasMON(void) const;
+    
+      /// Indicates that a CPL qualified debug store is supported.
+      /// @note No known source actually tells us what a CPL qualified debug
+      /// store even is! Sandpile and wikipedia both have a very short
+      /// summary with no real good elaboration. CPUID docs from intel and
+      /// AMD both seem to skip over the issue. Processor documentation
+      /// probably has it, but a quick search over 4000+ pages did not turn
+      /// up anything.
+      bool hasDSCPL(void) const;
+
+      /// True when Virtual Machine Extensions are supported.
+      /// This is an Intel extension and is not binary compatable with AMD's.
+      /// Enabled instructions on Intel are:
+      /// CR4.VMPTRLD, VMPTRST, VMCLEAR, VMREAD, VMWRITE, VMLAUNCH, VMRESUME,
+      /// VMXOFF, VMXON, INVEPT, INVVPID, VMCALL, VMFUNC.
+      bool hasVMX(void) const;
+    
+      /// True when Secure Virtual Machine instructions are supported.
+      /// This is an AMD extension and is not binary compatable with Intel's.
+      /// Enabled instructions are:
+      /// CR4.VMPTRLD, CLGI, INVLPGA, SKINIT, STGI, VMLOAD, VMMCALL, VMRUN,
+      /// VMSAVE.
+      bool hasSVM(void) const;
+    
+      /// Are Safer Mode Extensions, e.g. the GETSEC instruction enabled?
+      /// Chip has to be an Intel. When available, CR4.SMXE can be used to
+      /// turn on and off this feature.
+      bool hasSMX(void) const;
+
+      /// Enhanced Intel SpeedStep Technology is supported.
+      /// Means that IA32_PERF_STS and IA32_PERF_CTL registers are
+      /// implemented.
+      bool hasEST(void) const;
+
+      /// Processor has the Thermal Monitor 2 control circuit.
+      /// Means the following are available:
+      /// THERM_INTERRUPT, THERM_STATUS MSRs, 
+      /// THERM2_CONTROL MSR, xAPIC thermal LVT entry,
+      /// @note This is an Intel only extension. AMD's CPUID reference manual
+      /// makes no mention of this.
+      bool hasTM2(void) const;
+
+      /// SSSE3 instructions are supported.
+      bool hasSSSE3(void) const;
+
+      /// Processor allows L1 data cache to be set as adaptive or shared.
+      /// Context ID is toggled with MISC_ENABLE.L1DCCM.
+      /// @note only known to be supported on some Intel processors.
+      bool hasCID(void) const;
+
+      /// Has Fused Multiply Add support.
+      /// @note Intel processors support FMA3 while AMD supports FMA4. It is
+      /// not yet known if there will be crossover support. Reference
+      /// https://en.wikipedia.org/wiki/FMA_instruction_set for more
+      /// details. This means that we really can't know if a processor
+      /// supports FMA3 or FMA4 without also knowing the processor brand.
+      bool hasFMA(void) const;
+      /// Has Fused Multiply Add 3 support.
+      /// @note Don't rely on this too much as correct answers depend on the
+      /// cpu maker and must be added to the implementation. That is, it is
+      /// possible for a processor to support FMA3 while this function
+      /// returns false. 
+      bool hasFMA3(void) const;
+      /// Has Fused Multiply Add 4 support.
+      /// @note Don't rely on this too much as correct answers depend on the
+      /// cpu maker and must be added to the implementation. That is, it is
+      /// possible for a processor to support FMA3 while this function
+      /// returns false.
+      bool hasFMA4(void) const;
+
+      /// Compare and Exchange on 16 bytes is supported.
+      /// Means CMPXCHG16B instruction is implemented.
+      bool hasCX16(void) const;
+
+      /// Support for the xTPR Update Control over Task Priority messages.
+      /// Task Priority messages can be optionally disabled through toggling
+      /// bit 23 of the MISC_ENABLE model specific registers.
+      /// @note Currently only intel is known to support this.
+      bool hasETPRD(void) const;
+    
+      bool hasPDCM(void) const;
+      bool hasPCID(void) const;
+      bool hasDCA(void) const;
+      bool hasSSE4_1(void) const;
+      bool hasSSE4_2(void) const;
+      bool hasX2APIC(void) const;
+      bool hasMOVBE(void) const;
+      bool hasPOPCNT(void) const;
+      bool hasTSCD(void) const;
+      bool hasAES(void) const;
+      bool hasXSAVE(void) const;
+      bool hasOSXSAVE(void) const;
+      bool hasAVX(void) const;
+      bool hasF16C(void) const;
+      bool hasRDRAND(void) const;
+
+      bool hasFPU(void) const;
+      bool hasVME(void) const;
+      bool hasDE(void) const;
+      bool hasPSE(void) const;
+      bool hasTSC(void) const;
+      bool hasMSR(void) const;
+      bool hasPAE(void) const;
+      bool hasCX8(void) const;
+      bool hasAPIC(void) const;
+      bool hasSEP(void) const;
+      bool hasMTRR(void) const;
+      bool hasPGE(void) const;
+      bool hasMCA(void) const;
+      bool hasCMOV(void) const;
+      bool hasPAT(void) const;
+      bool hasPSE36(void) const;
+      /// Processor Serial Number
+      /// Disabled on more recent processors due to privacy issues.
+      bool hasPSN(void) const;
+      bool hasCLFL(void) const;
+      bool hasDTES(void) const;
+      bool hasACPI(void) const;
+      bool hasMMX(void) const;
+      bool hasFXSR(void) const;
+      bool hasSSE(void) const;
+      bool hasSSE2(void) const;
+      bool hasSS(void) const;
+
+      /// Does this processor support HyperThreading?
+      bool hasHTT(void) const;
+      bool hasTM1(void) const;
+      bool hasIA64(void) const;
+      bool hasPBE(void) const;
+
+    private:
       bool has_cpuid;
       
       MachineVendor machine_vendor;
       ProcessorType processor_type;
       u8 family;   /// Combination of basefamily and extended family.
       u8 model;    /// Combination of basemodel and extended model.
-      u8 stepping; /// Only lower 4 bits are ever used.
+      u8 _stepping; /// Only lower 4 bits are ever used.
       
       u32 misc_features_ecx;
       u32 misc_features_edx;
@@ -89,173 +250,12 @@ namespace kernel {
       u8 logical_processor_count;
       u8 clflush_size;
       u8 brand_id;
+
+      
     private:
       void fn0000_0001_eax(uint eax);
       void fn0000_0001_ebx(uint ebx);
       void fn0000_0002_eax(uint eax);
     };
-
-
-
-
-    /// Processor specific values.length
-    /// @range [0 ... 15]
-    uint processorStepping(void);
-
-    u8 clflushChunckCount(void);
-    u8 logicalCpuCount(void);
-    u8 apicId(void);
-
-    /// True if the SSE3 extensions are supported.
-    bool hasSSE3(void);
-    /// True if MXCSR is supported.
-    bool hasMXCSR(void);
-    /// True if CR4.OSXMMEXCPT is supported.
-    bool hasCR4_OSXMMEXCPT(void);
-    /// True if #XF is supported.
-    bool hasXF(void);
-    /// True if FISTTP is supported.
-    bool hasFISTTP(void);
-
-    /// True if the PCLMULQDQ instruction is supported.
-    bool hasPCLMUL(void);
-
-    /// True if cpu supports 64 bit Debug Trace and EMON store MSRs.
-    bool hasDTES64(void);
-
-    /// Cpu supports the MONITOR and MWAIT instructions.
-    /// Additionally as a direct consequence MISC_ENABLE_MONE,
-    /// MISC_ENABLE_LCMV, MONITOR_FILTER_LINE_SIZE MSR.
-    bool hasMON(void);
-    
-    /// Indicates that a CPL qualified debug store is supported.
-    /// @note No known source actually tells us what a CPL qualified debug
-    /// store even is! Sandpile and wikipedia both have a very short
-    /// summary with no real good elaboration. CPUID docs from intel and
-    /// AMD both seem to skip over the issue. Processor documentation
-    /// probably has it, but a quick search over 4000+ pages did not turn
-    /// up anything.
-    bool hasDSCPL(void);
-
-    /// True when Virtual Machine Extensions are supported.
-    /// This is an Intel extension and is not binary compatable with AMD's.
-    /// Enabled instructions on Intel are:
-    /// CR4.VMPTRLD, VMPTRST, VMCLEAR, VMREAD, VMWRITE, VMLAUNCH, VMRESUME,
-    /// VMXOFF, VMXON, INVEPT, INVVPID, VMCALL, VMFUNC.
-    bool hasVMX(void);
-    
-    /// True when Secure Virtual Machine instructions are supported.
-    /// This is an AMD extension and is not binary compatable with Intel's.
-    /// Enabled instructions are:
-    /// CR4.VMPTRLD, CLGI, INVLPGA, SKINIT, STGI, VMLOAD, VMMCALL, VMRUN,
-    /// VMSAVE.
-    bool hasSVM(void);
-    
-    /// Are Safer Mode Extensions, e.g. the GETSEC instruction enabled?
-    /// Chip has to be an Intel. When available, CR4.SMXE can be used to
-    /// turn on and off this feature.
-    bool hasSMX(void);
-
-    /// Enhanced Intel SpeedStep Technology is supported.
-    /// Means that IA32_PERF_STS and IA32_PERF_CTL registers are
-    /// implemented.
-    bool hasEST(void);
-
-    /// Processor has the Thermal Monitor 2 control circuit.
-    /// Means the following are available:
-    /// THERM_INTERRUPT, THERM_STATUS MSRs, 
-    /// THERM2_CONTROL MSR, xAPIC thermal LVT entry,
-    /// @note This is an Intel only extension. AMD's CPUID reference manual
-    /// makes no mention of this.
-    bool hasTM2(void);
-
-    /// SSSE3 instructions are supported.
-    bool hasSSSE3(void);
-
-    /// Processor allows L1 data cache to be set as adaptive or shared.
-    /// Context ID is toggled with MISC_ENABLE.L1DCCM.
-    /// @note only known to be supported on some Intel processors.
-    bool hasCID(void);
-
-    /// Has Fused Multiply Add support.
-    /// @note Intel processors support FMA3 while AMD supports FMA4. It is
-    /// not yet known if there will be crossover support. Reference
-    /// https://en.wikipedia.org/wiki/FMA_instruction_set for more
-    /// details. This means that we really can't know if a processor
-    /// supports FMA3 or FMA4 without also knowing the processor brand.
-    bool hasFMA(void);
-    /// Has Fused Multiply Add 3 support.
-    /// @note Don't rely on this too much as correct answers depend on the
-    /// cpu maker and must be added to the implementation. That is, it is
-    /// possible for a processor to support FMA3 while this function
-    /// returns false. 
-    bool hasFMA3(void);
-    /// Has Fused Multiply Add 4 support.
-    /// @note Don't rely on this too much as correct answers depend on the
-    /// cpu maker and must be added to the implementation. That is, it is
-    /// possible for a processor to support FMA3 while this function
-    /// returns false.
-    bool hasFMA4(void);
-
-    /// Compare and Exchange on 16 bytes is supported.
-    /// Means CMPXCHG16B instruction is implemented.
-    bool hasCX16(void);
-
-    /// Support for the xTPR Update Control over Task Priority messages.
-    /// Task Priority messages can be optionally disabled through toggling
-    /// bit 23 of the MISC_ENABLE model specific registers.
-    /// @note Currently only intel is known to support this.
-    bool hasETPRD(void);
-    
-    bool hasPDCM(void);
-    bool hasPCID(void);
-    bool hasDCA(void);
-    bool hasSSE4_1(void);
-    bool hasSSE4_2(void);
-    bool hasX2APIC(void);
-    bool hasMOVBE(void);
-    bool hasPOPCNT(void);
-    bool hasTSCD(void);
-    bool hasAES(void);
-    bool hasXSAVE(void);
-    bool hasOSXSAVE(void);
-    bool hasAVX(void);
-    bool hasF16C(void);
-    bool hasRDRAND(void);
-
-    bool hasFPU(void);
-    bool hasVME(void);
-    bool hasDE(void);
-    bool hasPSE(void);
-    bool hasTSC(void);
-    bool hasMSR(void);
-    bool hasPAE(void);
-    bool hasCX8(void);
-    bool hasAPIC(void);
-    bool hasSEP(void);
-    bool hasMTRR(void);
-    bool hasPGE(void);
-    bool hasMCA(void);
-    bool hasCMOV(void);
-    bool hasPAT(void);
-    bool hasPSE36(void);
-    /// Processor Serial Number
-    /// Disabled on more recent processors due to privacy issues.
-    bool hasPSN(void);
-    bool hasCLFL(void);
-    bool hasDTES(void);
-    bool hasACPI(void);
-    bool hasMMX(void);
-    bool hasFXSR(void);
-    bool hasSSE(void);
-    bool hasSSE2(void);
-    bool hasSS(void);
-
-    /// Does this processor support HyperThreading?
-    bool hasHTT(void);
-    bool hasTM1(void);
-    bool hasIA64(void);
-    bool hasPBE(void);
-
   }
 }
