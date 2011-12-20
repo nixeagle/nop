@@ -1,6 +1,7 @@
 #include "cpuid.h"
 #include "kernel/asm/pushfd.h"
 #include "kernel/asm/popfd.h"
+#include "kernel/panic/kpanic.h"
 
 namespace kernel {
   namespace cpuid {
@@ -31,8 +32,10 @@ namespace kernel {
     }
       
     CpuInfo::CpuInfo (void) {
-      _has_cpuid = hasCPUID();
-      if (!_has_cpuid) { return ; }
+      _has_cpuid = kernel::cpuid::hasCPUID();
+      if (!_has_cpuid) { // @todo try to detect as much as possible anyway
+        return;
+      }
       u8 max_function_code;
       {
         const CpuidResults result = cpuid(0);
@@ -148,23 +151,22 @@ namespace kernel {
     }
 
     bool CpuInfo::hasVMX(void) const {
-      
-      return (isBitSet(_features_ecx, 5) && isIntel(this));
+      return (isBitSet(_features_ecx, 5));
     }
     bool CpuInfo::hasSVM(void) const {
-      return (isBitSet(_features_ecx, 5) && isAMD(this));
+      return (isBitSet(_features_ecx, 5));
     }
 
     bool CpuInfo::hasSMX(void) const {
-      return (isBitSet(_features_ecx, 6) && isIntel(this));
+      return (isBitSet(_features_ecx, 6));
     }
 
     bool CpuInfo::hasEST(void) const {
-      return (isBitSet(_features_ecx, 7) && isIntel(this));
+      return (isBitSet(_features_ecx, 7));
     }
 
     bool CpuInfo::hasTM2(void) const {
-      return (isBitSet(_features_ecx, 8) && isIntel(this));
+      return (isBitSet(_features_ecx, 8));
     }
 
     bool CpuInfo::hasSSSE3(void) const {
@@ -172,7 +174,7 @@ namespace kernel {
     }
 
     bool CpuInfo::hasCID(void) const {
-      return (isBitSet(_features_ecx, 10) && isIntel(this));
+      return (isBitSet(_features_ecx, 10));
     }
 
     bool CpuInfo::hasFMA(void) const {
@@ -190,8 +192,13 @@ namespace kernel {
     }
 
     bool CpuInfo::hasETPRD(void) const {
-      return (isBitSet(_features_ecx, 14) && isIntel(this));
+      return (isBitSet(_features_ecx, 14));
     }
+
+    bool CpuInfo::hasPDCM(void) const {
+      return (isBitSet(_features_ecx, 15));
+    }
+
     // Tests under cpuid(1).edx()
     bool CpuInfo::hasFPU(void) const {
       return isBitSet(_features_edx, 0);

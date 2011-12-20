@@ -47,8 +47,6 @@ namespace kernel {
       UNINITIALIZED
     };
 
-    /// Who does the processor claim to be made by?
-    MachineVendor machineVendor (void);
 
     /// How many standard function calls are supported on this CPU?
     /// Basically if CPUID is supported, we know at least code=0 is
@@ -74,6 +72,7 @@ namespace kernel {
       CpuInfo(void);
 
       bool hasCPUID(void) const { return _has_cpuid; }
+      /// Who does the processor claim to be made by?
       MachineVendor vendor(void) const { return _machine_vendor; }
       ProcessorType type(void) const { return _processor_type; }
       u8 apicId(void) const { return _local_apic_id; }
@@ -184,7 +183,10 @@ namespace kernel {
       /// bit 23 of the MISC_ENABLE model specific registers.
       /// @note Currently only intel is known to support this.
       bool hasETPRD(void) const;
-    
+
+      /// Has Performance Debug Capability MSR.
+      /// For Intel this means MSR 0x345.
+      /// @note AMD's CPUID manual makes no mention of this.
       bool hasPDCM(void) const;
       bool hasPCID(void) const;
       bool hasDCA(void) const;
