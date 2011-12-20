@@ -19,11 +19,11 @@ namespace kernel {
 
     static MachineVendor machineVendor (uint edx) {
       switch (edx) {
-      case 0x696E6549: // 'ineI' for Intel
+      case 0x49656E69: // 'ineI' for Intel
         return MachineVendor::INTEL;
-      case 0x656E7469: // 'enti' for AuthenticAMD
+      case 0x69746E65: // 'enti' for AuthenticAMD
         return MachineVendor::AMD;
-      case 0x61757248: // 'aurH' (short of CentaurHauls) for VIA.
+      case 0x48727561: // 'aurH' (short of CentaurHauls) for VIA.
         return MachineVendor::VIA; 
       default:
         return MachineVendor::UNKNOWN;
