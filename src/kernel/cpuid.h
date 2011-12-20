@@ -272,38 +272,104 @@ namespace kernel {
       bool hasHypervisor(void) const;
       
       /// x87 Floating Point Unit supported.
+      /// Indicates the floating point stack and instructions may be
+      /// used. Most if not all modern x86 processors support this 
       bool hasFPU(void) const;
+      /// Virtual Mode Extension.
+      /// Virtual 8086 mode is supported.
       bool hasVME(void) const;
+      /// Debug Extension.
+      /// Processor implements IO breakpoints. Use the CR4.DE bit to enable
+      /// debug extensions.
       bool hasDE(void) const;
+      /// Page Size Extension.
+      /// 4MB pages are supported.
       bool hasPSE(void) const;
+      /// Time Stamp Counter.
+      /// Support for the RDTSC instruction. Use the CR4.TSD bit to control
+      /// privilege and access to this instruction.
       bool hasTSC(void) const;
+      /// Model Specific Registers.
+      /// Instructions RDMSR and WRMSR allow access to MSRs.
       bool hasMSR(void) const;
+      /// Physical Address Extension.
+      /// Addresses larger than 32 bits are supported.
       bool hasPAE(void) const;
+      /// Machine Check Exception.
+      /// Indicates support for INT18 and CR4.MCE enable bit.
+      bool hasMCE(void) const;
+      /// Compare and Exchange 8 bytes.
+      /// CMPXCHG8 Instruction is supported.
       bool hasCX8(void) const;
+      /// Advanced Programmable Interrupt Controller.
+      /// Software is able to access a local APIC.
       bool hasAPIC(void) const;
+      /// Fast System Call.
+      /// Instructions SYSENTER and SYSEXIT are supported.
       bool hasSEP(void) const;
+      /// Memory Type Range Registers.
+      /// Access to MTRR_CAP is supported.
       bool hasMTRR(void) const;
+      /// Page Global Enable
+      /// Global bit for page table entries indicates that TLB entries are
+      /// common to different processes. This means no need to flush these
+      /// entries. Controlled by the CR4.PGE bit.
       bool hasPGE(void) const;
+      /// Machine Check Architecture.
+      /// Controlled by the MCG_CAP register.
       bool hasMCA(void) const;
+      /// Conditional Move Instruction.
+      /// Support for CMOV* and possibly FCMOVCC, FCOMI if FPU exists.
       bool hasCMOV(void) const;
+      /// Page Attribute Table.
+      /// Allows OS to set attributes on memory with a 4K
+      /// granularity. Feature works hand in hand with the MTRRs.
       bool hasPAT(void) const;
+      /// 36 bit Page Size Extension.
+      /// Means 4MB pages are supported and can address memory beyond 4GB.
       bool hasPSE36(void) const;
       /// Processor Serial Number
       /// Disabled on more recent processors due to privacy issues.
       bool hasPSN(void) const;
-      bool hasCLFL(void) const;
-      bool hasDTES(void) const;
+      /// Cache Line Flush.
+      /// The CLFLSH instruction is supported.
+      bool hasCLFSH(void) const;
+      /// Debug Store.
+      /// Allows information to be stored in special debug registers.
+      bool hasDS(void) const;
+      /// Thermal Monitor and Software Clock Facilities.
+      /// Internal MSRs are implemented allowing processor temperture and
+      /// processor performance to be monitored and controlled.
       bool hasACPI(void) const;
+      /// Multimedia Extensions.
       bool hasMMX(void) const;
+      /// Fast save and restore of floating point context.
+      /// When this is supported, the OS may indicate that it also supports
+      /// this feature by setting CR4.OSFXSR.
+      /// Provided instructions are:
+      /// FXSAVE, FXRSTOR
       bool hasFXSR(void) const;
+      /// Streaming SIMD Extensions.
       bool hasSSE(void) const;
+      /// Streaming SIMD Extensions 2.
       bool hasSSE2(void) const;
+      /// Self Snoop.
+      /// Conflicting memory types may be managed by the OS.
+      /// @todo Figure out how this works and what the advantage is.
       bool hasSS(void) const;
 
       /// Does this processor support HyperThreading?
       bool hasHTT(void) const;
-      bool hasTM1(void) const;
-      bool hasIA64(void) const;
+      /// Thermal Monitor
+      /// Automatic thermal control (TCC) is supported.
+      bool hasTM(void) const;
+      /// True if AMD64 instructions are supported.
+      /// Also known as x86-64.
+      bool hasAMD64(void) const;
+      /// Pending Break Enable.
+      /// Allows to signal the processor that a break is pending and that
+      /// an interrupt should be handled. The MISC_ENABLE MSR enables this
+      /// capacity.
       bool hasPBE(void) const;
 
     private:

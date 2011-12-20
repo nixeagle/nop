@@ -249,5 +249,89 @@ namespace kernel {
     bool CpuInfo::hasFPU(void) const {
       return isBitSet(_features_edx, 0);
     }
+    bool CpuInfo::hasVME(void) const {
+      return isBitSet(_features_edx, 1);
+    }
+    bool CpuInfo::hasDE(void) const {
+      return isBitSet(_features_edx, 2);
+    }
+    bool CpuInfo::hasPSE(void) const {
+      return isBitSet(_features_edx, 3);
+    }
+    bool CpuInfo::hasTSC(void) const {
+      return isBitSet(_features_edx, 4);
+    }
+    bool CpuInfo::hasMSR(void) const {
+      return isBitSet(_features_edx, 5);
+    }
+    bool CpuInfo::hasPAE(void) const {
+      return isBitSet(_features_edx, 6);
+    }
+    bool CpuInfo::hasMCE(void) const {
+      return isBitSet(_features_edx, 7);
+    }
+    bool CpuInfo::hasCX8(void) const {
+      return isBitSet(_features_edx, 8);
+    }
+    bool CpuInfo::hasAPIC(void) const {
+      return isBitSet(_features_edx, 9);
+    }
+    bool CpuInfo::hasSEP(void) const {
+      return isBitSet(_features_edx, 11);
+    }
+    bool CpuInfo::hasMTRR(void) const {
+      return isBitSet(_features_edx, 12);
+    }
+    bool CpuInfo::hasPGE(void) const {
+      return isBitSet(_features_edx, 13);
+    }
+    bool CpuInfo::hasMCA(void) const {
+      return isBitSet(_features_edx, 14);
+    }
+    bool CpuInfo::hasCMOV(void) const {
+      return isBitSet(_features_edx, 15);
+    }
+    bool CpuInfo::hasPAT(void) const {
+      return isBitSet(_features_edx, 16);
+    }
+    bool CpuInfo::hasPSE36(void) const {
+      return isBitSet(_features_edx, 17);
+    }
+    bool CpuInfo::hasPSN(void) const {
+      return isBitSet(_features_edx, 18);
+    }
+    bool CpuInfo::hasCLFSH(void) const {
+      return isBitSet(_features_edx, 19);
+    }
+    bool CpuInfo::hasDS(void) const {
+      return isBitSet(_features_edx, 21);
+    }
+    bool CpuInfo::hasACPI(void) const {
+      return isBitSet(_features_edx, 22);
+    }
+    bool CpuInfo::hasMMX(void) const {
+      return isBitSet(_features_edx, 23);
+    }
+    bool CpuInfo::hasFXSR(void) const {
+      return isBitSet(_features_edx, 24);
+    }
+    bool CpuInfo::hasSSE(void) const {
+      return isBitSet(_features_edx, 25);
+    }
+    bool CpuInfo::hasSSE2(void) const {
+      return isBitSet(_features_edx, 26);
+    }
+    bool CpuInfo::hasSS(void) const {
+      return isBitSet(_features_edx, 27);
+    }
+    bool CpuInfo::hasHTT(void) const {
+      return isBitSet(_features_edx, 28);
+    }
+    bool CpuInfo::hasTM(void) const {
+      return isBitSet(_features_edx, 29);
+    }
+    bool CpuInfo::hasPBE(void) const {
+      return isBitSet(_features_edx, 31);
+    }
   }
 }
