@@ -73,10 +73,10 @@ namespace kernel {
     public:
       CpuInfo(void);
 
-      bool hasCPUID(void) const { return has_cpuid; }
-      MachineVendor vendor(void) const { return machine_vendor; }
-      ProcessorType type(void) const { return processor_type; }
-      u8 acicId(void) const { return local_apic_id; }
+      bool hasCPUID(void) const { return _has_cpuid; }
+      MachineVendor vendor(void) const { return _machine_vendor; }
+      ProcessorType type(void) const { return _processor_type; }
+      u8 acicId(void) const { return _local_apic_id; }
 
       /// Processor specific values.length
       /// @range [0 ... 15]
@@ -236,20 +236,20 @@ namespace kernel {
       bool hasPBE(void) const;
 
     private:
-      bool has_cpuid;
+      bool _has_cpuid;
       
-      MachineVendor machine_vendor;
-      ProcessorType processor_type;
-      u8 family;   /// Combination of basefamily and extended family.
-      u8 model;    /// Combination of basemodel and extended model.
+      MachineVendor _machine_vendor;
+      ProcessorType _processor_type;
+      u8 _family;   /// Combination of basefamily and extended family.
+      u8 _model;    /// Combination of basemodel and extended model.
       u8 _stepping; /// Only lower 4 bits are ever used.
       
-      u32 misc_features_ecx;
-      u32 misc_features_edx;
-      u8 local_apic_id;
-      u8 logical_processor_count;
-      u8 clflush_size;
-      u8 brand_id;
+      u32 _features_ecx;
+      u32 _features_edx;
+      u8 _local_apic_id;
+      u8 _logical_processor_count;
+      u8 _clflush_size;
+      u8 _brand_id;
 
       
     private:
