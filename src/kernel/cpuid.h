@@ -52,7 +52,7 @@ namespace kernel {
     MachineVendor machineVendor (void);
 
     /// How many standard function calls are supported on this CPU?
-    /// Basically if CPUID is supported, we know at leasat code=0 is
+    /// Basically if CPUID is supported, we know at least code=0 is
     /// supported. This function tells us what the upper bound of the
     /// supported range is.
     inline uint upperFunctionCode(void) {
