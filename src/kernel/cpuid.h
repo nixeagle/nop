@@ -39,7 +39,7 @@ namespace kernel {
 
     /// Enumerates CPU makers.
     /// @TODO Add other CPU venders.
-    enum class MachineVendor {
+    enum class  MachineVendor {
       INTEL,
       AMD,
       VIA,

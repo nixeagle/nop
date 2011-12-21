@@ -6,16 +6,19 @@ osdevops :=-nostdinc++	-nostdinc -nostartfiles	-fno-exceptions	-fno-builtin -fno
 
 experimentalops := -fextended-identifiers
 
-assembly_output :=-masm=intel -save-temps
+assembly_output := #-fverbose-asm -save-temps #-masm=intel
 
-dangerous_o_flags := -fmerge-all-constants -funsafe-loop-optimizations -fsched-spec-load-dangerous -fipa-struct-reorg -fipa-matrix-reorg -ffast-math -funsafe-math-optimizations -ffinite-math-only -frename-registers
+dangerous_o_flags := -fmerge-all-constants -funsafe-loop-optimizations -fsched-spec-load-dangerous -fipa-struct-reorg -fipa-matrix-reorg -ffast-math -funsafe-math-optimizations -ffinite-math-only -frename-registers -fomit-frame-pointer # -flto # -fwhole-program #-flto
 
 # -flto == has not been enabled in this configuration (looks cool, I want)
 
 # -floop-interchange -fgraphite-identity -floop-parallelize-all -floop-block === This optimization applies to all the languages supported by GCC and is not limited to Fortran. To use this code transformation, GCC has to be configured with --with-ppl and --with-cloog to enable the Graphite loop transformation infrastructure.
-fthings := -O3 -fstrict-aliasing -fno-rtti -fweb -fkeep-inline-functions -fmodulo-sched -fmodulo-sched-allow-regmoves -fgcse-sm -fgcse-las  -fgcse-after-reload -fsched-pressure -fsched2-use-superblocks -fschedule-insns2  -fipa-pta -ftree-loop-linear  -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model -ftracer -fvariable-expansion-in-unroller -freorder-blocks-and-partition -falign-jumps -fbranch-target-load-optimize2 ${dangerous_o_flags}
-
 gcc46 := -ftree-bit-ccp
+
+more := -fforward-propagate -fregmove -fno-peephole2  -finline-small-functions
+
+
+fthings := -Ofast -fstrict-aliasing -fno-rtti -fweb  -fmodulo-sched -fmodulo-sched-allow-regmoves -fgcse-sm -fgcse-las  -fgcse-after-reload -fsched-pressure -fsched2-use-superblocks -fschedule-insns2  -fipa-pta -ftree-loop-linear  -ftree-loop-distribution -ftree-loop-im -ftree-loop-ivcanon -fivopts -fvect-cost-model -ftracer -fvariable-expansion-in-unroller -freorder-blocks-and-partition -falign-jumps -fbranch-target-load-optimize2 ${dangerous_o_flags} ${gcc46} ${more} ${assembly_output} # -fkeep-inline-functions
 
 
 #-fwhole-program == problems
@@ -29,7 +32,7 @@ ignore_define := -U i386
 
 
 #-ftrapv can't use yet because some internal funcctions are not defined.
-CODEGEN := -freg-struct-return -fno-common
+CODEGEN := -freg-struct-return -fno-common -frecord-gcc-switches
 
 args := ${warnings} ${fthings} ${osdevops} ${experimentalops} \
 	 -Wwrite-strings ${includes} ${cxx_selection} -m32 ${ignore_define} \
@@ -63,11 +66,13 @@ all: nop.bin
 
 nop.bin: $(OBJFILES) ${AOBJFILES}
 	@nasm -f elf -o loader.o loader.s
-	@${CXX} ${LDFLAGS} --strip -nostdlib -T linker.ld -o nop.bin loader.o ${OBJFILES} ${AOBJFILES}
+	@${CXX} ${LDFLAGS} -Wl,-melf_i386 -nostdlib -T linker.ld -o nop.bin loader.o ${OBJFILES} ${AOBJFILES}
 #	@echo "Done! Linked the following into nop.bin:" ${OBJFILES}
 
 %.o: %.cpp Makefile
-	@$(CXX) $(args) -MMD -MP -MT "$*.d $*.o"  -c $< -o $@
+	@$(CXX) $(args) -m32 -MMD -MP -MT "$*.d $*.o"  -c $< -o $@
+# For looking at assembly with objdump if wanted.
+# -Wa,-adhln -g
 #	@echo "Compiled" $<
 
 %.o: %.asm Makefile
@@ -93,7 +98,19 @@ grub:
 	@genisoimage -R -b boot/grub/stage2_eltorito -no-emul-boot -boot-load-size 4                 -boot-info-table --input-charset utf-8 -o nop.iso isofiles
 
 qemu: grub
-	@qemu -cpu phenom -m 32M -mem-path '/tmp/nop-ram' -name 'nop' -no-shutdown -writeconfig '/tmp/nop-device-config' -monitor stdio -cdrom nop.iso
+	@qemu-system-i386 -cpu core2duo -m 32M -usb -serial 'file:nop.out' -name 'nop' -monitor stdio -daemonize -no-reboot -no-shutdown -smp 16 -cdrom nop.iso
+
+qemu-no-ui: grub
+	@qemu-system-i386 -cpu core2duo -m 32M -usb -serial 'file:nop.out' -name 'nop' -monitor null -daemonize -no-reboot -nographic -cdrom nop.iso 
+	@sleep 6
+	@pkill -f qemu-system-i386
+	@echo "============     NOP OUT    ============="
+	@cat nop.out
+	@echo "\n==============---------------==================="
+#-pidfile 'nop-qemu.pid'
+#-mem-path '/tmp/nop-ram'
+#-no-shutdown
+#-monitor stdio
 
 doxygen: all
 	doxygen .doxygenrc
@@ -118,5 +135,9 @@ asm:
 	@${CXX} -S -O2 -fverbose-asm -g  ${args} ${asm_file}.cpp -o ${asm_file}.s
 	as --32 -alhnd ${asm_file}.s
 
- stats:
+stats:
 	@echo "commits" $(shell git log --oneline | wc -l) "additions" $(shell git log -p | grep -v '+++' | grep -c '^+') "removals" $(shell git log -p | grep -v -e '---' | grep -c '^-')
+
+complog:
+	@echo `date --rfc-3339=seconds -u | sed 's/\+.*/::size=/'` `size nop.bin | tail -n1 |  sed 's/nop.bin//'` `sha1sum nop.bin | sed 's/ .*//g'` >> complog.log
+	@tail -n7 complog.log

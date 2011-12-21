@@ -4,7 +4,9 @@
 #include "kernel/idt/idt.h"
 #include "kernel/gdt/descriptor.h"
 #include "kernel/asm/out.h"
+#include "kernel/asm/in.h"
 #include "kernel/virtual-console/virtual-console.h"
+#include "kernel/cpuid.h"
 #include "experiments/main.h"
 
 using kernel::text_mode::put_hex;
@@ -26,36 +28,53 @@ void busy_loop(size_t limit) {
   return;
 }
 
+struct COMPort {
+  // We have 8 different ones....
+  u8 registers[8];
+};
 
 template<class T>
-void show_type(const T&)
-{
+void show_type(const T&) {
   kernel::VirtualConsole::currentConsole()->put(__PRETTY_FUNCTION__);
 }
 
+static const u16* COM = reinterpret_cast<u16*>(0x400);
+static void serializeString(const char* c_string) {
+  char* ptr = const_cast<char*>(c_string);
+  while (*ptr != 0) {
+    while((kernel::inlasm::inb(COM[0]+5) & 0x20) == 0) {}
+    kernel::inlasm::outb(COM[0]+0, *ptr);
+    *ptr++;
+  }
+  
+}
 extern "C" void kmain(struct mb_header *header, unsigned int magic) {
   using kernel::gdt::BaseDescriptor;
   using kernel::gdt::GdtEntry;
   using kernel::idt::IdtEntry;
   using kernel::VirtualConsole;
-  using kernel::VirtualConsole;
+  
+  kernel::cpuid::CpuInfo cpuinfo;
+  
   // Setup memory:
-  kernel::text_mode::clear_screen();
-
+  kernel::text_mode::clear_screen();  
   kernel::memory::init();
 
   if(0x2BADB002 != magic) {
     puts("ERROR: Bootloader magic does not match.", 15, 20);
     put_hex(magic,16,22);
   }
+
+
+  
   //  void* foo = kernel::memory::kmalloc(10);
   puts("nop", 0, 0);
   //  puts_allocated_memory();
 
-  BaseDescriptor<GdtEntry> descs = kernel::gdt::init();
+  /*BaseDescriptor<GdtEntry> descs =*/ kernel::gdt::init();
   puts_allocated_memory();
 
-  BaseDescriptor<IdtEntry> idt = kernel::idt::init(256);
+  /*BaseDescriptor<IdtEntry> idt =*/ kernel::idt::init(256);
 
   //  kernel::VirtualConsole vc[6];
 
@@ -82,10 +101,46 @@ extern "C" void kmain(struct mb_header *header, unsigned int magic) {
   kernel::global::virtual_consoles[0].setCurrent();
   puts_allocated_memory();
 
-  asm volatile("sti");
+  //put_hex(kernel::cpuid::upperFunctionCode(),8,15);
+  //put_hex(kernel::cpuid::cpuid(0x8000001E).eax(),8,15);
+  //put_hex(static_cast<uint>(kernel::cpuid::hasCPUID()),8,15);
+  put_hex(static_cast<uint>(cpuinfo.hasCPUID()),8,15);
+  put_hex(static_cast<uint>(cpuinfo.hasSSE3()),8,25);
+  //put_hex(static_cast<uint>(cpuinfo.vendor()),8,35);
+  //put_hex(static_cast<uint>(cpuinfo.hasFPU()),9,15);
+  //put_hex(static_cast<uint>(cpuinfo.hasCX16()),9,25);
+  //put_hex(static_cast<uint>(cpuinfo.hasPDCM()),9,35);
+
+
+  
+  puts("COM1:", 10, 19);
+  puts("COM2:", 10, 39);
+  puts("COM3:", 11, 19);
+  puts("COM4:", 11, 39);
+  //#b11110000 00000000 11111111 01010011
+
+  put_hex(COM[0],10,25);
+  put_hex(COM[1],10,45);
+  put_hex(COM[2],11,25);
+  put_hex(COM[3],11,45);
+
+  kernel::inlasm::outb(COM[0]+1, 0x00);
+  kernel::inlasm::outb(COM[0]+3, 0x80);
+  kernel::inlasm::outb(COM[0], 0x1);
+  kernel::inlasm::outb(COM[0]+1, 0x00);
+  kernel::inlasm::outb(COM[0]+3, 0x3);
+  kernel::inlasm::outb(COM[0]+2, 0xc7);
+  kernel::inlasm::outb(COM[0]+4, 0x0B);
+  serializeString("Hello world!\n");
+  while((kernel::inlasm::inb(COM[0]+5) & 0x20) == 0) {}
+  // output letter 'S' for success.
+  kernel::inlasm::outb(COM[0]+0, 83);
+
+
+  //asm volatile("sti");
   // //  Enter experiments function, this returns void.
-  experiments::main();
-  busy_loop(0xfff);
+  //experiments::main();
+  //busy_loop(0xfff);
   return;
 }
 
